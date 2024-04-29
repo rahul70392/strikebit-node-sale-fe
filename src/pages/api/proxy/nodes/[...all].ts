@@ -5,4 +5,4 @@ export const config = {
     externalResolver: true,
   }
 }
-export default apiProxy.createHandler(process.env.NODES_API_BASE_URL!, "^/api/proxy/nodes")
+export default apiProxy.createHandler(process.env.DROPLET_NODES_API_BASE_URL!, "^/api/proxy/nodes")

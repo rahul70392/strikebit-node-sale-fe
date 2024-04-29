@@ -21,7 +21,7 @@ export interface ApiServices {
 const isBrowser = typeof window !== "undefined";
 
 const dropletApiBaseUrl = isBrowser ? "/api/proxy/droplet" : process.env.DROPLET_API_BASE_URL!;
-const nodesApiBaseUrl = isBrowser ? "/api/proxy/nodes" : process.env.NODES_API_BASE_URL!;
+const nodesApiBaseUrl = isBrowser ? "/api/proxy/nodes" : process.env.DROPLET_NODES_API_BASE_URL!;
 
 export function createApiServices(
   timeout?: number,
