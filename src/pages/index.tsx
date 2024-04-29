@@ -90,7 +90,7 @@ const HomePageBody = (
     <Container className="h1 text-center">
       Total <Badge bg="primary" pill>
       {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
-    </Badge> Droplet Nodes Sold
+    </Badge> Droplet Engines Sold
     </Container>
 
     <Container className="h1 m-0 text-center position-relative">
@@ -100,7 +100,7 @@ const HomePageBody = (
           className="p-3 px-lg-4 fs-3 fw-bold flex-fill flex-lg-grow-0 animated-edge-button"
           onClick={() => setShowNodePurchaseDialog(true)}
         >
-          Buy Droplet Nodes
+          Buy Droplet Engines
         </Button>
       </div>
     </Container>
@@ -185,7 +185,7 @@ const HomePageBody = (
             </Row>*/}
 
     <Container className="mt-2 mb-1 h2 text-center">
-      <StarIcon/><span className="mx-3">My Nodes</span><StarIcon/>
+      <StarIcon/><span className="mx-3">My Engines</span><StarIcon/>
     </Container>
 
     <Row>
@@ -196,7 +196,7 @@ const HomePageBody = (
               <Col xs={12} md={6}>
                 <Stack gap={3}>
                   <div>
-                    <Card.Title>Droplet Nodes</Card.Title>
+                    <Card.Title>Droplet Engines</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalPurchasedNodesCount}
@@ -221,14 +221,14 @@ const HomePageBody = (
                    md={6}
                    className="d-flex flex-column justify-content-evenly m-0 mt-3 mt-md-0 h6"
               >
-                <p>Each Node generates more DROPLET for you, every day at midnight 00:00 UTC.</p>
+                <p>Each Engine generates more vDROP for you, every day at midnight 00:00 UTC.</p>
                 <p className="mb-0">
                   For every 5 purchased Engines, you are also granted a <a
                   href={routes.docs.dePin()}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  DePin License
+                  DePin Key
                 </a>!
                 </p>
               </Col>
@@ -279,7 +279,7 @@ const HomePageBody = (
               disabled={!canWithdrawHoldingRewards}
               onClick={() => onWithdrawHoldingRewardsClicked()}
             >
-              <TbShare2 className="me-2"/> Claim DROPLET
+              <TbShare2 className="me-2"/> Claim DROP
             </Button>
           </Card.Body>
         </Card>

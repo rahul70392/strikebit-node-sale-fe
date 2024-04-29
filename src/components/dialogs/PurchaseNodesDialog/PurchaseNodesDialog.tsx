@@ -74,7 +74,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   }
 
   const onPurchasedSucceeded = async () => {
-    toast.success("Purchased Droplet Nodes successfully.");
+    toast.success("Purchased Droplet Engines successfully.");
     props.purchasedCallback();
   }
 
@@ -87,7 +87,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       data-rk=""
     >
       <Modal.Header closeButton>
-        <Modal.Title><StarIcon className="me-2"/>Purchase Droplet Nodes</Modal.Title>
+        <Modal.Title><StarIcon className="me-2"/>Purchase Droplet Engines</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -95,7 +95,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
           {(web3Account.isConnected && isCorrectChain) && <>
               <FloatingLabel
                   controlId="purchase-amount"
-                  label="Droplet Nodes to buy *"
+                  label="Droplet Engines to buy *"
               >
                   <Form.Control
                       required
@@ -131,9 +131,6 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                       onChange={e => setReferralCode(e.currentTarget.value)}
                       className={`${classes.prettyInput} text-uppercase`}
                   />
-                {/*                  <Form.Control.Feedback type="invalid">
-                      Referral code is required.
-                  </Form.Control.Feedback>*/}
               </FloatingLabel>
 
               <Stack direction="vertical" gap={2} className="fs-5 mb-2">
