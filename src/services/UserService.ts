@@ -188,7 +188,7 @@ const useUserService = create<IUserState>()(devtools((set, get) => ({
         await clientApiServices.dropletUsersApi.userControllerGetNotificationSettings();
       } catch (error) {
         console.error("Validate auth token failed");
-        console.log(error);
+        console.error(error);
 
         setCurrentAuthData(set, null, false);
       }

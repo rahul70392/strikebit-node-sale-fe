@@ -69,7 +69,7 @@ const HomePageBody = (
     try {
       await userService.logout();
     } catch (err: any) {
-      console.log(err)
+      console.error(err)
     }
     toast.info("Logged out successfully.");
     await router.push(routes.login());
@@ -224,7 +224,7 @@ const HomePageBody = (
                 <p>Each Engine generates more vDROP for you, every day at midnight 00:00 UTC.</p>
                 <p className="mb-0">
                   For every 5 purchased Engines, you are also granted a <a
-                  href={routes.docs.dePin()}
+                  href={routes.docs.dePinKey()}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -385,11 +385,10 @@ const HomePage: NextPage = () => {
 
   const showWithdrawHoldingRewardsDialog = () => {
     withdrawHoldingRewardsDialog.open({
-      holdingRewardTotalBalanceTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardBalanceTokenAmount),
-      holdingRewardVestedTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardVestedTokenAmount),
-      holdingRewardAvailableTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardAvailableTokenAmount),
+      holdingRewardTokenAddress: nodesInformation!.holdingRewardErc20Token?.address,
       holdingRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
       holdingRewardEarlyWithdrawalPenaltyBps: nodesInformation!.holdingRewardEarlyWithdrawalPenaltyBps,
+      holdingRewardMinAmountOnWalletRequiredForWithdrawal: BigInt(nodesInformation!.holdingRewardMinAmountOnWalletRequiredForWithdrawal),
       confirmCallback: () => {
       },
       successCallback: async () => await fetchData()

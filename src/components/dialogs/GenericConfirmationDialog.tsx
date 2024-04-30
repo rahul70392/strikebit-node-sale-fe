@@ -7,7 +7,7 @@ export interface DialogButtonProps extends ButtonProps {
   kind: "confirm" | "dismiss" | "generic";
   title: string;
   disabled?: boolean;
-  onClick?: (() => void) | (() => Promise<void>);
+  onClick?: (() => boolean) | (() => Promise<boolean>);
   preventCloseOnClick?: boolean;
 }
 
@@ -49,17 +49,18 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
       clickResult = button.onClick();
     }
 
+    let mustCloseDialog = !button.preventCloseOnClick;
     if (clickResult) {
       setAwaitingButtons(new Set(awaitingButtons.add(buttonIndex)));
       try {
-        await clickResult;
+        mustCloseDialog = mustCloseDialog && await clickResult;
       } finally {
         awaitingButtons.delete(buttonIndex);
         setAwaitingButtons(new Set(awaitingButtons));
       }
     }
 
-    if (!button.preventCloseOnClick) {
+    if (mustCloseDialog) {
       closeDialog();
     }
   }

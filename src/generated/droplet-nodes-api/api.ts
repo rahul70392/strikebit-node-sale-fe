@@ -135,6 +135,12 @@ export interface NodesInformationDto {
      * @memberof NodesInformationDto
      */
     'holdingRewardEarlyWithdrawalPenaltyBps': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof NodesInformationDto
+     */
+    'holdingRewardMinAmountOnWalletRequiredForWithdrawal': string;
 }
 /**
  * 

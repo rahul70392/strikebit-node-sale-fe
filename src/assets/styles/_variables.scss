@@ -32,9 +32,9 @@ $cyan:    #32fbe2 !default;
 
 $primary:       $purple !default;
 $secondary:     $pink !default;
-$success:       $green !default;
-$info:          $blue !default;
-$warning:       $yellow !default;
+$success:       darken(green, 15%) !default;
+$info:          darken($blue, 15%) !default;
+$warning:       darken($yellow, 15%) !default;
 $danger:        $red !default;
 $light:         #44d9e8 !default;
 $dark:          $gray-900 !default;

@@ -16,7 +16,7 @@ export const routes = {
   },
 
   docs: {
-    dePin: () => "https://docs.dropletsocial.com/droplet-ecosystem/droplet-depin"
+    dePinKey: () => "https://docs.dropletsocial.com/droplet-ecosystem/droplet-depin/depin-key"
   },
 
   evmBlockExplorer: {
