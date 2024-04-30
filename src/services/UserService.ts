@@ -18,10 +18,6 @@ interface AuthData {
   refreshToken: string;
 }
 
-/*const requestRefreshToken = async function (): Promise<AuthData> {
-  return (await clientApiServices.dropletAuthApi.authControllerRefreshToken()).data;
-};*/
-
 const clientSide = typeof window !== "undefined";
 
 export interface IAuthError {
@@ -44,7 +40,7 @@ export interface IUserState {
 }
 
 const LOCAL_STORAGE_KEY = "DropletNodes.AuthData";
-export const ACCESS_TOKEN_COOKIE = "DropletNodes.AccessToken";
+const ACCESS_TOKEN_COOKIE = "DropletNodes.AccessToken";
 
 const setCurrentAuthData = (
   set: StoreApi<IUserState>['setState'],
@@ -75,78 +71,10 @@ const useUserService = create<IUserState>()(devtools((set, get) => ({
   isInitialized: false,
   autoRefreshTimerId: 0,
   refresh: async () => {
-    console.log("Refreshing auth state");
+    //console.log("Refreshing auth state");
     return null;
-
-    /*if (get().user == null) {
-      clearTimeout(get().autoRefreshTimerId);
-      set(state => {
-        return {autoRefreshTimerId: 0};
-      });
-
-      return null;
-    }
-
-    let refreshedAuthData: AuthData | null = null;
-    try {
-      refreshedAuthData = await requestRefreshToken();
-      setCurrentAuthData(set, refreshedAuthData, true);
-    } catch (error: any) {
-      console.error("Error during auto token refresh", error);
-
-      const allHttpErrorHandler = () => {
-        setCurrentAuthData(set, null, true);
-      };
-
-      const backendError = handleBackendError(
-        error,
-        {
-          401: () => {
-            allHttpErrorHandler();
-            return new BackendError("Session timed out, please log in again");
-          },
-          403: () => {
-            allHttpErrorHandler();
-            return new BackendError("Session timed out, please log in again");
-          },
-        },
-        () => null,
-        () => null
-      );
-
-      // Only continue trying on a network error
-      if (backendError != null) {
-        //toast.error(backendError.message);
-        return null;
-      }
-    }
-
-    refreshedAuthData ??= get().user!;
-    return refreshedAuthData;*/
   },
   setupNextAutoRefresh: (authData: AuthData) => {
-    /*const accessTokenExpirationTime = new Date(authData.accessTokenExpiresAt!);
-
-    const timeout =
-      process && process.env.NODE_ENV === 'development' ?
-        60 * 1000 :
-        accessTokenExpirationTime.getTime() - Date.now() - 3 * 60 * 1000;
-
-    console.log(`Setting up next token auto refresh in ${timeout / 1000}s`);
-
-    const timerId = Number(setTimeout(async () => {
-      const refreshedAuthData = await get().refresh();
-      if (refreshedAuthData == null) {
-        console.warn("refreshedAuthData == null, stopping auto auth state refresh");
-        return null;
-      }
-
-      get().setupNextAutoRefresh(refreshedAuthData);
-    }, timeout));
-
-    set((state) => {
-      return {autoRefreshTimerId: timerId};
-    });*/
   },
   initialize: async () => {
     const initializeInner = async function (set: StoreApi<IUserState>['setState']) {
@@ -185,6 +113,8 @@ const useUserService = create<IUserState>()(devtools((set, get) => ({
       try {
         console.log("Validate auth token");
 
+        // Refresh token API doesn't seem to work as expected,
+        // so instead just call a random API and clear up auth data if it fails (assumedly because of 401)
         await clientApiServices.dropletUsersApi.userControllerGetNotificationSettings();
       } catch (error) {
         console.error("Validate auth token failed");
@@ -192,33 +122,6 @@ const useUserService = create<IUserState>()(devtools((set, get) => ({
 
         setCurrentAuthData(set, null, false);
       }
-
-      /*try {
-        console.log("Initial token refresh");
-        authData = await requestRefreshToken();
-
-        setCurrentAuthData(set, authData, true);
-      } catch (error: any) {
-        console.error("Error during initial token refresh", error);
-
-        set((state) => ({
-          isInitialized: true,
-        }));
-
-        const backendError = handleBackendError(
-          error,
-          {},
-          () => setCurrentAuthData(set, null, false),
-          () => {
-            // Do nothing
-          }
-        );
-
-        if (backendError) {
-          console.error("Not a backend error, resetting authData in localStorage", error);
-          setCurrentAuthData(set, null, true);
-        }
-      }*/
 
       set((state) => ({
         isInitialized: true,
