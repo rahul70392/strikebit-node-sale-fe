@@ -1,19 +1,21 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import {DialogConfig, useGenericConfirmationDialog} from "./GenericConfirmationDialog";
 import clientApiServices from "@/services/clientApiServices";
-import wagmiConfig from "@/contexts/web3/wagmiConfig";
+import wagmiConfig from "@/providers/web3/wagmiConfig";
 import {useAccount} from "wagmi";
 import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
 import {BasicWithdrawDialogBody} from "@/components/dialogs/BasicWithdrawDialogBody";
 import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
 import {UserNodesAccountSummaryDto} from "@/generated/droplet-nodes-api";
 import {Spinner} from "react-bootstrap";
+import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
 
 interface WithdrawNodesReferralRewardsDialogOpenProps {
+  userNodesSummary: UserNodesAccountSummaryDto | null,
   referralRewardTokenDecimals: number;
-  confirmCallback: () => void
-  successCallback: () => void
+  confirmCallback: () => void;
+  successCallback: () => void;
+  refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
 }
 
 interface WithdrawNodesReferralRewardsDialogContextProps {
@@ -25,18 +27,10 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
   const isCorrectChain = web3Account.chainId === wagmiConfig.chain.id;
   const isCorrectWalletConnected = web3Account.isConnected && isCorrectChain;
 
-  const [openProps, setOpenProps] = useState<WithdrawNodesReferralRewardsDialogOpenProps>({} as any);
-  const {open: openGenericConfirmationDialog, set: updateGenericConfirmationDialog} = useGenericConfirmationDialog();
-
   const [userNodesSummary, setUserNodesSummary] = useState<UserNodesAccountSummaryDto | null>(null);
-  const fetchUserNodesSummary = async () => {
-    setUserNodesSummary(null);
-    try {
-      setUserNodesSummary((await clientApiServices.dropletNodesApi.nodesControllerGetUserSummary()).data);
-    } catch (err: any) {
-      defaultErrorHandler(err);
-    }
-  }
+
+  const [openProps, setOpenProps] = useState<WithdrawNodesReferralRewardsDialogOpenProps | null>(null);
+  const {open: openGenericConfirmationDialog, set: updateGenericConfirmationDialog} = useGenericConfirmationDialog();
 
   const referralRewardTokenAmount =
     userNodesSummary?.totalReferralRewardAvailableTokenAmount ?
@@ -92,15 +86,20 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
   }, [formattedReferralRewardTokenAmount, handleConfirm, isCorrectWalletConnected, referralRewardTokenAmount, userNodesSummary]);
 
   useEffect(() => {
+    if (!openProps)
+      return;
+
     updateGenericConfirmationDialog(dialogConfig(openProps));
   }, [dialogConfig, openProps, updateGenericConfirmationDialog, web3Account.address, web3Account.chainId]);
 
   return {
     open: (openProps: WithdrawNodesReferralRewardsDialogOpenProps) => {
       setOpenProps(openProps);
+      setUserNodesSummary(null);
       openGenericConfirmationDialog(dialogConfig(openProps));
-
-      fetchUserNodesSummary().then(() => {
+      
+      openProps.refetchUserSummary(false).then((newSummary) => {
+        setUserNodesSummary(newSummary)
       });
     }
   }

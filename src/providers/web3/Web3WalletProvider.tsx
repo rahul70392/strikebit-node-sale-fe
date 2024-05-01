@@ -2,7 +2,7 @@ import React, {ReactNode} from "react";
 import {darkTheme, lightTheme, RainbowKitProvider} from '@rainbow-me/rainbowkit';
 import {WagmiProvider} from "wagmi";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import wagmiConfig from "@/contexts/web3/wagmiConfig";
+import wagmiConfig from "@/providers/web3/wagmiConfig";
 
 const queryClient = new QueryClient();
 

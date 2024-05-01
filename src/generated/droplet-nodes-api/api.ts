@@ -102,15 +102,52 @@ export interface HoldingRewardsWithdrawRequestDto {
 /**
  * 
  * @export
+ * @interface NodesFeatureFlags
+ */
+export interface NodesFeatureFlags {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'purchasingDisabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'holdingRewardsDispenseDisabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'holdingRewardsWithdrawDisabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'referralRewardsWithdrawDisabled': boolean;
+}
+/**
+ * 
+ * @export
  * @interface NodesInformationDto
  */
 export interface NodesInformationDto {
     /**
      * 
-     * @type {NodesPurchaseInfo}
+     * @type {NodesFeatureFlags}
      * @memberof NodesInformationDto
      */
-    'purchaseInfo': NodesPurchaseInfo;
+    'featureFlags': NodesFeatureFlags;
+    /**
+     * 
+     * @type {NodesPurchaseInfoDto}
+     * @memberof NodesInformationDto
+     */
+    'purchaseInfo': NodesPurchaseInfoDto;
     /**
      * 
      * @type {Erc20TokenDto}
@@ -145,31 +182,31 @@ export interface NodesInformationDto {
 /**
  * 
  * @export
- * @interface NodesPurchaseInfo
+ * @interface NodesPurchaseInfoDto
  */
-export interface NodesPurchaseInfo {
+export interface NodesPurchaseInfoDto {
     /**
      * 
      * @type {Erc20TokenDto}
-     * @memberof NodesPurchaseInfo
+     * @memberof NodesPurchaseInfoDto
      */
     'erc20Token': Erc20TokenDto;
     /**
      * 
      * @type {string}
-     * @memberof NodesPurchaseInfo
+     * @memberof NodesPurchaseInfoDto
      */
     'currentPricePerNode': string;
     /**
      * 
      * @type {number}
-     * @memberof NodesPurchaseInfo
+     * @memberof NodesPurchaseInfoDto
      */
     'limitAtPrice': number;
     /**
      * 
      * @type {number}
-     * @memberof NodesPurchaseInfo
+     * @memberof NodesPurchaseInfoDto
      */
     'globalPurchasedNodesCount': number;
 }
@@ -278,6 +315,12 @@ export interface UserNodesAccountSummaryDto {
      * @memberof UserNodesAccountSummaryDto
      */
     'totalHoldingRewardVestedTokenAmount': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserNodesAccountSummaryDto
+     */
+    'totalHoldingRewardConvertableVestedTokenAmount': string;
 }
 /**
  * 
@@ -426,6 +469,39 @@ export const NodesApiAxiosParamCreator = function (configuration?: Configuration
             if (transactionHash !== undefined) {
                 localVarQueryParameter['transactionHash'] = transactionHash;
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        nodesControllerPostConvertHoldingRewardsWithFinishedVesting: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/nodes/convert-holding-rewards-with-finished-vesting`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -612,6 +688,17 @@ export const NodesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodesApi.nodesControllerPostConvertHoldingRewardsWithFinishedVesting']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {CreatePurchaseTransactionRequestDto} createPurchaseTransactionRequestDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -691,6 +778,14 @@ export const NodesApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options?: any): AxiosPromise<void> {
+            return localVarFp.nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {CreatePurchaseTransactionRequestDto} createPurchaseTransactionRequestDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -765,6 +860,16 @@ export class NodesApi extends BaseAPI {
      */
     public nodesControllerPostConfirmPurchaseTransaction(transactionHash: string, options?: RawAxiosRequestConfig) {
         return NodesApiFp(this.configuration).nodesControllerPostConfirmPurchaseTransaction(transactionHash, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodesApi
+     */
+    public nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options?: RawAxiosRequestConfig) {
+        return NodesApiFp(this.configuration).nodesControllerPostConvertHoldingRewardsWithFinishedVesting(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

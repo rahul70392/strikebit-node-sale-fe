@@ -1,11 +1,18 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import httpProxyMiddleware, {NextHttpProxyMiddlewareOptions} from "next-http-proxy-middleware";
+import {HttpStatusCode} from "axios";
 
 const baseConfig = {
   api: {
     externalResolver: true,
   }
 }
+
+const GatewayTimeoutErrorCodes = [
+  "ECONNREFUSED",
+  "ETIMEDOUT",
+  "ECONNRESET",
+]
 
 const handleProxyInit: NextHttpProxyMiddlewareOptions["onProxyInit"] = (proxy) => {
   proxy.on("proxyReq", (proxyReq, req, res) => {
@@ -15,10 +22,23 @@ const handleProxyInit: NextHttpProxyMiddlewareOptions["onProxyInit"] = (proxy) =
     }*/
   });
 
-  proxy.on("error", (err, _, res) => {
+  proxy.on("error", (err, req, res) => {
     const errCode = (err as any).code;
-    if (errCode === "ECONNREFUSED" || errCode == "ETIMEDOUT" || errCode == "ECONNRESET") {
-      res.writeHead(504, []);
+    
+    let statusCode: HttpStatusCode;
+    switch (errCode) {
+      case "ECONNREFUSED":
+      case "ECONNRESET":
+      case "ETIMEDOUT":
+        statusCode = HttpStatusCode.GatewayTimeout;
+        break;
+      default:
+        statusCode = HttpStatusCode.BadGateway;
+        break;
+    }
+
+    if (statusCode) {
+      res.writeHead(statusCode, []);
     }
     res.end()
   });

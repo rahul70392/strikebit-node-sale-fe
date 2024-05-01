@@ -2,26 +2,20 @@ import {useRouter} from "next/router";
 import {useUserService} from "@/services/UserService";
 import React, {useState} from "react";
 import {toast} from "react-toastify";
-import {handleBackendError} from "@/services/backend-errors/backendErrorHandling";
 import {Button, Card, Form, Stack} from "react-bootstrap";
 import {Formik, FormikProps} from "formik";
 import {FormikFormControl} from "@/components/shared/FormikFormControl";
 import OTPInput from "react-otp-input";
 import {
-  loginSchema, registerActivateSchema,
+  loginSchema,
+  registerActivateSchema,
   registerSchema,
   requestResetPasswordSchema,
   resetPasswordSchema
-} from "@/components/auth/loginValidationSchemas";
+} from "@/data/authValidationSchemas";
 import clientApiServices from "@/services/clientApiServices";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
-
-interface AuthFormProps {
-  loading: boolean,
-  onSubmitHandler: (callback: () => Promise<void>) => Promise<void>,
-  setCardState: (state: AuthCardState) => void,
-}
 
 enum AuthCardState {
   Login,
@@ -29,6 +23,12 @@ enum AuthCardState {
   RegistrationActivation,
   RequestResetPassword,
   ResetPassword
+}
+
+interface AuthFormProps {
+  loading: boolean,
+  onSubmitHandler: (callback: () => Promise<void>) => Promise<void>,
+  setCardState: (state: AuthCardState) => void,
 }
 
 interface FormikOtpBlockProps<Values> {

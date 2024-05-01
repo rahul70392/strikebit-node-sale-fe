@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {DialogConfig, useGenericConfirmationDialog} from "./GenericConfirmationDialog";
 import {NodesReferralPurchaseDto, UserNodesReferralPurchasesDto} from "@/generated/droplet-nodes-api";
 import clientApiServices from "@/services/clientApiServices";
 import {Alert, Button, Card, Spinner, Stack} from "react-bootstrap";
@@ -9,6 +8,7 @@ import {useRouter} from "next/router";
 import {routes} from "@/data/routes";
 import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
 import {FaExternalLinkAlt} from "react-icons/fa";
+import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
 
 interface NodesReferralPurchasesHistoryDialogProps {
   referralRewardTokenDecimals: number;

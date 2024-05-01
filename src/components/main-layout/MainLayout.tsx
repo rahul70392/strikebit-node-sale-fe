@@ -3,7 +3,7 @@ import DropletEngineBackgroundImage from "@/components/visual/DropletEngineBackg
 import React from "react";
 import {GenericConfirmationDialogProvider} from "@/components/dialogs/GenericConfirmationDialog";
 import {routes} from "@/data/routes";
-import {Web3WalletProvider} from "@/contexts/web3/Web3WalletProvider";
+import {Web3WalletProvider} from "@/providers/web3/Web3WalletProvider";
 
 export const MainLayout = ({children}: { children: React.ReactNode }) => {
   return <>

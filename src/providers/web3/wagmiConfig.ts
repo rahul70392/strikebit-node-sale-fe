@@ -17,7 +17,7 @@ if (!chain)
 
 const wagmiConfig = getDefaultConfig({
   appName: 'Droplet',
-  projectId: '3eaafdde36afd2536532a9c2f9d6d9ac', // FIXME
+  projectId: '98e3a178b58e7a726f08e22381be14a6',
   chains: [chain],
   transports: {
     [chain.id]: http(process.env.NEXT_PUBLIC_EVM_RPC_URL),

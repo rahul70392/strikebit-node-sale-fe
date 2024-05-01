@@ -44,12 +44,12 @@ function ToastInitializer() {
   return <>
     <ToastContainer
       position="top-center"
-      autoClose={5000}
+      autoClose={3500}
       hideProgressBar={true}
       newestOnTop={true}
       closeOnClick
       rtl={false}
-      theme="dark"
+      theme="colored"
     />
   </>
 }

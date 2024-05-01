@@ -20,8 +20,9 @@ export interface DialogConfig {
 }
 
 export interface GenericConfirmationDialogContextProps {
-  set: (props: DialogConfig) => void
-  open: (openProps: DialogConfig) => void
+  set: (props: DialogConfig) => void;
+  open: (openProps: DialogConfig) => void;
+  isOpen: boolean;
 }
 
 const GenericConfirmationDialogContext = createContext<GenericConfirmationDialogContextProps>(
@@ -84,7 +85,8 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
   return (
     <GenericConfirmationDialogContext.Provider value={{
       open: openDialog,
-      set: setConfig
+      set: setConfig,
+      isOpen: isOpen
     }}>
       {children}
 

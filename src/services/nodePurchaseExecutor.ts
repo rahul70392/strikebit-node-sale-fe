@@ -6,7 +6,7 @@ import {
   waitForTransactionReceipt
 } from "@wagmi/core";
 import clientApiServices from "@/services/clientApiServices";
-import wagmiConfig from "@/contexts/web3/wagmiConfig";
+import wagmiConfig from "@/providers/web3/wagmiConfig";
 import {useAddRecentTransaction} from "@rainbow-me/rainbowkit";
 
 export enum NodePurchaseState {

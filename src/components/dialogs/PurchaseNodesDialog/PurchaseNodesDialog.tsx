@@ -1,13 +1,13 @@
 import {useUserService} from "@/services/UserService";
 import React, {useState} from "react";
-import {useAccount, useBalance} from "wagmi";
-import {Address} from "viem";
+import {useAccount, useBalance, useReadContract} from "wagmi";
+import {Address, erc20Abi} from "viem";
 import {toast} from "react-toastify";
 import {FloatingLabel, Form, InputGroup, Modal, Stack} from "react-bootstrap";
 import {ConnectButton} from "@rainbow-me/rainbowkit";
 import {uiFloatNumberNiceFormat, uiIntNumberNiceFormat} from "@/utils/uiNiceFormat";
 import {calculateFormattedTokenPrice} from "@/utils/bigint/bigIntMathUI";
-import wagmiConfig from "@/contexts/web3/wagmiConfig";
+import wagmiConfig from "@/providers/web3/wagmiConfig";
 import classes from "./PurchaseNodesDialog.module.scss";
 import {StarIcon} from "@/components/visual/StarIcon";
 import {NodesPurchaseButton} from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
@@ -29,9 +29,15 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
   const web3Account = useAccount();
 
-  const purchaseTokenBalance = useBalance({
-    address: web3Account.address as Address,
-    token: props.purchaseTokenAddress as Address
+  const purchaseTokenBalance = useReadContract({
+    abi: erc20Abi,
+    address: props.purchaseTokenAddress as Address,
+    chainId: wagmiConfig.chain.id,
+    functionName: "balanceOf",
+    args: [web3Account.address as Address],
+    query: {
+      enabled: props.isOpen,
+    }
   });
 
   const [referralCode, setReferralCode] = useState("");
@@ -45,7 +51,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const maxEnteredAmountPerPurchase = props.currentNodeLimit - props.globalTotalPurchasedNodes;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
-    isEnteredAmountValid && (!purchaseTokenBalance.data || purchaseTokenBalance.data.value < finalPrice);
+    isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data< finalPrice);
 
   const [condition1Accepted, setCondition1Accepted] = useState(false);
   const [condition2Accepted, setCondition2Accepted] = useState(false);
