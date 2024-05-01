@@ -44,7 +44,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const isCorrectChain = web3Account.chainId === wagmiConfig.chain.id;
 
   const [enteredAmountText, setEnteredAmountText] = useState("1");
-  const enteredAmount = parseInt(enteredAmountText) || 1;
+  const enteredAmount = parseInt(enteredAmountText) || 0;
 
   const finalPrice = BigInt(enteredAmount) * props.pricePerNode;
 
@@ -67,7 +67,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       //value = maxEnteredAmountPerPurchase;
     }
 
-    setEnteredAmountText(value ? value.toString() : "1");
+    setEnteredAmountText(!isNaN(value) ? value.toString() : "");
   }
 
   const onClose = () => {

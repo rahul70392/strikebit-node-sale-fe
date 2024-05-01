@@ -100,8 +100,10 @@ const HomePageBody = (
           variant="primary"
           className="p-3 px-lg-4 fs-3 fw-bold flex-fill flex-lg-grow-0 animated-edge-button"
           onClick={() => setShowNodePurchaseDialog(true)}
+          disabled={nodesInformation.featureFlags.purchasingDisabled}
         >
-          Buy Droplet Engines
+          {nodesInformation.featureFlags.purchasingDisabled && <>Temporarily Unavailable</>}
+          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy Droplet Engines</>}
         </Button>
       </div>
     </Container>
@@ -192,7 +194,8 @@ const HomePageBody = (
                 </a>!
                 </p>
 
-                <p className="mb-0">Each Engine and each DePin Key generate more vDROP for you, every day at midnight 00:00 UTC.</p>
+                <p className="mb-0">Each Engine and each DePin Key generate more vDROP for you, every day at midnight
+                  00:00 UTC.</p>
               </Col>
             </Row>
           </Card.Body>
@@ -236,13 +239,15 @@ const HomePageBody = (
               </div>
             </Stack>
 
-            <Button
-              variant="primary p-3 px-4 fs-5"
-              disabled={!canWithdrawHoldingRewards}
-              onClick={() => onWithdrawHoldingRewardsClicked()}
-            >
-              <TbShare2 className="me-2"/> Claim DROP
-            </Button>
+            {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
+                <Button
+                    variant="primary p-3 px-4 fs-5"
+                    disabled={!canWithdrawHoldingRewards}
+                    onClick={() => onWithdrawHoldingRewardsClicked()}
+                >
+                    <TbShare2 className="me-2"/> Claim DROP
+                </Button>
+            </>}
           </Card.Body>
         </Card>
       </Col>
@@ -258,13 +263,15 @@ const HomePageBody = (
                 <span className="card-subtitle h4"> USDT</span>
               </div>
 
-              <Button
-                variant="primary p-3 px-4 fs-5"
-                disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
-                onClick={() => onWithdrawReferralRewardsClicked()}
-              >
-                <BiMoneyWithdraw className="me-2"/> Withdraw
-              </Button>
+              {!nodesInformation.featureFlags.referralRewardsWithdrawDisabled && <>
+                  <Button
+                      variant="primary p-3 px-4 fs-5"
+                      disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
+                      onClick={() => onWithdrawReferralRewardsClicked()}
+                  >
+                      <BiMoneyWithdraw className="me-2"/> Withdraw
+                  </Button>
+              </>}
 
               <Button
                 variant="primary p-3 px-4 fs-5"
