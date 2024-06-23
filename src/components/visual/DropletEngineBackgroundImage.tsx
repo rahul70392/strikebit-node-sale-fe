@@ -1,6 +1,6 @@
 import * as React from "react";
+import { SVGProps } from "react";
 import classes from "./DropletEngineBackgroundImage.module.scss";
-import {SVGProps} from "react";
 
 const DropletEngineBackgroundImage = (props: SVGProps<SVGSVGElement>) => {
   const {className, ...rest} = props;

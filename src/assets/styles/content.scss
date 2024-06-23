@@ -70,6 +70,14 @@
   font-size: 1.25rem;
 }
 
+.card.bg-blur-primary {
+  //background: rgba(110, 69, 202, 0.1);
+  background: rgba(34, 103, 206, 0.1);
+  backdrop-filter: blur(8px);
+
+  border: 0;
+}
+
 .web3-connect-button-wrapper {
   width: 100%;
 

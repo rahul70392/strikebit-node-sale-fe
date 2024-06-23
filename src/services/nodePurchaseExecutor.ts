@@ -1,13 +1,8 @@
-import {Address, parseTransaction, TransactionSerializedGeneric} from "viem";
-import {
-  estimateGas,
-  getBalance,
-  sendTransaction,
-  waitForTransactionReceipt
-} from "@wagmi/core";
+import { Address, parseTransaction, TransactionSerializedGeneric } from "viem";
+import { estimateGas, getBalance, sendTransaction, waitForTransactionReceipt } from "@wagmi/core";
 import clientApiServices from "@/services/clientApiServices";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
-import {useAddRecentTransaction} from "@rainbow-me/rainbowkit";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 
 export enum NodePurchaseState {
   Idle,
@@ -25,7 +20,7 @@ const confirmNodePurchaseTransaction = async(
   setState(NodePurchaseState.ConfirmingPurchase);
   console.info("Confirming purchase");
 
-  await clientApiServices.dropletNodesApi.nodesControllerPostConfirmPurchaseTransaction(transactionHash);
+  await clientApiServices.distribrainNodesApi.nodesControllerPostConfirmPurchaseTransaction(transactionHash);
 }
 
 const createAndSendNodePurchaseTransaction = async (
@@ -40,7 +35,7 @@ const createAndSendNodePurchaseTransaction = async (
   console.info("Creating unsigned purchase transaction");
 
   const createPurchaseTransactionResult =
-    await clientApiServices.dropletNodesApi.nodesControllerPostCreatePurchaseTransaction({
+    await clientApiServices.distribrainNodesApi.nodesControllerPostCreatePurchaseTransaction({
     amount: amount,
     address: buyerAddress,
     referralCode: referralCode

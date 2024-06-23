@@ -1,6 +1,6 @@
-import {getDefaultConfig, getDefaultWallets} from "@rainbow-me/rainbowkit";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import * as allWagmiChains from 'wagmi/chains'
-import {http} from "viem";
+import { http } from "viem";
 
 if (!process.env.NEXT_PUBLIC_EVM_CHAIN_ID)
   throw new Error("NEXT_PUBLIC_EVM_CHAIN_ID must be set");

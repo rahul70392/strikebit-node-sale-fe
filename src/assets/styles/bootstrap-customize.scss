@@ -26,6 +26,31 @@ body {
   border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
 }
 
+@mixin btn-primary-gradient {
+  background: linear-gradient(135deg, rgba(51, 51, 215, 1) 0%, rgba(0, 209, 188, 1) 100%);
+  background-size: 100% 100%;
+  box-shadow: none;
+
+  transition: opacity 0.15s ease-in-out,
+  color 0.15s ease-in-out,
+  background 0.15s ease-in-out,
+  background-size 0.15s ease-in-out,
+  border-color 0.15s ease-in-out,
+  box-shadow 0.15s ease-in-out;
+
+  &:hover {
+    background-size: 120% 120%;
+  }
+}
+
+.btn-primary:not(.no-primary-gradient) {
+  @include btn-primary-gradient;
+}
+
+.btn-primary-gradient {
+  @include btn-primary-gradient;
+}
+
 .card-body {
   @include relative-font-size-rem(16, 19);
 }
@@ -73,6 +98,7 @@ hr {
 }
 
 .modal {
+  --bs-modal-bg: rgb(13, 47, 101);
   --bs-modal-padding: 1rem;
   --bs-modal-header-padding-x: 1rem;
   --bs-modal-header-padding-y: 1rem;
@@ -101,3 +127,4 @@ hr {
     opacity: 0.65;
   }
 }
+

@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.9.3",
     "@rainbow-me/rainbowkit": "^2.0.5",
     "@tanstack/react-query": "^5.32.0",
     "axios": "^1.6.8",
@@ -29,7 +30,7 @@
     "react-icons": "^5.0.1",
     "react-otp-input": "^3.1.1",
     "react-toastify": "^10.0.5",
-    "sharp": "^0.33.3",
+    "sharp": "0.32.6",
     "use-async-effect": "^2.2.7",
     "viem": "^2.9.15",
     "wagmi": "^2.5.19",

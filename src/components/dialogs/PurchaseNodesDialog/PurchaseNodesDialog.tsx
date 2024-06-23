@@ -1,17 +1,16 @@
-import {useUserService} from "@/services/UserService";
-import React, {useState} from "react";
-import {useAccount, useBalance, useReadContract} from "wagmi";
-import {Address, erc20Abi} from "viem";
-import {toast} from "react-toastify";
-import {FloatingLabel, Form, InputGroup, Modal, Stack} from "react-bootstrap";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
-import {uiFloatNumberNiceFormat, uiIntNumberNiceFormat} from "@/utils/uiNiceFormat";
-import {calculateFormattedTokenPrice} from "@/utils/bigint/bigIntMathUI";
+import React, { useState } from "react";
+import { useAccount, useReadContract } from "wagmi";
+import { Address, erc20Abi } from "viem";
+import { toast } from "react-toastify";
+import { FloatingLabel, Form, InputGroup, Modal, Stack } from "react-bootstrap";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { uiFloatNumberNiceFormat, uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { calculateFormattedTokenPrice } from "@/utils/bigint/bigIntMathUI";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
 import classes from "./PurchaseNodesDialog.module.scss";
-import {StarIcon} from "@/components/visual/StarIcon";
-import {NodesPurchaseButton} from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
-import {routes} from "@/data/routes";
+import { StarIcon } from "@/components/visual/StarIcon";
+import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
+import { routes } from "@/data/routes";
 
 export interface PurchaseNodesDialogOpenProps {
   pricePerNode: bigint,

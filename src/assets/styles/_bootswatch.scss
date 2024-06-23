@@ -129,7 +129,7 @@ table,
     @if (($color != dark) or ($color != link)) {
       &-#{$color},
       &-outline-#{$color} {
-        @include box-shadow($value);
+        //@include box-shadow($value);
       }
     }
 

@@ -1,14 +1,14 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {NodesReferralPurchaseDto, UserNodesReferralPurchasesDto} from "@/generated/droplet-nodes-api";
+import React, { useCallback, useEffect, useState } from "react";
+import { NodesReferralPurchaseDto, UserNodesReferralPurchasesDto } from "@/generated/droplet-nodes-api";
 import clientApiServices from "@/services/clientApiServices";
-import {Alert, Button, Card, Spinner, Stack} from "react-bootstrap";
-import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
-import {uiDateNiceFormat, uiIntNumberNiceFormat} from "@/utils/uiNiceFormat";
-import {useRouter} from "next/router";
-import {routes} from "@/data/routes";
-import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
-import {FaExternalLinkAlt} from "react-icons/fa";
-import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
+import { Alert, Button, Card, Spinner, Stack } from "react-bootstrap";
+import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
+import { uiDateNiceFormat, uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { useRouter } from "next/router";
+import { routes } from "@/data/routes";
+import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 
 interface NodesReferralPurchasesHistoryDialogProps {
   referralRewardTokenDecimals: number;
@@ -79,7 +79,7 @@ export const useNodesReferralPurchasesHistoryDialog = (): NodesReferralPurchases
   const fetchData = async () => {
     setMyReferralPurchases(null);
     try {
-      setMyReferralPurchases((await clientApiServices.dropletNodesApi.nodesControllerGetReferralPurchases()).data);
+      setMyReferralPurchases((await clientApiServices.distribrainNodesApi.nodesControllerGetReferralPurchases()).data);
     } catch (err: any) {
       defaultErrorHandler(err);
     }

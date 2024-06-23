@@ -7,6 +7,11 @@ if (!process.env.NEXT_PUBLIC_EVM_BLOCK_EXPLORER_ADDRESS_TEMPLATE)
 export const routes = {
   makeAbsoluteUri: (relativeUri: string) => window.location.protocol + "//" + window.location.host + relativeUri,
 
+  auth: {
+    login: (returnToUrl: string) => `/api/auth/login?returnTo=${encodeURIComponent(returnToUrl)}`,
+    logout: () => `/api/auth/logout`,
+  },
+
   home: () => "/",
   login: () => "/login",
 

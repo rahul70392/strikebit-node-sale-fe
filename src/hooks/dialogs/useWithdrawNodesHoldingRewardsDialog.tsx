@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {toast} from "react-toastify";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import clientApiServices from "@/services/clientApiServices";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
-import {useAccount, useReadContract} from "wagmi";
-import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
-import {Alert, Form, InputGroup, Spinner, Stack} from "react-bootstrap";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
-import {uiPercentageNumberNiceFormat} from "@/utils/uiNiceFormat";
-import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
-import {Address, erc20Abi} from "viem";
-import {UserNodesAccountSummaryDto} from "@/generated/droplet-nodes-api";
+import { useAccount, useReadContract } from "wagmi";
+import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
+import { Alert, Form, InputGroup, Spinner, Stack } from "react-bootstrap";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { uiPercentageNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
+import { Address, erc20Abi } from "viem";
+import { UserNodesAccountSummaryDto } from "@/generated/droplet-nodes-api";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
-import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
+import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 import commonTerms from "@/data/commonTerms";
 
 interface WithdrawNodesHoldingRewardsDialogOpenProps {
@@ -128,7 +128,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         confirmCallback?.();
 
         const address = web3Account.address;
-        await clientApiServices.dropletNodesApi.nodesControllerPostHoldingRewardsWithdraw({
+        await clientApiServices.distribrainNodesApi.nodesControllerPostHoldingRewardsWithdraw({
           address: address!,
           includeVested: includeVested
         });
@@ -147,7 +147,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
       setIsConvertingConvertableVestedTokens(true);
       try {
         //await new Promise(r => setTimeout(r, 5000));
-        await clientApiServices.dropletNodesApi.nodesControllerPostConvertHoldingRewardsWithFinishedVesting();
+        await clientApiServices.distribrainNodesApi.nodesControllerPostConvertHoldingRewardsWithFinishedVesting();
         setUserNodesSummary(await openProps.refetchUserSummary(false));
         toast.success(`Successfully converted ${commonTerms.holdingRewardVestedTokenName} to ${commonTerms.holdingRewardTokenName}!`);
       } catch (err: any) {

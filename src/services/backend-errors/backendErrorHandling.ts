@@ -1,7 +1,7 @@
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
 
-import {getReasonPhrase, StatusCodes,} from 'http-status-codes';
-import {BackendError, BackendErrorResponse, IBackendErrorResponseDto} from "./backend-errors";
+import { getReasonPhrase, StatusCodes, } from 'http-status-codes';
+import { BackendError, BackendErrorResponse, IBackendErrorResponseDto } from "./backend-errors";
 
 type HandlerReturnType = BackendError | null | void;
 type HandlerFunctionType = (() => HandlerReturnType) | ((errorResponse: BackendErrorResponse) => HandlerReturnType);
@@ -83,6 +83,7 @@ export function handleBackendErrorOptional(
   }
 
   let handlerResult;
+
   if (httpErrorHandler) {
     handlerResult = httpErrorHandler(errorResponse);
   } else {

@@ -1,4 +1,4 @@
-import {RawAxiosRequestHeaders} from "axios";
+import { RawAxiosRequestHeaders } from "axios";
 
 const noCacheHeaders : RawAxiosRequestHeaders = {
   'Cache-Control': 'no-cache',

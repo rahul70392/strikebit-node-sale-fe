@@ -1,5 +1,5 @@
-import {toast} from "react-toastify";
-import {handleBackendError} from "@/services/backend-errors/backendErrorHandling";
+import { toast } from "react-toastify";
+import { handleBackendError } from "@/services/backend-errors/backendErrorHandling";
 
 const isBrowser = typeof window !== "undefined";
 

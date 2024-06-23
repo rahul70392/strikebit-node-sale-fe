@@ -1,8 +1,8 @@
 import React from "react";
-import {useAccount} from "wagmi";
+import { useAccount } from "wagmi";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
-import {Stack} from "react-bootstrap";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
+import { Stack } from "react-bootstrap";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export function BasicWithdrawDialogBody(
   {

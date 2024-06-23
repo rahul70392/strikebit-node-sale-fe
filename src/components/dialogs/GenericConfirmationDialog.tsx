@@ -1,7 +1,7 @@
-import React, {createContext, ReactNode, useState} from "react";
-import {ButtonProps, Modal, ModalFooterProps, ModalProps} from "react-bootstrap";
+import React, { createContext, ReactNode, useState } from "react";
+import { ButtonProps, Modal, ModalFooterProps, ModalProps } from "react-bootstrap";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
-import {StarIcon} from "@/components/visual/StarIcon";
+import { StarIcon } from "@/components/visual/StarIcon";
 
 export interface DialogButtonProps extends ButtonProps {
   kind: "confirm" | "dismiss" | "generic";

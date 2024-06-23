@@ -1,7 +1,7 @@
-import React, {ReactNode} from "react";
-import {darkTheme, lightTheme, RainbowKitProvider} from '@rainbow-me/rainbowkit';
-import {WagmiProvider} from "wagmi";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import React, { ReactNode } from "react";
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
 
 const queryClient = new QueryClient();

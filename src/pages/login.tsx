@@ -1,26 +1,24 @@
-import {Card, Container, Form, Stack} from "react-bootstrap";
-import {NextPage} from "next";
-import React, {useState} from "react";
+import { Card, Container, Stack } from "react-bootstrap";
+import { NextPage } from "next";
+import React from "react";
 import Logo from "../assets/images/Logo.svg";
 import Image from "next/image";
-import {useRouter} from "next/router";
-import {toast} from "react-toastify";
-import {useUserService} from "@/services/UserService";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import useAsyncEffect from "use-async-effect";
-import {AuthCardBody} from "@/components/auth/AuthCardBody";
+import { AuthCardBody } from "@/components/auth/AuthCardBody";
+import { useUser } from "@/hooks/useUser";
 
 const LoginPage: NextPage = (props) => {
   const router = useRouter();
-  const userService = useUserService();
+  const user = useUser();
 
   useAsyncEffect(async _ => {
-    await userService.initialize();
-
-    if (userService.isLoggedIn()) {
+    if (user.user) {
       toast.info("Already logged in, redirecting...");
       await router.push("/");
     }
-  }, [])
+  }, [user.user])
 
   return (
     <>

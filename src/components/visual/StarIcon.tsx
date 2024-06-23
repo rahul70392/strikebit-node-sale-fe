@@ -1,4 +1,4 @@
-import Image, {ImageProps} from "next/image";
+import Image, { ImageProps } from "next/image";
 import StarImage from "@/assets/images/Star.svg";
 import React from "react";
 

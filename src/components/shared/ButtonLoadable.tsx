@@ -1,5 +1,5 @@
-import React, {FC, ReactNode} from "react";
-import {Button, ButtonProps, Spinner} from "react-bootstrap";
+import React, { FC, ReactNode } from "react";
+import { Button, ButtonProps, Spinner } from "react-bootstrap";
 
 interface ButtonLoadableProps extends ButtonProps {
   children: ReactNode;

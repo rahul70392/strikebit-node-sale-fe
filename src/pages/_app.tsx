@@ -2,14 +2,13 @@ import "react-toastify/dist/ReactToastify.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import "../assets/styles/styles.scss";
 
-import type {AppProps} from "next/app";
+import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Bai_Jamjuree } from 'next/font/google'
-import {ToastContainer} from "react-toastify";
-import localFont from 'next/font/local'
+import { ToastContainer } from "react-toastify";
 import React from "react";
-import {HeaderSEO} from "@/components/main-layout/HeaderSEO";
-import {MainLayout} from "@/components/main-layout/MainLayout";
+import { HeaderSEO } from "@/components/main-layout/HeaderSEO";
+import { MainLayout } from "@/components/main-layout/MainLayout";
 
 const baiJamjureeFont = Bai_Jamjuree({
   weight: ['400', '500', '600', '700'],

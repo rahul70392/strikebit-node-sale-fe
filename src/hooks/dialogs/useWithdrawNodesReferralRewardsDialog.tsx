@@ -1,14 +1,14 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {toast} from "react-toastify";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import clientApiServices from "@/services/clientApiServices";
 import wagmiConfig from "@/providers/web3/wagmiConfig";
-import {useAccount} from "wagmi";
-import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
-import {BasicWithdrawDialogBody} from "@/components/dialogs/BasicWithdrawDialogBody";
-import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
-import {UserNodesAccountSummaryDto} from "@/generated/droplet-nodes-api";
-import {Spinner} from "react-bootstrap";
-import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
+import { useAccount } from "wagmi";
+import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
+import { BasicWithdrawDialogBody } from "@/components/dialogs/BasicWithdrawDialogBody";
+import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
+import { UserNodesAccountSummaryDto } from "@/generated/droplet-nodes-api";
+import { Spinner } from "react-bootstrap";
+import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 
 interface WithdrawNodesReferralRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
@@ -47,7 +47,7 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
       confirmCallback?.();
 
       const address = web3Account.address;
-      await clientApiServices.dropletNodesApi.nodesControllerPostReferralRewardsWithdraw({
+      await clientApiServices.distribrainNodesApi.nodesControllerPostReferralRewardsWithdraw({
         address: address!
       });
       toast.success(`Successfully withdrawn ${formattedReferralRewardTokenAmount} to address ${address}!`);
