@@ -39,8 +39,8 @@ export interface IUserState {
   setupNextAutoRefresh: (authData: AuthData) => void;
 }
 
-const LOCAL_STORAGE_KEY = "DropletNodes.AuthData";
-const ACCESS_TOKEN_COOKIE = "DropletNodes.AccessToken";
+const LOCAL_STORAGE_KEY = "DistriBrain.AuthData";
+const ACCESS_TOKEN_COOKIE = "DistriBrain.AccessToken";
 
 const setCurrentAuthData = (
   set: StoreApi<IUserState>['setState'],

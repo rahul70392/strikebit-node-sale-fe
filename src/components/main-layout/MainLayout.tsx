@@ -16,7 +16,7 @@ export const MainLayout = ({children}: { children: React.ReactNode }) => {
         </GenericConfirmationDialogProvider>
       </Web3WalletProvider>
 
-      <Stack gap={3} className="flex-grow-0 my-4 font-weight-light text-uppercase align-items-center">
+      <Stack gap={3} className="flex-grow-0 my-4 font-weight-light align-items-center">
         <Stack gap={3} className="flex-grow-0 align-self-center align-items-center flex-column flex-sm-row">
           <a href={routes.legal.privacyPolicy()}
              target="_blank"
@@ -33,7 +33,7 @@ export const MainLayout = ({children}: { children: React.ReactNode }) => {
           </a>
         </Stack>
 
-        <span>{new Date().getUTCFullYear()} Droplet Labs Limited</span>
+        <span>© {new Date().getUTCFullYear()} DistriBrain</span>
       </Stack>
     </Container>
   </>;

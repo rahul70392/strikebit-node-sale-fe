@@ -80,7 +80,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   }
 
   const onPurchasedSucceeded = async () => {
-    toast.success("Purchased Droplet Engines successfully.");
+    toast.success("Purchased DistriBrain Engines successfully.");
     props.purchasedCallback();
   }
 
@@ -93,7 +93,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       data-rk=""
     >
       <Modal.Header closeButton>
-        <Modal.Title><StarIcon className="me-2"/>Purchase Droplet Engines</Modal.Title>
+        <Modal.Title><StarIcon className="me-2"/>Purchase DistriBrain Engines</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -101,7 +101,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
           {(web3Account.isConnected && isCorrectChain) && <>
               <FloatingLabel
                   controlId="purchase-amount"
-                  label="Droplet Engines to buy *"
+                  label="DistriBrain Engines to buy *"
               >
                   <Form.Control
                       required

@@ -7,7 +7,7 @@ export function HeaderSEO() {
 
     <meta
       name="description"
-      content="Droplet Social is an all-in-one social networking platform prioritizing content-creators"
+      content="Machine Learning Powered by DePin. Breaking users free from the matrix."
     />
 
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png"/>
@@ -18,17 +18,17 @@ export function HeaderSEO() {
     <meta name="msapplication-TileColor" content="#da532c"/>
     <meta name="theme-color" content="#ffffff"/>
 
-    <meta property="og:title" content="Droplet Social"/>
-    <meta property="og:description" content="Droplet Social is an all-in-one social networking platform prioritizing content-creators"/>
+    <meta property="og:title" content="DistriBrain"/>
+    <meta property="og:description" content="Machine Learning Powered by DePin. Breaking users free from the matrix."/>
     <meta property="og:type" content="website"/>
-    <meta property="og:image" content="/og-thumb.png"/>
+    <meta property="og:image" content="/og-thumb.jpg"/>
     <meta property="og:width" content="1200"/>
     <meta property="og:height" content="630"/>
 
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@DropletSocial"/>
-    <meta name="twitter:title" content="Droplet Social"/>
-    <meta name="twitter:description" content="Droplet Social is an all-in-one social networking platform prioritizing content-creators"/>
-    <meta name="twitter:image" content="/og-thumb.png"/>
+    <meta name="twitter:site" content="@DistriBrain"/>
+    <meta name="twitter:title" content="DistriBrain"/>
+    <meta name="twitter:description" content="Machine Learning Powered by DePin. Breaking users free from the matrix."/>
+    <meta name="twitter:image" content="/og-thumb.jpg"/>
   </>
 }

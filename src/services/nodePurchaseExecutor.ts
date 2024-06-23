@@ -118,7 +118,7 @@ const createAndSendNodePurchaseTransaction = async (
 
   addRecentTransaction({
     hash: transactionHash,
-    description: `Purchase ${amount} Droplet Engines`
+    description: `Purchase ${amount} DistriBrain Engines`
   })
 
   console.log("Completed executing purchase transaction");

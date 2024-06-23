@@ -12,6 +12,7 @@ import {Address, erc20Abi} from "viem";
 import {UserNodesAccountSummaryDto} from "@/generated/droplet-nodes-api";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 import {DialogConfig, useGenericConfirmationDialog} from "@/components/dialogs/GenericConfirmationDialog";
+import commonTerms from "@/data/commonTerms";
 
 interface WithdrawNodesHoldingRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
@@ -100,26 +101,26 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
     const isWithdrawable = isWithdrawableWithoutMinUserBalanceCheck && isMinUserWalletBalanceReached;
 
     const formattedVestedAmount =
-      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} vDROP`
+      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedConvertableVestedAmount =
-      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardTokenDecimals)} vDROP`
+      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedAvailableAmount =
-      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} DROP`;
+      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedWithdrawalAmount =
-      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardTokenDecimals)} DROP`;
+      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedDeductionAmount =
       includeVested ?
-        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} DROP + 
-          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} vDROP` :
-        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardTokenDecimals)} DROP`;
+        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName} + 
+          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}` :
+        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedUserBalance =
       holdingRewardTokenUserWalletBalance.data != null ?
-        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardTokenDecimals)} DROP` :
+        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}` :
         "...";
 
     const handleConfirm = async function (confirmCallback?: () => void, successCallback?: () => void) {
@@ -148,7 +149,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         //await new Promise(r => setTimeout(r, 5000));
         await clientApiServices.dropletNodesApi.nodesControllerPostConvertHoldingRewardsWithFinishedVesting();
         setUserNodesSummary(await openProps.refetchUserSummary(false));
-        toast.success(`Successfully converted vDROP to DROP!`);
+        toast.success(`Successfully converted ${commonTerms.holdingRewardVestedTokenName} to ${commonTerms.holdingRewardTokenName}!`);
       } catch (err: any) {
         defaultErrorHandler(err);
       } finally {
@@ -165,7 +166,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
             </span>
 
               <span className="">
-              <span className="fw-bolder">Wallet DROP Balance: </span>{formattedUserBalance}
+              <span className="fw-bolder">Wallet {commonTerms.holdingRewardTokenName} Balance: </span>{formattedUserBalance}
             </span>
           </>}
         </Stack>
@@ -175,11 +176,11 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         </Stack>
 
         <Stack className="fs-5 mt-3">
-          <span><span className="fw-bolder">DROP Balance: </span>{formattedAvailableAmount}</span>
-          <span><span className="fw-bolder">vDROP Balance: </span>{formattedVestedAmount}</span>
+          <span><span className="fw-bolder">{commonTerms.holdingRewardTokenName} Balance: </span>{formattedAvailableAmount}</span>
+          <span><span className="fw-bolder">{commonTerms.holdingRewardVestedTokenName} Balance: </span>{formattedVestedAmount}</span>
 
           <span className="mt-3">
-            <span className="fw-bolder">Convertable vDROP Balance: </span>
+            <span className="fw-bolder">Convertable {commonTerms.holdingRewardVestedTokenName} Balance: </span>
             {formattedConvertableVestedAmount}
           </span>
 
@@ -191,7 +192,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
                   loading={isConvertingConvertableVestedTokens}
                   onClick={() => handleConvertConvertableVestedTokens()}
               >
-                  Convert to DROP
+                  Convert to {commonTerms.holdingRewardTokenName}
               </ButtonLoadable>
           </>}
 
@@ -202,8 +203,8 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         {(!isWithdrawable && isWithdrawableWithoutMinUserBalanceCheck) && <>
             <Alert variant="warning">
                 Minimum
-                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardTokenDecimals)} DROP
-                on the connected wallet is required for withdrawal. You can buy more DROP on any supported exchange.
+                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardTokenDecimals)} {commonTerms.holdingRewardTokenName}
+                on the connected wallet is required for withdrawal. You can buy more {commonTerms.holdingRewardTokenName} on any supported exchange.
             </Alert>
         </>}
 
@@ -230,7 +231,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         {
           kind: "confirm",
           title: !isWithdrawable && isWithdrawableWithoutMinUserBalanceCheck ?
-            "Insufficient DROP balance on wallet" :
+            `Insufficient ${commonTerms.holdingRewardTokenName} balance on wallet` :
             `Claim ${formattedWithdrawalAmount}`,
           disabled: !isWithdrawable,
           onClick: () => handleConfirm(openProps.confirmCallback, openProps.successCallback)

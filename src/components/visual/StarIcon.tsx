@@ -3,6 +3,8 @@ import StarImage from "@/assets/images/Star.svg";
 import React from "react";
 
 export function StarIcon(props: Partial<ImageProps>) {
+  return <></>;
+
   const { style, ...restProps} = props;
   return <Image
     src={StarImage}

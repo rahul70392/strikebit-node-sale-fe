@@ -28,6 +28,7 @@ import {defaultErrorHandler} from "@/utils/defaultErrorHandler";
 import {useNodesReferralPurchasesHistoryDialog} from "@/hooks/dialogs/useNodesReferralPurchasesHistoryDialog";
 import {useWithdrawNodesReferralRewardsDialog} from "@/hooks/dialogs/useWithdrawNodesReferralRewardsDialog";
 import {useWithdrawNodesHoldingRewardsDialog} from "@/hooks/dialogs/useWithdrawNodesHoldingRewardsDialog";
+import commonTerms from "@/data/commonTerms";
 
 const HomePageBody = (
   {
@@ -91,7 +92,7 @@ const HomePageBody = (
     <Container className="h1 text-center">
       Total <Badge bg="primary" pill>
       {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
-    </Badge> Droplet Engines Sold
+    </Badge> DistriBrain Engines Sold
     </Container>
 
     <Container className="h1 m-0 text-center position-relative">
@@ -103,7 +104,7 @@ const HomePageBody = (
           disabled={nodesInformation.featureFlags.purchasingDisabled}
         >
           {nodesInformation.featureFlags.purchasingDisabled && <>Temporarily Unavailable</>}
-          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy Droplet Engines</>}
+          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy DistriBrain Engines</>}
         </Button>
       </div>
     </Container>
@@ -159,7 +160,7 @@ const HomePageBody = (
               <Col xs={12} md={6}>
                 <Stack gap={3}>
                   <div>
-                    <Card.Title>Droplet Engines</Card.Title>
+                    <Card.Title>DistriBrain Engines</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalPurchasedNodesCount}
@@ -194,7 +195,7 @@ const HomePageBody = (
                 </a>!
                 </p>
 
-                <p className="mb-0">Each Engine and each DePin Key generate more vDROP for you, every day at midnight
+                <p className="mb-0">Each Engine and each DePin Key generate more {commonTerms.holdingRewardVestedTokenName} for you, every day at midnight
                   00:00 UTC.</p>
               </Col>
             </Row>
@@ -219,22 +220,22 @@ const HomePageBody = (
           <Card.Body className="d-flex vstack gap-3 justify-content-between">
             <Stack gap={3}>
               <div>
-                <Card.Title>vDROP Rewards</Card.Title>
+                <Card.Title>{commonTerms.holdingRewardVestedTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
                     {formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardVestedTokenAmount))}
                   </span>
-                  <span className="card-subtitle h4"> vDROP</span>
+                  <span className="card-subtitle h4"> {commonTerms.holdingRewardVestedTokenName}</span>
                 </div>
               </div>
 
               <div>
-                <Card.Title>DROP Rewards</Card.Title>
+                <Card.Title>{commonTerms.holdingRewardTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
                     {formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardAvailableTokenAmount))}
                   </span>
-                  <span className="card-subtitle h4"> DROP</span>
+                  <span className="card-subtitle h4"> {commonTerms.holdingRewardTokenName}</span>
                 </div>
               </div>
             </Stack>
@@ -245,7 +246,7 @@ const HomePageBody = (
                     disabled={!canWithdrawHoldingRewards}
                     onClick={() => onWithdrawHoldingRewardsClicked()}
                 >
-                    <TbShare2 className="me-2"/> Claim DROP
+                    <TbShare2 className="me-2"/> Claim {commonTerms.holdingRewardTokenName}
                 </Button>
             </>}
           </Card.Body>

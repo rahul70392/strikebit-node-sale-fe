@@ -95,7 +95,7 @@ button[data-testid="rk-wrong-network-button"] {
 
 [data-rk] {
   display: flex;
-  --rk-fonts-body: var(--font-gilroy), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  --rk-fonts-body: var(--font-primary), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
   --rk-radii-connectButton: var(--bs-border-radius) !important;
   --rk-colors-connectButtonBackground: var(--bs-primary) !important;
   --rk-colors-actionButtonSecondaryBackground: var(--bs-primary) !important;

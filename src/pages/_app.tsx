@@ -4,40 +4,18 @@ import "../assets/styles/styles.scss";
 
 import type {AppProps} from "next/app";
 import Head from "next/head";
+import { Bai_Jamjuree } from 'next/font/google'
 import {ToastContainer} from "react-toastify";
 import localFont from 'next/font/local'
 import React from "react";
 import {HeaderSEO} from "@/components/main-layout/HeaderSEO";
 import {MainLayout} from "@/components/main-layout/MainLayout";
 
-const gilroyFont = localFont({
-  src: [
-    {
-      path: '../assets/fonts/gilroy/Gilroy-Light.woff',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: '../assets/fonts/gilroy/Gilroy-Regular.woff',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../assets/fonts/gilroy/Gilroy-Medium.woff',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../assets/fonts/gilroy/Gilroy-Bold.woff',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../assets/fonts/gilroy/Gilroy-Heavy.woff',
-      weight: '900',
-      style: 'normal',
-    },
-  ],
+const baiJamjureeFont = Bai_Jamjuree({
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
 });
 
 function ToastInitializer() {
@@ -60,13 +38,13 @@ export default function MyApp(appProps: AppProps) {
   return (
     <>
       <Head>
-        <title>Droplet Social</title>
+        <title>DistriBrain</title>
         <HeaderSEO/>
       </Head>
 
       <style jsx global>{`
           html {
-              --font-gilroy: ${gilroyFont.style.fontFamily};
+            --font-primary: ${baiJamjureeFont.style.fontFamily};
           }
       `}</style>
 
