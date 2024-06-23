@@ -14,7 +14,7 @@ import {
   NodesInformationDto,
   UserMyReferralCodeResponseDto,
   UserNodesAccountSummaryDto
-} from "@/generated/droplet-nodes-api";
+} from "@/generated/distribrain-nodes-api";
 import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
 import { uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
 import { CopyToClipboard } from "react-copy-to-clipboard";

@@ -2,7 +2,7 @@ import {
   Configuration as DropletNodesConfiguration,
   NodesApi as DropletNodesApi,
   UsersApi as DropletNodesUsersApi,
-} from "../generated/droplet-nodes-api";
+} from "../generated/distribrain-nodes-api";
 import axios, { AxiosInterceptorManager, InternalAxiosRequestConfig } from "axios";
 
 export interface ApiServices {

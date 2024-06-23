@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { NodesReferralPurchaseDto, UserNodesReferralPurchasesDto } from "@/generated/droplet-nodes-api";
+import { NodesReferralPurchaseDto, UserNodesReferralPurchasesDto } from "@/generated/distribrain-nodes-api";
 import clientApiServices from "@/services/clientApiServices";
 import { Alert, Button, Card, Spinner, Stack } from "react-bootstrap";
 import { defaultErrorHandler } from "@/utils/defaultErrorHandler";

@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
 import { BasicWithdrawDialogBody } from "@/components/dialogs/BasicWithdrawDialogBody";
 import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
-import { UserNodesAccountSummaryDto } from "@/generated/droplet-nodes-api";
+import { UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
 import { Spinner } from "react-bootstrap";
 import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 

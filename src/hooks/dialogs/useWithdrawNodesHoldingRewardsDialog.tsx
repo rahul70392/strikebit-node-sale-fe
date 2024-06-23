@@ -9,7 +9,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { uiPercentageNumberNiceFormat } from "@/utils/uiNiceFormat";
 import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
 import { Address, erc20Abi } from "viem";
-import { UserNodesAccountSummaryDto } from "@/generated/droplet-nodes-api";
+import { UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 import commonTerms from "@/data/commonTerms";
