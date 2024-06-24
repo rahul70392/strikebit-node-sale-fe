@@ -1,4 +1,4 @@
-import { UserProfile, useUser as useAuth0User } from "@auth0/nextjs-auth0";
+import { UserProfile, useUser as useAuth0User } from "@auth0/nextjs-auth0/client";
 import { createContext, FC, PropsWithChildren, useState } from "react";
 import useAsyncEffect from "use-async-effect";
 import clientApiServices from "@/services/clientApiServices";
@@ -77,7 +77,7 @@ export const UserProvider: FC<PropsWithChildren<{ isActive: boolean }>> = ({isAc
       {
         ...auth0User.user,
         referralCode: referralCode,
-        userDisplayName: auth0User.user.name ?? auth0User.user.email!
+        userDisplayName: auth0User.user.email ?? auth0User.user.name!
       } : null;
 
   return (

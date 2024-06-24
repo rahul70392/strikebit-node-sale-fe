@@ -98,7 +98,7 @@ hr {
 }
 
 .modal {
-  --bs-modal-bg: rgb(13, 47, 101);
+  --bs-modal-bg: var(--bs-dark);
   --bs-modal-padding: 1rem;
   --bs-modal-header-padding-x: 1rem;
   --bs-modal-header-padding-y: 1rem;

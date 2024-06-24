@@ -1,44 +1,37 @@
-import { _initAuth, getAccessToken } from "@auth0/nextjs-auth0";
-import { clientFactory } from "@auth0/nextjs-auth0/dist/auth0-session";
-import { getConfig } from "@auth0/nextjs-auth0/dist/config";
-import version from "@auth0/nextjs-auth0/dist/version";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "@auth0/nextjs-auth0/src/session";
 import { IncomingMessage } from "node:http";
 import { ServerResponse } from "http";
+import { getAccessToken, initAuth0, Session } from "@auth0/nextjs-auth0";
 
-export const auth0Instance = _initAuth({
-  baseURL: process.env.AUTH0_BASE_URL
+export const auth0Instance = initAuth0({
+  baseURL: process.env.AUTH0_BASE_URL,
+  session: {
+    // https://github.com/auth0/nextjs-auth0/issues/616
+    rolling: false,
+    autoSave: false,
+
+    rollingDuration: false,
+  }
 });
 
-export const getClient = () => {
-  const {baseConfig} = getConfig({
-    httpTimeout: 20000,
-    enableTelemetry: false,
-    baseURL: process.env.AUTH0_BASE_URL
-  });
-
-  const getClient = clientFactory(baseConfig, {
-    name: "nextjs-auth0",
-    version,
-  });
-  return getClient();
-};
-
 export const refreshToken = async (
-  req: IncomingMessage | NextApiRequest,
-  res: ServerResponse | NextApiResponse
+  req: IncomingMessage,
+  res: ServerResponse
 ) => {
   let idToken: string = null!;
-  const afterRefresh = async (req: NextApiRequest, res: NextApiResponse, session: Session) => {
-    auth0Instance.sessionCache.set(req, res, session);
+  const afterRefresh = async (
+    req: NextApiRequest | IncomingMessage,
+    res: NextApiResponse | ServerResponse,
+    session: Session
+  ) => {
+    await auth0Instance.updateSession(req, res, session);
     idToken = session.idToken!;
     return session;
   };
 
   await getAccessToken(req, res, {
     refresh: true,
-    afterRefresh,
+    afterRefresh: afterRefresh
   });
 
   return idToken;

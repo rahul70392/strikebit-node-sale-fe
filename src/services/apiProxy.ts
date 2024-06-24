@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import httpProxyMiddleware, { NextHttpProxyMiddlewareOptions } from "next-http-proxy-middleware";
 import { HttpStatusCode } from "axios";
-import { auth0Instance, isIdTokenExpired, refreshToken } from "@/services/auth0";
 import router from "next/router";
 import { routes } from "@/data/routes";
 
@@ -22,9 +21,9 @@ const handleProxyInit: NextHttpProxyMiddlewareOptions["onProxyInit"] = (proxy) =
   proxy.on("proxyReq", async (proxyReq, req, res) => {
     let idToken: string | null = null;
     try {
-      let response = auth0Instance.getSession(req, res);
-      if (response != null) {
-        idToken = response.idToken!;
+      /*let session = await auth0Instance.getSession(req, res);
+      if (session != null) {
+        idToken = session.idToken!;
         let expired = isIdTokenExpired(idToken);
         if (expired) {
           console.log("idToken expired, try refresh");
@@ -35,7 +34,7 @@ const handleProxyInit: NextHttpProxyMiddlewareOptions["onProxyInit"] = (proxy) =
             return;
           }
         }
-      }
+      }*/
     } catch (err) {
       await router.push(routes.auth.logout());
       return;
@@ -82,7 +81,7 @@ const createHandler = (target: string, pattern: string, changeOrigin: boolean = 
       }],
       onProxyInit: handleProxyInit,
       timeout: 20 * 60 * 1000, // 20 minutes
-      proxyTimeout: 20 * 60 * 1000 // 20 minutes
+      proxyTimeout: 20 * 60 * 1000, // 20 minutes,
     })
   };
 }

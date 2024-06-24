@@ -94,7 +94,7 @@ const createAndSendNodePurchaseTransaction = async (
       console.info(`Waiting for transaction (attempt ${i})`);
       await waitForTransactionReceipt(wagmiConfig.config, {
         hash: transactionHash,
-        confirmations: 1
+        confirmations: 3
       });
       break;
     } catch (err: any) {

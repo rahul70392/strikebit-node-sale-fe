@@ -1,5 +1,5 @@
 import { Container, Stack } from "react-bootstrap";
-import { UserProvider as Auth0UserProvider } from "@auth0/nextjs-auth0";
+import { UserProvider as Auth0UserProvider } from "@auth0/nextjs-auth0/client";
 import DropletEngineBackgroundImage from "@/components/visual/DropletEngineBackgroundImage";
 import React from "react";
 import { GenericConfirmationDialogProvider } from "@/components/dialogs/GenericConfirmationDialog";
