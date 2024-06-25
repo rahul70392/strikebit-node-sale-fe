@@ -203,7 +203,7 @@ const HomePageBody = (
                   </div>
 
                   <div>
-                    <Card.Title>DePin Keys</Card.Title>
+                    <Card.Title>DePIN Keys</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalDePinKeyCount}
@@ -224,11 +224,11 @@ const HomePageBody = (
                   target="_blank"
                   rel="noreferrer"
                 >
-                  DePin Key
+                  DePIN Key
                 </a>!
                 </p>
 
-                <p className="mb-0">Each Engine and each DePin Key generate
+                <p className="mb-0">Each Engine and each DePIN Key generate
                   more {commonTerms.holdingRewardVestedTokenName} for you, every day at midnight
                   00:00 UTC.</p>
               </Col>

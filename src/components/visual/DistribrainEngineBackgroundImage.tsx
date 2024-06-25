@@ -1,8 +1,8 @@
 import * as React from "react";
 import { SVGProps } from "react";
-import classes from "./DropletEngineBackgroundImage.module.scss";
+import classes from "./DistribrainEngineBackgroundImage.module.scss";
 
-const DropletEngineBackgroundImage = (props: SVGProps<SVGSVGElement>) => {
+const DistribrainEngineBackgroundImage = (props: SVGProps<SVGSVGElement>) => {
   const {className, ...rest} = props;
   return <svg
     fill="none"
@@ -291,4 +291,4 @@ const DropletEngineBackgroundImage = (props: SVGProps<SVGSVGElement>) => {
     </defs>
   </svg>;
 }
-export default DropletEngineBackgroundImage;
+export default DistribrainEngineBackgroundImage;

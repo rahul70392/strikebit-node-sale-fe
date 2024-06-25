@@ -1,6 +1,6 @@
 import { Container, Stack } from "react-bootstrap";
 import { UserProvider as Auth0UserProvider } from "@auth0/nextjs-auth0/client";
-import DropletEngineBackgroundImage from "@/components/visual/DropletEngineBackgroundImage";
+import DistribrainEngineBackgroundImage from "@/components/visual/DistribrainEngineBackgroundImage";
 import React from "react";
 import { GenericConfirmationDialogProvider } from "@/components/dialogs/GenericConfirmationDialog";
 import { routes } from "@/data/routes";
@@ -10,7 +10,7 @@ import { UserProvider } from "@/services/UserProvider";
 export const MainLayout = ({children}: { children: React.ReactNode }) => {
   return <>
     <Container as="main">
-      <DropletEngineBackgroundImage/>
+      <DistribrainEngineBackgroundImage/>
 
       <Auth0UserProvider>
         <UserProvider isActive={true}>

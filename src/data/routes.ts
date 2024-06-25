@@ -16,12 +16,12 @@ export const routes = {
   login: () => "/login",
 
   legal: {
-    termsAndConditions: () => "https://docs.dropletsocial.com/terms-and-conditions",
-    privacyPolicy: () => "https://docs.dropletsocial.com/privacy-policy",
+    termsAndConditions: () => "https://docs.distribrain.ai/terms-and-conditions",
+    privacyPolicy: () => "https://docs.distribrain.ai/privacy-policy",
   },
 
   docs: {
-    dePinKey: () => "https://docs.dropletsocial.com/droplet-ecosystem/droplet-depin/depin-key"
+    dePinKey: () => "https://docs.distribrain.ai/ecosystem/depin-key"
   },
 
   evmBlockExplorer: {

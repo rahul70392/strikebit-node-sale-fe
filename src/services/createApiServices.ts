@@ -1,13 +1,13 @@
 import {
-  Configuration as DropletNodesConfiguration,
-  NodesApi as DropletNodesApi,
-  UsersApi as DropletNodesUsersApi,
+  Configuration as DistribrainNodesConfiguration,
+  NodesApi as DistribrainNodesApi,
+  UsersApi as DistribrainNodesUsersApi,
 } from "../generated/distribrain-nodes-api";
 import axios, { AxiosInterceptorManager, InternalAxiosRequestConfig } from "axios";
 
 export interface ApiServices {
-  distribrainNodesApi: DropletNodesApi,
-  distribrainNodesUsersApi: DropletNodesUsersApi,
+  distribrainNodesApi: DistribrainNodesApi,
+  distribrainNodesUsersApi: DistribrainNodesUsersApi,
   setAccessToken: (accessToken: (string | undefined)) => void
 }
 
@@ -33,15 +33,15 @@ export function createApiServices(
     modifyRequest(axiosInstance.interceptors.request)
   }
 
-  const distribrainNodesConfiguration = new DropletNodesConfiguration({});
+  const distribrainNodesConfiguration = new DistribrainNodesConfiguration({});
 
   const setAccessToken = (accessToken: string | undefined) => {
     distribrainNodesConfiguration.accessToken = accessToken;
   }
 
   return {
-    distribrainNodesApi: new DropletNodesApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
-    distribrainNodesUsersApi: new DropletNodesUsersApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
+    distribrainNodesApi: new DistribrainNodesApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
+    distribrainNodesUsersApi: new DistribrainNodesUsersApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
 
     setAccessToken
   };

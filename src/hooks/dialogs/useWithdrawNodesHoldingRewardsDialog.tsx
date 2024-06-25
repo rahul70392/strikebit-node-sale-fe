@@ -214,8 +214,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
             checked={includeVested}
             onChange={e => setIncludeVested(e.target.checked)}
             label={<>
-              Claim vDROP
-              ({uiPercentageNumberNiceFormat(openProps.holdingRewardEarlyWithdrawalPenaltyBps / 10000)} penalty)
+              Claim {commonTerms.holdingRewardVestedTokenName} ({uiPercentageNumberNiceFormat(openProps.holdingRewardEarlyWithdrawalPenaltyBps / 10000)} penalty)
             </>}
             className="pe-2 fs-5"
             id="holding-reward-withdraw-include-vested-check"

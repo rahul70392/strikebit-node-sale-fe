@@ -19,7 +19,7 @@ export function HeaderSEO() {
     <meta name="theme-color" content="#ffffff"/>
 
     <meta property="og:title" content="DistriBrain"/>
-    <meta property="og:description" content="Machine Learning Powered by DePin. Breaking users free from the matrix."/>
+    <meta property="og:description" content="Machine Learning Powered by DePIN. Breaking users free from the matrix."/>
     <meta property="og:type" content="website"/>
     <meta property="og:image" content="/og-thumb.jpg"/>
     <meta property="og:width" content="1200"/>
@@ -28,7 +28,7 @@ export function HeaderSEO() {
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:site" content="@DistriBrain"/>
     <meta name="twitter:title" content="DistriBrain"/>
-    <meta name="twitter:description" content="Machine Learning Powered by DePin. Breaking users free from the matrix."/>
+    <meta name="twitter:description" content="Machine Learning Powered by DePIN. Breaking users free from the matrix."/>
     <meta name="twitter:image" content="/og-thumb.jpg"/>
   </>
 }
