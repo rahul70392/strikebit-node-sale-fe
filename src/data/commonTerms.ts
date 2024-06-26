@@ -1,6 +1,6 @@
 const commonTerms = {
-  holdingRewardTokenName: "DIST",
-  holdingRewardVestedTokenName: "vDIST",
+  holdingRewardTokenName: "BRAIN",
+  holdingRewardVestedTokenName: "esBRAIN",
 }
 
 export default commonTerms;

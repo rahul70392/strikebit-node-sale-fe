@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import React from "react";
 import { HeaderSEO } from "@/components/main-layout/HeaderSEO";
 import { MainLayout } from "@/components/main-layout/MainLayout";
+import { FauxAuthenticationPortal } from "@/components/FauxAuthenticationPortal";
 
 const baiJamjureeFont = Bai_Jamjuree({
   weight: ['400', '500', '600', '700'],
@@ -33,6 +34,7 @@ function ToastInitializer() {
 
 export default function MyApp(appProps: AppProps) {
   const {Component, pageProps} = appProps;
+  const fauxAuthenticationPortal = FauxAuthenticationPortal();
 
   return (
     <>
@@ -47,9 +49,12 @@ export default function MyApp(appProps: AppProps) {
           }
       `}</style>
 
-      <MainLayout>
-        <Component {...pageProps} />
-      </MainLayout>
+      {fauxAuthenticationPortal != null && fauxAuthenticationPortal}
+      {fauxAuthenticationPortal == null && <>
+          <MainLayout>
+              <Component {...pageProps} />
+          </MainLayout>
+      </>}
 
       <ToastInitializer/>
     </>

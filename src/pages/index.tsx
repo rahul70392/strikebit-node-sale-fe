@@ -115,7 +115,7 @@ const HomePageBody = (
       </Button>
     </Container>
 
-    <Container className="h1 text-center">
+    <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
       {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
     </Badge> DistriBrain Engines Sold
@@ -376,11 +376,8 @@ const HomePage: NextPage = () => {
   }
 
   useAsyncEffect(async _ => {
-    console.log("user", user)
-
-    if (!user.initialized) {
+    if (!user.initialized)
       return;
-    }
 
     if (!user.user) {
       await router.push(routes.login());
@@ -432,12 +429,12 @@ const HomePage: NextPage = () => {
       <Container
         className="d-flex position-relative mt-4 vstack justify-content-center gap-3"
         style={{
-          maxWidth: "700px",
+          maxWidth: "735px",
         }}
       >
         <Image
           src={Logo}
-          alt="Logo"
+          alt="DistriBrain"
           priority={true}
           className="w-100 h-auto px-3 mb-3"
           style={{

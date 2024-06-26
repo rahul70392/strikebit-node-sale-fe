@@ -33,7 +33,7 @@ const LoginPage: NextPage = (props) => {
             <Stack>
               <Image
                 src={Logo}
-                alt="Logo"
+                alt="DistriBrain"
                 priority={true}
                 className="w-100 h-auto px-3 mb-3"
               />

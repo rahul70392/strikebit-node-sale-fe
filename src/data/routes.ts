@@ -16,12 +16,12 @@ export const routes = {
   login: () => "/login",
 
   legal: {
-    termsAndConditions: () => "https://docs.distribrain.ai/terms-and-conditions",
-    privacyPolicy: () => "https://docs.distribrain.ai/privacy-policy",
+    termsAndConditions: () => "https://distribrain.gitbook.io/distribrain-1",
+    privacyPolicy: () => "https://distribrain.gitbook.io/distribrain-1/privacy-policy",
   },
 
   docs: {
-    dePinKey: () => "https://docs.distribrain.ai/ecosystem/depin-key"
+    dePinKey: () => "https://distribrain.gitbook.io/distribrain/depin/depin-key"
   },
 
   evmBlockExplorer: {
