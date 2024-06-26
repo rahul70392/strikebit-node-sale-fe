@@ -1,6 +1,6 @@
-import {type AxiosRequestConfig, AxiosResponse} from "axios";
-import {defaultErrorHandler} from "./defaultErrorHandler";
-import {ApiServices} from "@/services/createApiServices";
+import { type AxiosRequestConfig, AxiosResponse } from "axios";
+import { defaultErrorHandler } from "./defaultErrorHandler";
+import { ApiServices } from "@/services/createApiServices";
 
 export type RemoteDataFetcherFn<T> = (
   apiServices: ApiServices,

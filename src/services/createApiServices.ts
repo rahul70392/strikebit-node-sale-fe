@@ -1,27 +1,19 @@
 import {
-  AuthApi as DropletAuthApi,
-  Configuration as DropletAuthConfiguration,
-  UsersApi as DropletUsersApi
-} from "../generated/droplet-api";
-
-import {
-  NodesApi as DropletNodesApi,
-  UsersApi as DropletNodesUsersApi
-} from "../generated/droplet-nodes-api";
-import axios, {AxiosInterceptorManager, InternalAxiosRequestConfig} from "axios";
+  Configuration as DistribrainNodesConfiguration,
+  NodesApi as DistribrainNodesApi,
+  UsersApi as DistribrainNodesUsersApi,
+} from "../generated/distribrain-nodes-api";
+import axios, { AxiosInterceptorManager, InternalAxiosRequestConfig } from "axios";
 
 export interface ApiServices {
-  dropletAuthApi: DropletAuthApi,
-  dropletUsersApi: DropletUsersApi,
-  dropletNodesApi: DropletNodesApi,
-  dropletNodesUsersApi: DropletNodesUsersApi,
+  distribrainNodesApi: DistribrainNodesApi,
+  distribrainNodesUsersApi: DistribrainNodesUsersApi,
   setAccessToken: (accessToken: (string | undefined)) => void
 }
 
 const isBrowser = typeof window !== "undefined";
 
-const dropletApiBaseUrl = isBrowser ? "/api/proxy/droplet" : process.env.DROPLET_API_BASE_URL!;
-const nodesApiBaseUrl = isBrowser ? "/api/proxy/nodes" : process.env.NODES_API_BASE_URL!;
+const nodesApiBaseUrl = isBrowser ? "/api/proxy/nodes" : process.env.DISTRIBRAIN_NODES_API_BASE_URL!;
 
 export function createApiServices(
   timeout?: number,
@@ -41,17 +33,15 @@ export function createApiServices(
     modifyRequest(axiosInstance.interceptors.request)
   }
 
-  const dropletAppConfiguration = new DropletAuthConfiguration({});
+  const distribrainNodesConfiguration = new DistribrainNodesConfiguration({});
 
   const setAccessToken = (accessToken: string | undefined) => {
-    dropletAppConfiguration.accessToken = accessToken;
+    distribrainNodesConfiguration.accessToken = accessToken;
   }
 
   return {
-    dropletAuthApi: new DropletAuthApi(dropletAppConfiguration, dropletApiBaseUrl, axiosInstance),
-    dropletUsersApi: new DropletUsersApi(dropletAppConfiguration, dropletApiBaseUrl, axiosInstance),
-    dropletNodesApi: new DropletNodesApi(dropletAppConfiguration, nodesApiBaseUrl, axiosInstance),
-    dropletNodesUsersApi: new DropletNodesUsersApi(dropletAppConfiguration, nodesApiBaseUrl, axiosInstance),
+    distribrainNodesApi: new DistribrainNodesApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
+    distribrainNodesUsersApi: new DistribrainNodesUsersApi(distribrainNodesConfiguration, nodesApiBaseUrl, axiosInstance),
 
     setAccessToken
   };

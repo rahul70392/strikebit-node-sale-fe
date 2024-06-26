@@ -7,16 +7,21 @@ if (!process.env.NEXT_PUBLIC_EVM_BLOCK_EXPLORER_ADDRESS_TEMPLATE)
 export const routes = {
   makeAbsoluteUri: (relativeUri: string) => window.location.protocol + "//" + window.location.host + relativeUri,
 
+  auth: {
+    login: (returnToUrl: string) => `/api/auth/login?returnTo=${encodeURIComponent(returnToUrl)}`,
+    logout: () => `/api/auth/logout`,
+  },
+
   home: () => "/",
   login: () => "/login",
 
   legal: {
-    termsAndConditions: () => "https://docs.dropletsocial.com/terms-and-conditions",
-    privacyPolicy: () => "https://docs.dropletsocial.com/privacy-policy",
+    termsAndConditions: () => "https://distribrain.gitbook.io/distribrain-1",
+    privacyPolicy: () => "https://distribrain.gitbook.io/distribrain-1/privacy-policy",
   },
 
   docs: {
-    dePin: () => "https://docs.dropletsocial.com/droplet-ecosystem/droplet-depin"
+    dePinKey: () => "https://distribrain.gitbook.io/distribrain/depin/depin-key"
   },
 
   evmBlockExplorer: {

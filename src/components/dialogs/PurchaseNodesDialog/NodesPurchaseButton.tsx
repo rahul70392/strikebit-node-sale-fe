@@ -1,13 +1,13 @@
-import {useAccount} from "wagmi";
-import React, {useCallback, useState} from "react";
-import {useAddRecentTransaction} from "@rainbow-me/rainbowkit";
-import {BaseError} from "viem";
-import {Alert} from "react-bootstrap";
-import {motion} from "framer-motion";
-import {toast} from "react-toastify";
-import {getUIMessageFromViemBaseError} from "@/utils/getUIMessageFromViemBaseError";
-import nodePurchaseExecutor, {NodePurchaseState} from "@/services/nodePurchaseExecutor";
-import {handleBackendError} from "@/services/backend-errors/backendErrorHandling";
+import { useAccount } from "wagmi";
+import React, { useCallback, useState } from "react";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import { BaseError } from "viem";
+import { Alert } from "react-bootstrap";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { getUIMessageFromViemBaseError } from "@/utils/getUIMessageFromViemBaseError";
+import nodePurchaseExecutor, { NodePurchaseState } from "@/services/nodePurchaseExecutor";
+import { handleBackendError } from "@/services/backend-errors/backendErrorHandling";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 
 export function NodesPurchaseButton(

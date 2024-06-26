@@ -1,4 +1,4 @@
-import {ApiServices, createApiServices} from "./createApiServices";
+import { ApiServices, createApiServices } from "./createApiServices";
 
 const isBrowser = typeof window !== "undefined";
 

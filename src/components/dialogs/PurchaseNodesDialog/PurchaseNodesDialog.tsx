@@ -1,17 +1,16 @@
-import {useUserService} from "@/services/UserService";
-import React, {useState} from "react";
-import {useAccount, useBalance} from "wagmi";
-import {Address} from "viem";
-import {toast} from "react-toastify";
-import {FloatingLabel, Form, InputGroup, Modal, Stack} from "react-bootstrap";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
-import {uiFloatNumberNiceFormat, uiIntNumberNiceFormat} from "@/utils/uiNiceFormat";
-import {calculateFormattedTokenPrice} from "@/utils/bigint/bigIntMathUI";
-import wagmiConfig from "@/contexts/web3/wagmiConfig";
+import React, { useState } from "react";
+import { useAccount, useReadContract } from "wagmi";
+import { Address, erc20Abi } from "viem";
+import { toast } from "react-toastify";
+import { FloatingLabel, Form, InputGroup, Modal, Stack } from "react-bootstrap";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { uiFloatNumberNiceFormat, uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { calculateFormattedTokenPrice } from "@/utils/bigint/bigIntMathUI";
+import wagmiConfig from "@/providers/web3/wagmiConfig";
 import classes from "./PurchaseNodesDialog.module.scss";
-import {StarIcon} from "@/components/visual/StarIcon";
-import {NodesPurchaseButton} from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
-import {routes} from "@/data/routes";
+import { StarIcon } from "@/components/visual/StarIcon";
+import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
+import { routes } from "@/data/routes";
 
 export interface PurchaseNodesDialogOpenProps {
   pricePerNode: bigint,
@@ -29,23 +28,29 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
   const web3Account = useAccount();
 
-  const purchaseTokenBalance = useBalance({
-    address: web3Account.address as Address,
-    token: props.purchaseTokenAddress as Address
+  const purchaseTokenBalance = useReadContract({
+    abi: erc20Abi,
+    address: props.purchaseTokenAddress as Address,
+    chainId: wagmiConfig.chain.id,
+    functionName: "balanceOf",
+    args: [web3Account.address as Address],
+    query: {
+      enabled: props.isOpen,
+    }
   });
 
   const [referralCode, setReferralCode] = useState("");
   const isCorrectChain = web3Account.chainId === wagmiConfig.chain.id;
 
   const [enteredAmountText, setEnteredAmountText] = useState("1");
-  const enteredAmount = parseInt(enteredAmountText) || 1;
+  const enteredAmount = parseInt(enteredAmountText) || 0;
 
   const finalPrice = BigInt(enteredAmount) * props.pricePerNode;
 
   const maxEnteredAmountPerPurchase = props.currentNodeLimit - props.globalTotalPurchasedNodes;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
-    isEnteredAmountValid && (!purchaseTokenBalance.data || purchaseTokenBalance.data.value < finalPrice);
+    isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data< finalPrice);
 
   const [condition1Accepted, setCondition1Accepted] = useState(false);
   const [condition2Accepted, setCondition2Accepted] = useState(false);
@@ -61,7 +66,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       //value = maxEnteredAmountPerPurchase;
     }
 
-    setEnteredAmountText(value ? value.toString() : "1");
+    setEnteredAmountText(!isNaN(value) ? value.toString() : "");
   }
 
   const onClose = () => {
@@ -74,7 +79,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   }
 
   const onPurchasedSucceeded = async () => {
-    toast.success("Purchased Droplet Nodes successfully.");
+    toast.success("Purchased DistriBrain Engines successfully.");
     props.purchasedCallback();
   }
 
@@ -87,7 +92,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       data-rk=""
     >
       <Modal.Header closeButton>
-        <Modal.Title><StarIcon className="me-2"/>Purchase Droplet Nodes</Modal.Title>
+        <Modal.Title><StarIcon className="me-2"/>Purchase DistriBrain Engines</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -95,7 +100,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
           {(web3Account.isConnected && isCorrectChain) && <>
               <FloatingLabel
                   controlId="purchase-amount"
-                  label="Droplet Nodes to buy *"
+                  label="DistriBrain Engines to buy *"
               >
                   <Form.Control
                       required
@@ -131,9 +136,6 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                       onChange={e => setReferralCode(e.currentTarget.value)}
                       className={`${classes.prettyInput} text-uppercase`}
                   />
-                {/*                  <Form.Control.Feedback type="invalid">
-                      Referral code is required.
-                  </Form.Control.Feedback>*/}
               </FloatingLabel>
 
               <Stack direction="vertical" gap={2} className="fs-5 mb-2">

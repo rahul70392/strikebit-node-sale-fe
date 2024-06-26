@@ -1,13 +1,13 @@
-import React, {createContext, ReactNode, useState} from "react";
-import {ButtonProps, Modal, ModalFooterProps, ModalProps} from "react-bootstrap";
+import React, { createContext, ReactNode, useState } from "react";
+import { ButtonProps, Modal, ModalFooterProps, ModalProps } from "react-bootstrap";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
-import {StarIcon} from "@/components/visual/StarIcon";
+import { StarIcon } from "@/components/visual/StarIcon";
 
 export interface DialogButtonProps extends ButtonProps {
   kind: "confirm" | "dismiss" | "generic";
   title: string;
   disabled?: boolean;
-  onClick?: (() => void) | (() => Promise<void>);
+  onClick?: (() => boolean) | (() => Promise<boolean>);
   preventCloseOnClick?: boolean;
 }
 
@@ -20,8 +20,9 @@ export interface DialogConfig {
 }
 
 export interface GenericConfirmationDialogContextProps {
-  set: (props: DialogConfig) => void
-  open: (openProps: DialogConfig) => void
+  set: (props: DialogConfig) => void;
+  open: (openProps: DialogConfig) => void;
+  isOpen: boolean;
 }
 
 const GenericConfirmationDialogContext = createContext<GenericConfirmationDialogContextProps>(
@@ -49,17 +50,18 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
       clickResult = button.onClick();
     }
 
+    let mustCloseDialog = !button.preventCloseOnClick;
     if (clickResult) {
       setAwaitingButtons(new Set(awaitingButtons.add(buttonIndex)));
       try {
-        await clickResult;
+        mustCloseDialog = mustCloseDialog && await clickResult;
       } finally {
         awaitingButtons.delete(buttonIndex);
         setAwaitingButtons(new Set(awaitingButtons));
       }
     }
 
-    if (!button.preventCloseOnClick) {
+    if (mustCloseDialog) {
       closeDialog();
     }
   }
@@ -83,7 +85,8 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
   return (
     <GenericConfirmationDialogContext.Provider value={{
       open: openDialog,
-      set: setConfig
+      set: setConfig,
+      isOpen: isOpen
     }}>
       {children}
 

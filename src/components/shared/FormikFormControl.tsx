@@ -1,8 +1,8 @@
-import React, {InputHTMLAttributes, ReactNode, TextareaHTMLAttributes} from "react";
+import React, { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
 
-import {FormikProps} from "formik";
-import {FloatingLabel, Form, FormControlProps} from "react-bootstrap";
-import {FloatingLabelProps} from "react-bootstrap/FloatingLabel";
+import { FormikProps } from "formik";
+import { FloatingLabel, Form, FormControlProps } from "react-bootstrap";
+import { FloatingLabelProps } from "react-bootstrap/FloatingLabel";
 
 interface FormikFormGroupProps<Values> {
   name: string,

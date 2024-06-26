@@ -1,32 +1,35 @@
-import {Badge, Button, Card, Col, Container, Row, Spinner, Stack} from "react-bootstrap";
-import {NextPage} from "next";
-import React, {useState} from "react";
+import { Badge, Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
+import { NextPage } from "next";
+import React, { useState } from "react";
 import Logo from "../assets/images/Logo.svg";
 import Image from "next/image";
-import {useRouter} from "next/router";
-import {useUserService} from "@/services/UserService";
+import { useRouter } from "next/router";
 import useAsyncEffect from "use-async-effect";
-import {MdOutlineContentCopy, MdOutlineHistory} from "react-icons/md";
-import {BiMoneyWithdraw} from "react-icons/bi";
-import {TbShare2} from "react-icons/tb";
-import {basicRemoteDataFetcherFn} from "@/utils/basicRemoteDataFetcher";
+import { MdOutlineContentCopy, MdOutlineHistory } from "react-icons/md";
+import { BiMoneyWithdraw } from "react-icons/bi";
+import { TbShare2 } from "react-icons/tb";
+import { basicRemoteDataFetcherFn } from "@/utils/basicRemoteDataFetcher";
 import clientApiServices from "@/services/clientApiServices";
 import {
   NodesInformationDto,
   UserMyReferralCodeResponseDto,
   UserNodesAccountSummaryDto
-} from "@/generated/droplet-nodes-api";
-import {formatTokenAmountUI} from "@/utils/formatTokenAmountUI";
-import {uiIntNumberNiceFormat} from "@/utils/uiNiceFormat";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {toast} from "react-toastify";
+} from "@/generated/distribrain-nodes-api";
+import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
+import { uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
 import noCacheHeaders from "@/utils/noCacheHeaders";
-import {useNodesReferralPurchasesHistoryDialog} from "@/components/dialogs/useNodesReferralPurchasesHistoryDialog";
-import {StarIcon} from "@/components/visual/StarIcon";
-import {PurchaseNodesDialog} from "@/components/dialogs/PurchaseNodesDialog/PurchaseNodesDialog";
-import {routes} from "@/data/routes";
-import {useWithdrawNodesReferralRewardsDialog} from "@/components/dialogs/useWithdrawNodesReferralRewardsDialog";
-import {useWithdrawNodesHoldingRewardsDialog} from "@/components/dialogs/useWithdrawNodesHoldingRewardsDialog";
+import { StarIcon } from "@/components/visual/StarIcon";
+import { PurchaseNodesDialog } from "@/components/dialogs/PurchaseNodesDialog/PurchaseNodesDialog";
+import { routes } from "@/data/routes";
+import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
+import { useNodesReferralPurchasesHistoryDialog } from "@/hooks/dialogs/useNodesReferralPurchasesHistoryDialog";
+import { useWithdrawNodesReferralRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesReferralRewardsDialog";
+import { useWithdrawNodesHoldingRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesHoldingRewardsDialog";
+import commonTerms from "@/data/commonTerms";
+import { useUser } from "@/hooks/useUser";
+import { FiLogOut } from "react-icons/fi";
 
 const HomePageBody = (
   {
@@ -48,7 +51,7 @@ const HomePageBody = (
   }
 ) => {
   const router = useRouter();
-  const userService = useUserService();
+  const user = useUser();
   const [showPurchaseDialog, setShowNodePurchaseDialog] = useState(false);
 
   const canWithdrawHoldingRewards =
@@ -66,52 +69,83 @@ const HomePageBody = (
   }
 
   const onLogoutClicked = async () => {
-    try {
-      await userService.logout();
-    } catch (err: any) {
-      console.log(err)
-    }
-    toast.info("Logged out successfully.");
-    await router.push(routes.login());
+    toast.info("Signing out...");
+    await router.push(routes.auth.logout());
   }
 
   return <>
-    <Container className="text-center mb-2">
-      Hi, {userService.getUserName()}
+    <Container
+      className="d-flex w-auto mb-2 flex-column flex-sm-row align-items-center gap-3"
+      style={{
+        minHeight: "2.9rem"
+      }}
+    >
+      <span
+        className="d-flex h-100 px-3 py-2 align-items-center border-2 border- border-info rounded-pill"
+        style={{
+          border: "solid"
+        }}
+      >
+        {user.user!.picture && (
+          <Image
+            src={user.user!.picture!}
+            alt="Avatar"
+            width={100}
+            height={100}
+            unoptimized
+            className="rounded-circle"
+            style={{
+              width: "2rem",
+              height: "2rem",
+              marginLeft: "-0.5rem",
+              marginRight: "0.5rem",
+            }}
+          />
+        )}
+
+        {user.user!.userDisplayName}
+      </span>
+
       <Button
-        variant="link"
-        className="d-inline p-0 ps-2"
+        variant="outline-info"
+        className="d-flex h-100 px-3 py-2 align-items-center rounded-pill no-primary-gradient"
         onClick={() => onLogoutClicked()}
       >
-        [Logout]
+        <span className="d-flex fs-4 me-2"><FiLogOut/></span> Sign Out
       </Button>
     </Container>
 
-    <Container className="h1 text-center">
+    <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
       {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
-    </Badge> Droplet Nodes Sold
+    </Badge> DistriBrain Engines Sold
     </Container>
 
     <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
         <Button
           variant="primary"
-          className="p-3 px-lg-4 fs-3 fw-bold flex-fill flex-lg-grow-0 animated-edge-button"
+          className="p-3 px-lg-4 fs-3 fw-medium flex-fill flex-lg-grow-0 animated-edge-button btn-primary-gradient"
           onClick={() => setShowNodePurchaseDialog(true)}
+          disabled={nodesInformation.featureFlags.purchasingDisabled}
         >
-          Buy Droplet Nodes
+          {nodesInformation.featureFlags.purchasingDisabled && <>Temporarily Unavailable</>}
+
+          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy DistriBrain Engines</>}
         </Button>
       </div>
     </Container>
 
-    <Container className="mt-2 mb-1 h2 text-center">
+    <Container className="mb-1 h2 text-center">
       <StarIcon/><span className="mx-3">My Referral Code</span><StarIcon/>
     </Container>
 
     <Row>
       <Col>
-        <Card border={"primary"}>
+        <Card
+          className="bg-blur-primary"
+          border="primary"
+        >
           <Card.Body>
             <Row>
               <Col
@@ -144,59 +178,22 @@ const HomePageBody = (
       </Col>
     </Row>
 
-    {/*            <Container className="d-flex flex-column align-items-center justify-content-center gap-2 card border-primary">
-                <div className="h2">My Referral Code</div>
-                <div className="h6 text-muted">Share your referral code to and earn USDT rewards</div>
-
-                <div
-                    className="d-flex mt-3 m-md-0 align-items-center justify-content-center fs-4"
-                >
-                    8KQWKA50
-                    <Button variant="primary ms-3">
-                        <MdOutlineContentCopy/>
-                    </Button>
-                </div>
-            </Container>*/}
-
-    {/*            <Row>
-                <Col>
-                    <Card border={"primary"}>
-                        <Card.Body>
-                            <Row>
-                                <Col xs={12} md={8}>
-                                    <Card.Title><StarIcon className="d-none d-sm-inline-block"/> My Referral Code</Card.Title>
-                                    <Card.Subtitle>Share your referral code to and earn USDT rewards</Card.Subtitle>
-                                </Col>
-
-                                <Col
-                                    xs={12}
-                                    md={4}
-                                    className="d-flex mt-3 m-md-0 align-items-center justify-content-center justify-content-md-end fs-4"
-                                >
-                                    8KQWKA50
-                                    <Button variant="primary ms-3">
-                                        <MdOutlineContentCopy/>
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>*/}
-
     <Container className="mt-2 mb-1 h2 text-center">
-      <StarIcon/><span className="mx-3">My Nodes</span><StarIcon/>
+      <StarIcon/><span className="mx-3">My Engines</span><StarIcon/>
     </Container>
 
     <Row>
       <Col>
-        <Card border={"primary"}>
+        <Card
+          className="bg-blur-primary"
+          border="primary"
+        >
           <Card.Body>
             <Row>
               <Col xs={12} md={6}>
                 <Stack gap={3}>
                   <div>
-                    <Card.Title>Droplet Nodes</Card.Title>
+                    <Card.Title>DistriBrain Engines</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalPurchasedNodesCount}
@@ -206,7 +203,7 @@ const HomePageBody = (
                   </div>
 
                   <div>
-                    <Card.Title>DePin Keys</Card.Title>
+                    <Card.Title>DePIN Keys</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalDePinKeyCount}
@@ -221,16 +218,19 @@ const HomePageBody = (
                    md={6}
                    className="d-flex flex-column justify-content-evenly m-0 mt-3 mt-md-0 h6"
               >
-                <p>Each Node generates more DROPLET for you, every day at midnight 00:00 UTC.</p>
-                <p className="mb-0">
-                  For every 5 purchased Engines, you are also granted a <a
-                  href={routes.docs.dePin()}
+                <p>
+                  For every 5 purchased Engines, you are granted a <a
+                  href={routes.docs.dePinKey()}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  DePin License
+                  DePIN Key
                 </a>!
                 </p>
+
+                <p className="mb-0">Each Engine and each DePIN Key generate
+                  more {commonTerms.holdingRewardVestedTokenName} for you, every day at midnight
+                  00:00 UTC.</p>
               </Col>
             </Row>
           </Card.Body>
@@ -243,8 +243,8 @@ const HomePageBody = (
     </Container>
 
     <Card
-      className="row g-0 flex-row"
-      border={"primary"}
+      className="row g-0 flex-row bg-blur-primary"
+      border="primary"
       style={{
         paddingBottom: "var(--bs-gutter-y)"
       }}
@@ -254,33 +254,35 @@ const HomePageBody = (
           <Card.Body className="d-flex vstack gap-3 justify-content-between">
             <Stack gap={3}>
               <div>
-                <Card.Title>vDROP Rewards</Card.Title>
+                <Card.Title>{commonTerms.holdingRewardVestedTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
                     {formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardVestedTokenAmount))}
                   </span>
-                  <span className="card-subtitle h4"> vDROP</span>
+                  <span className="card-subtitle h4"> {commonTerms.holdingRewardVestedTokenName}</span>
                 </div>
               </div>
 
               <div>
-                <Card.Title>DROP Rewards</Card.Title>
+                <Card.Title>{commonTerms.holdingRewardTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
                     {formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardAvailableTokenAmount))}
                   </span>
-                  <span className="card-subtitle h4"> DROP</span>
+                  <span className="card-subtitle h4"> {commonTerms.holdingRewardTokenName}</span>
                 </div>
               </div>
             </Stack>
 
-            <Button
-              variant="primary p-3 px-4 fs-5"
-              disabled={!canWithdrawHoldingRewards}
-              onClick={() => onWithdrawHoldingRewardsClicked()}
-            >
-              <TbShare2 className="me-2"/> Claim DROPLET
-            </Button>
+            {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
+                <Button
+                    variant="primary p-3 px-4 fs-5"
+                    disabled={!canWithdrawHoldingRewards}
+                    onClick={() => onWithdrawHoldingRewardsClicked()}
+                >
+                    <TbShare2 className="me-2"/> Claim {commonTerms.holdingRewardTokenName}
+                </Button>
+            </>}
           </Card.Body>
         </Card>
       </Col>
@@ -296,13 +298,15 @@ const HomePageBody = (
                 <span className="card-subtitle h4"> USDT</span>
               </div>
 
-              <Button
-                variant="primary p-3 px-4 fs-5"
-                disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
-                onClick={() => onWithdrawReferralRewardsClicked()}
-              >
-                <BiMoneyWithdraw className="me-2"/> Withdraw
-              </Button>
+              {!nodesInformation.featureFlags.referralRewardsWithdrawDisabled && <>
+                  <Button
+                      variant="primary p-3 px-4 fs-5"
+                      disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
+                      onClick={() => onWithdrawReferralRewardsClicked()}
+                  >
+                      <BiMoneyWithdraw className="me-2"/> Withdraw
+                  </Button>
+              </>}
 
               <Button
                 variant="primary p-3 px-4 fs-5"
@@ -331,7 +335,7 @@ const HomePageBody = (
 
 const HomePage: NextPage = () => {
   const router = useRouter();
-  const userService = useUserService();
+  const user = useUser();
 
   const [referralCode, setReferralCode] = useState<UserMyReferralCodeResponseDto | null>(null);
   const [userNodesSummary, setUserNodesSummary] = useState<UserNodesAccountSummaryDto | null>(null);
@@ -352,16 +356,36 @@ const HomePage: NextPage = () => {
     setNodesInformation(await nodesInformationPromise);
   }
 
+  const fetchUserSummaryData = async (clearCurrentData: boolean) => {
+    console.log("Fetching user summary data");
+
+    if (clearCurrentData) {
+      setUserNodesSummary(null);
+    }
+    try {
+      const options = {
+        headers: noCacheHeaders
+      };
+      const data = (await clientApiServices.distribrainNodesApi.nodesControllerGetUserSummary(options)).data;
+      setUserNodesSummary(data);
+      return data;
+    } catch (err: any) {
+      defaultErrorHandler(err);
+      return null;
+    }
+  }
+
   useAsyncEffect(async _ => {
-    await userService.initialize();
-    //await new Promise(r => setTimeout(r, 3000));
-    if (!userService.isLoggedIn()) {
+    if (!user.initialized)
+      return;
+
+    if (!user.user) {
       await router.push(routes.login());
       return;
     }
 
     await fetchData();
-  }, []);
+  }, [user]);
 
   const referralPurchasesHistoryDialog = useNodesReferralPurchasesHistoryDialog();
   const withdrawReferralRewardsDialog = useWithdrawNodesReferralRewardsDialog();
@@ -375,40 +399,42 @@ const HomePage: NextPage = () => {
 
   const showWithdrawReferralRewardsDialog = () => {
     withdrawReferralRewardsDialog.open({
+      userNodesSummary: userNodesSummary,
       referralRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
-      referralRewardTokenAmount: BigInt(userNodesSummary!.totalReferralRewardAvailableTokenAmount),
       confirmCallback: () => {
       },
-      successCallback: async () => await fetchData()
+      successCallback: async () => await fetchData(),
+      refetchUserSummary: fetchUserSummaryData,
     })
   }
 
   const showWithdrawHoldingRewardsDialog = () => {
     withdrawHoldingRewardsDialog.open({
-      holdingRewardTotalBalanceTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardBalanceTokenAmount),
-      holdingRewardVestedTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardVestedTokenAmount),
-      holdingRewardAvailableTokenAmount: BigInt(userNodesSummary!.totalHoldingRewardAvailableTokenAmount),
+      userNodesSummary: userNodesSummary,
+      holdingRewardTokenAddress: nodesInformation!.holdingRewardErc20Token?.address,
       holdingRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
       holdingRewardEarlyWithdrawalPenaltyBps: nodesInformation!.holdingRewardEarlyWithdrawalPenaltyBps,
+      holdingRewardMinAmountOnWalletRequiredForWithdrawal: BigInt(nodesInformation!.holdingRewardMinAmountOnWalletRequiredForWithdrawal),
       confirmCallback: () => {
       },
-      successCallback: async () => await fetchData()
-    })
+      successCallback: async () => await fetchData(),
+      refetchUserSummary: fetchUserSummaryData,
+    });
   }
 
-  const loaded = userService.isLoggedIn() && referralCode != null && userNodesSummary != null && nodesInformation != null;
+  const loaded = user.user && referralCode != null && userNodesSummary != null && nodesInformation != null;
 
   return (
     <>
       <Container
         className="d-flex position-relative mt-4 vstack justify-content-center gap-3"
         style={{
-          maxWidth: "700px",
+          maxWidth: "735px",
         }}
       >
         <Image
           src={Logo}
-          alt="Logo"
+          alt="DistriBrain"
           priority={true}
           className="w-100 h-auto px-3 mb-3"
           style={{
@@ -443,16 +469,16 @@ const HomePage: NextPage = () => {
 
 const remoteData = {
   getMyReferralCode: basicRemoteDataFetcherFn(
-    (apiServices, options) => apiServices.dropletNodesUsersApi.usersControllerGetMyReferralCode(options)
+    (apiServices, options) => apiServices.distribrainNodesUsersApi.usersControllerGetMyReferralCode(options)
   ),
   getNodesInformation: basicRemoteDataFetcherFn(
-    (apiServices, options) => apiServices.dropletNodesApi.nodesControllerGetInformation(options)
+    (apiServices, options) => apiServices.distribrainNodesApi.nodesControllerGetInformation(options)
   ),
   getMyNodesSummary: basicRemoteDataFetcherFn(
-    (apiServices, options) => apiServices.dropletNodesApi.nodesControllerGetUserSummary(options)
+    (apiServices, options) => apiServices.distribrainNodesApi.nodesControllerGetUserSummary(options)
   ),
   getMyReferralPurchases: basicRemoteDataFetcherFn(
-    (apiServices, options) => apiServices.dropletNodesApi.nodesControllerGetReferralPurchases(options)
+    (apiServices, options) => apiServices.distribrainNodesApi.nodesControllerGetReferralPurchases(options)
   ),
 }
 

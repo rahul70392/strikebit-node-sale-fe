@@ -1,4 +1,4 @@
-import {BaseError} from "viem";
+import { BaseError } from "viem";
 
 export function getUIMessageFromViemBaseError(error: BaseError) {
   if (error.shortMessage.startsWith("An unknown RPC error occurred."))
