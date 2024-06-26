@@ -22,8 +22,11 @@ export function FauxAuthenticationPortal() {
   const isBrowser = typeof window !== 'undefined';
   const accessPasswordEncrypted = process.env.NEXT_PUBLIC_ACCESS_PASSWORD_ENCRYPTED;
   const [showForm, setShowForm] = useState(!!accessPasswordEncrypted);
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     setShowForm(!!(accessPasswordEncrypted && (!isBrowser || (localStorage.getItem(encode(accessPasswordEncrypted)) !== "true"))));
+    setLoaded(true);
   }, [isBrowser, accessPasswordEncrypted]);
 
   if (!showForm)
@@ -37,8 +40,12 @@ export function FauxAuthenticationPortal() {
     }
   }
 
-  return <Container className="d-flex flex-row mt-5 gap-3">
-    <Form.Control type="text" id="portalAccessPassword"/>
-    <Button onClick={onLoginClickHandler}>Enter</Button>
+  return <Container className="d-flex flex-row mt-5 gap-3 justify-content-center">
+    {loaded && <>
+        <Form.Control type="text" id="portalAccessPassword"/>
+        <Button onClick={onLoginClickHandler}>Enter</Button>
+    </>}
+
+    {!loaded && <span className="fs-1">Authenticating...</span>}
   </Container>
 }
