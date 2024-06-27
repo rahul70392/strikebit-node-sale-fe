@@ -16,28 +16,31 @@
   filter: hue-rotate(-70deg);
 }
 
-.ring1, .ring2, .ring3, .inner-ring, .core {
-  transform-origin: center;
-}
+// Animation causes flicker on Chrome on Android
+:global(main:not(.device-android-chrome)) {
+  .ring1, .ring2, .ring3, .inner-ring, .core {
+    transform-origin: center;
+  }
 
-.core {
-  animation: rotate-inverse 30s infinite linear;
-}
+  .core {
+    animation: rotate-inverse 30s infinite linear;
+  }
 
-.inner-ring {
-  animation: rotate-inverse 25s infinite linear;
-}
+  .inner-ring {
+    animation: rotate-inverse 25s infinite linear;
+  }
 
-.ring1 {
-  animation: rotate 20s infinite linear;
-}
+  .ring1 {
+    animation: rotate 20s infinite linear;
+  }
 
-.ring2 {
-  animation: rotate-inverse 15s infinite linear;
-}
+  .ring2 {
+    animation: rotate-inverse 15s infinite linear;
+  }
 
-.ring3 {
-  animation: rotate 13s infinite linear;
+  .ring3 {
+    animation: rotate 13s infinite linear;
+  }
 }
 
 @keyframes rotate {

@@ -321,6 +321,7 @@ const HomePageBody = (
     </Card>
 
     <PurchaseNodesDialog
+      referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
       pricePerNode={BigInt(nodesInformation.purchaseInfo.currentPricePerNode)}
       currentNodeLimit={nodesInformation.purchaseInfo.limitAtPrice}
       globalTotalPurchasedNodes={nodesInformation.purchaseInfo.globalPurchasedNodesCount}

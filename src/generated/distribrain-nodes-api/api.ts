@@ -83,6 +83,83 @@ export interface Erc20TokenDto {
 /**
  * 
  * @export
+ * @interface HealthControllerReadiness200Response
+ */
+export interface HealthControllerReadiness200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof HealthControllerReadiness200Response
+     */
+    'status'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness200Response
+     */
+    'info'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; } | null;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness200Response
+     */
+    'error'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; } | null;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness200Response
+     */
+    'details'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; };
+}
+/**
+ * 
+ * @export
+ * @interface HealthControllerReadiness200ResponseInfoValue
+ */
+export interface HealthControllerReadiness200ResponseInfoValue {
+    [key: string]: any;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof HealthControllerReadiness200ResponseInfoValue
+     */
+    'status': string;
+}
+/**
+ * 
+ * @export
+ * @interface HealthControllerReadiness503Response
+ */
+export interface HealthControllerReadiness503Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof HealthControllerReadiness503Response
+     */
+    'status'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness503Response
+     */
+    'info'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; } | null;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness503Response
+     */
+    'error'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; } | null;
+    /**
+     * 
+     * @type {{ [key: string]: HealthControllerReadiness200ResponseInfoValue; }}
+     * @memberof HealthControllerReadiness503Response
+     */
+    'details'?: { [key: string]: HealthControllerReadiness200ResponseInfoValue; };
+}
+/**
+ * 
+ * @export
  * @interface HoldingRewardsWithdrawRequestDto
  */
 export interface HoldingRewardsWithdrawRequestDto {
@@ -111,6 +188,12 @@ export interface NodesFeatureFlags {
      * @memberof NodesFeatureFlags
      */
     'purchasingDisabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'purchasingReferralCodeRequired': boolean;
     /**
      * 
      * @type {boolean}
@@ -335,6 +418,103 @@ export interface UserNodesReferralPurchasesDto {
      */
     'purchases': Array<NodesReferralPurchaseDto>;
 }
+
+/**
+ * DefaultApi - axios parameter creator
+ * @export
+ */
+export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        healthControllerReadiness: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/health`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DefaultApi - functional programming interface
+ * @export
+ */
+export const DefaultApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async healthControllerReadiness(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HealthControllerReadiness200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.healthControllerReadiness(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.healthControllerReadiness']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DefaultApi - factory interface
+ * @export
+ */
+export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DefaultApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        healthControllerReadiness(options?: any): AxiosPromise<HealthControllerReadiness200Response> {
+            return localVarFp.healthControllerReadiness(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DefaultApi - object-oriented interface
+ * @export
+ * @class DefaultApi
+ * @extends {BaseAPI}
+ */
+export class DefaultApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public healthControllerReadiness(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).healthControllerReadiness(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * NodesApi - axios parameter creator

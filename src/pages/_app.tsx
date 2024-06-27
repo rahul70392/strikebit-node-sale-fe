@@ -6,10 +6,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Bai_Jamjuree } from 'next/font/google'
 import { ToastContainer } from "react-toastify";
-import React from "react";
+import React, { useEffect } from "react";
 import { HeaderSEO } from "@/components/main-layout/HeaderSEO";
 import { MainLayout } from "@/components/main-layout/MainLayout";
 import { FauxAuthenticationPortal } from "@/components/FauxAuthenticationPortal";
+import Bowser from "bowser";
 
 const baiJamjureeFont = Bai_Jamjuree({
   weight: ['400', '500', '600', '700'],

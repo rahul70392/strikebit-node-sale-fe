@@ -18,6 +18,7 @@ export const routes = {
   legal: {
     termsAndConditions: () => "https://distribrain.gitbook.io/distribrain-1",
     privacyPolicy: () => "https://distribrain.gitbook.io/distribrain-1/privacy-policy",
+    support: () => "mailto:support@distribrain.ai?subject=DistriBrain%20Engines%20Support",
   },
 
   docs: {

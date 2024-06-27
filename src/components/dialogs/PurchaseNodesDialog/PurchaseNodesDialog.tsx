@@ -13,6 +13,7 @@ import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/No
 import { routes } from "@/data/routes";
 
 export interface PurchaseNodesDialogOpenProps {
+  referralCodeRequired: boolean;
   pricePerNode: bigint,
   globalTotalPurchasedNodes: number,
   currentNodeLimit: number,
@@ -56,7 +57,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const [condition2Accepted, setCondition2Accepted] = useState(false);
 
   const uiDisabled = isExecutingPurchase || !isCorrectChain;
-  const isReferralCodeValid = referralCode.trim().length >= 3;
+  const isReferralCodeValid = !props.referralCodeRequired || referralCode.trim().length >= 3;
   const purchaseButtonDisabled =
     uiDisabled || !isReferralCodeValid || !isEnteredAmountValid || isInsufficientBalance || !condition1Accepted || !condition2Accepted;
 
@@ -124,10 +125,10 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
               <FloatingLabel
                   controlId="purchase-refcode"
-                  label="Referral Code *"
+                  label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
               >
                   <Form.Control
-                      required
+                      required={props.referralCodeRequired}
                       autoComplete="off"
                       disabled={uiDisabled}
                       maxLength={20}
