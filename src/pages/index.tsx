@@ -121,6 +121,12 @@ const HomePageBody = (
     </Badge> DistriBrain Engines Sold
     </Container>
 
+    <Container className="h1 p-0 text-center">
+      Total <Badge bg="primary" pill>
+      {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedDePinKeysCount)}
+    </Badge> DePIN Keys Sold
+    </Container>
+
     <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
         <Button

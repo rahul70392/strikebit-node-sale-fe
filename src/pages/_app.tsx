@@ -6,11 +6,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Bai_Jamjuree } from 'next/font/google'
 import { ToastContainer } from "react-toastify";
-import React, { useEffect } from "react";
+import React from "react";
 import { HeaderSEO } from "@/components/main-layout/HeaderSEO";
 import { MainLayout } from "@/components/main-layout/MainLayout";
 import { FauxAuthenticationPortal } from "@/components/FauxAuthenticationPortal";
-import Bowser from "bowser";
+import { MaintenanceAlert } from "@/components/main-layout/MaintenanceAlert";
 
 const baiJamjureeFont = Bai_Jamjuree({
   weight: ['400', '500', '600', '700'],
@@ -46,9 +46,11 @@ export default function MyApp(appProps: AppProps) {
 
       <style jsx global>{`
           html {
-            --font-primary: ${baiJamjureeFont.style.fontFamily};
+              --font-primary: ${baiJamjureeFont.style.fontFamily};
           }
       `}</style>
+
+      <MaintenanceAlert/>
 
       {fauxAuthenticationPortal != null && fauxAuthenticationPortal}
       {fauxAuthenticationPortal == null && <>
