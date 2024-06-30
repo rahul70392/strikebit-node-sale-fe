@@ -10,13 +10,12 @@ export function MaintenanceAlert() {
     try {
       const info = (await clientApiServices.distribrainNodesApi.nodesControllerGetMaintenanceInfo()).data;
       if (info.maintenanceModeActive) {
-        setMaintenanceMessageHtml(info.message as unknown as string);
+        setMaintenanceMessageHtml(info.message!);
       }
     } catch (err: any) {
       console.error(err);
-      setMaintenanceMessageHtml("Service is undergoing maintenance. The Engines Portal might be unresponsive or have limited functionality in that period.");
+      setMaintenanceMessageHtml("Service is under maintenance. We expect to get back soon. Thank you for your patience!");
     }
-
   }, []);
 
   if (maintenanceMessageHtml == null)

@@ -23,7 +23,7 @@ function ToastInitializer() {
   return <>
     <ToastContainer
       position="top-center"
-      autoClose={3500}
+      autoClose={4000}
       hideProgressBar={true}
       newestOnTop={true}
       closeOnClick

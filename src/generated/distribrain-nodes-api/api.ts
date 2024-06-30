@@ -190,10 +190,10 @@ export interface MaintenanceModeInfoDto {
     'maintenanceModeActive': boolean;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof MaintenanceModeInfoDto
      */
-    'message': object;
+    'message': string | null;
 }
 /**
  * 
@@ -380,6 +380,12 @@ export interface UserMyReferralCodeResponseDto {
      * @memberof UserMyReferralCodeResponseDto
      */
     'code': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserMyReferralCodeResponseDto
+     */
+    'referralRewardBps': number;
 }
 /**
  * 
