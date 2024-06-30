@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { Address, erc20Abi } from "viem";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import classes from "./PurchaseNodesDialog.module.scss";
 import { StarIcon } from "@/components/visual/StarIcon";
 import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
 import { routes } from "@/data/routes";
+import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
 
 export interface PurchaseNodesDialogOpenProps {
   referralCodeRequired: boolean;
@@ -41,6 +42,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   });
 
   const [referralCode, setReferralCode] = useState("");
+  const referralCodeFromQuery = useReferralCodeFromQuery();
   const isCorrectChain = web3Account.chainId === wagmiConfig.chain.id;
 
   const [enteredAmountText, setEnteredAmountText] = useState("1");
@@ -61,6 +63,14 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const purchaseButtonDisabled =
     uiDisabled || !isReferralCodeValid || !isEnteredAmountValid || isInsufficientBalance || !condition1Accepted || !condition2Accepted;
 
+  useEffect(() => {
+    if (!props.isOpen || !referralCodeFromQuery.loaded)
+      return;
+
+    console.log("Using ref code from link: " + referralCodeFromQuery.referralCode);
+    setReferralCode(referralCodeFromQuery.referralCode ?? "");
+  }, [props.isOpen, referralCodeFromQuery.loaded, referralCodeFromQuery.referralCode]);
+  
   const onAmountTextChanged = (valueText: string) => {
     let value: number | null = parseInt(valueText);
     if (value && value > maxEnteredAmountPerPurchase) {

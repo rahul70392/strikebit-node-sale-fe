@@ -5,9 +5,9 @@ import Logo from "../assets/images/Logo.svg";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useAsyncEffect from "use-async-effect";
-import { MdOutlineContentCopy, MdOutlineHistory } from "react-icons/md";
+import { MdLink, MdOutlineContentCopy, MdOutlineHistory } from "react-icons/md";
 import { BiMoneyWithdraw } from "react-icons/bi";
-import { TbShare2 } from "react-icons/tb";
+import { TbLink, TbShare2 } from "react-icons/tb";
 import { basicRemoteDataFetcherFn } from "@/utils/basicRemoteDataFetcher";
 import clientApiServices from "@/services/clientApiServices";
 import {
@@ -16,7 +16,7 @@ import {
   UserNodesAccountSummaryDto
 } from "@/generated/distribrain-nodes-api";
 import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
-import { uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
+import { uiIntNumberNiceFormat, uiPercentageNumberNiceFormat } from "@/utils/uiNiceFormat";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
 import noCacheHeaders from "@/utils/noCacheHeaders";
@@ -30,6 +30,7 @@ import { useWithdrawNodesHoldingRewardsDialog } from "@/hooks/dialogs/useWithdra
 import commonTerms from "@/data/commonTerms";
 import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
+import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
 
 const HomePageBody = (
   {
@@ -52,6 +53,7 @@ const HomePageBody = (
 ) => {
   const router = useRouter();
   const user = useUser();
+  const referralCodeFromQuery = useReferralCodeFromQuery();
   const [showPurchaseDialog, setShowNodePurchaseDialog] = useState(false);
 
   const canWithdrawHoldingRewards =
@@ -121,6 +123,12 @@ const HomePageBody = (
     </Badge> DistriBrain Engines Sold
     </Container>
 
+    <Container className="h1 p-0 text-center">
+      Total <Badge bg="primary" pill>
+      {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedDePinKeysCount)}
+    </Badge> DePIN Keys Sold
+    </Container>
+
     <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
         <Button
@@ -159,8 +167,17 @@ const HomePageBody = (
                   text={referralCode.code}
                   onCopy={() => toast.info("Referral code copied!", {autoClose: 1500})}
                 >
-                  <Button variant="primary ms-3">
+                  <Button variant="primary ms-3" title="Copy referral code">
                     <MdOutlineContentCopy/>
+                  </Button>
+                </CopyToClipboard>
+
+                <CopyToClipboard
+                  text={routes.referralLink(referralCode.code)}
+                  onCopy={() => toast.info("Referral link copied!", {autoClose: 1500})}
+                >
+                  <Button variant="primary ms-2" title="Copy referral link">
+                    <TbLink/>
                   </Button>
                 </CopyToClipboard>
               </Col>

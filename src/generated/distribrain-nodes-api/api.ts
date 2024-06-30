@@ -179,6 +179,25 @@ export interface HoldingRewardsWithdrawRequestDto {
 /**
  * 
  * @export
+ * @interface MaintenanceModeInfoDto
+ */
+export interface MaintenanceModeInfoDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MaintenanceModeInfoDto
+     */
+    'maintenanceModeActive': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof MaintenanceModeInfoDto
+     */
+    'message': string | null;
+}
+/**
+ * 
+ * @export
  * @interface NodesFeatureFlags
  */
 export interface NodesFeatureFlags {
@@ -292,6 +311,12 @@ export interface NodesPurchaseInfoDto {
      * @memberof NodesPurchaseInfoDto
      */
     'globalPurchasedNodesCount': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodesPurchaseInfoDto
+     */
+    'globalPurchasedDePinKeysCount': number;
 }
 /**
  * 
@@ -355,6 +380,12 @@ export interface UserMyReferralCodeResponseDto {
      * @memberof UserMyReferralCodeResponseDto
      */
     'code': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserMyReferralCodeResponseDto
+     */
+    'referralRewardBps': number;
 }
 /**
  * 
@@ -540,9 +571,34 @@ export const NodesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        nodesControllerGetMaintenanceInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/nodes/maintenance-info`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
 
     
@@ -641,10 +697,6 @@ export const NodesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
             if (transactionHash !== undefined) {
                 localVarQueryParameter['transactionHash'] = transactionHash;
@@ -837,6 +889,17 @@ export const NodesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async nodesControllerGetMaintenanceInfo(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MaintenanceModeInfoDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.nodesControllerGetMaintenanceInfo(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodesApi.nodesControllerGetMaintenanceInfo']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async nodesControllerGetReferralPurchases(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserNodesReferralPurchasesDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.nodesControllerGetReferralPurchases(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -936,6 +999,14 @@ export const NodesApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        nodesControllerGetMaintenanceInfo(options?: any): AxiosPromise<MaintenanceModeInfoDto> {
+            return localVarFp.nodesControllerGetMaintenanceInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         nodesControllerGetReferralPurchases(options?: any): AxiosPromise<UserNodesReferralPurchasesDto> {
             return localVarFp.nodesControllerGetReferralPurchases(options).then((request) => request(axios, basePath));
         },
@@ -1009,6 +1080,16 @@ export class NodesApi extends BaseAPI {
      */
     public nodesControllerGetInformation(options?: RawAxiosRequestConfig) {
         return NodesApiFp(this.configuration).nodesControllerGetInformation(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodesApi
+     */
+    public nodesControllerGetMaintenanceInfo(options?: RawAxiosRequestConfig) {
+        return NodesApiFp(this.configuration).nodesControllerGetMaintenanceInfo(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

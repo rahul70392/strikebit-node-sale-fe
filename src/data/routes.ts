@@ -25,6 +25,8 @@ export const routes = {
     dePinKey: () => "https://distribrain.gitbook.io/distribrain/depin/depin-key"
   },
 
+  referralLink: (referralCode: string) => routes.makeAbsoluteUri(`/?eref=${encodeURIComponent(referralCode)}`),
+
   evmBlockExplorer: {
     transaction: (transactionHash: string) =>
       process.env.NEXT_PUBLIC_EVM_BLOCK_EXPLORER_TRANSACTION_HASH_TEMPLATE!

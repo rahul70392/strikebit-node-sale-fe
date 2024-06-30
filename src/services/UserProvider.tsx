@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 const isBrowser = typeof window !== "undefined";
 
-
 export type UserData = {
   userDisplayName: string;
   referralCode: string;
@@ -45,7 +44,6 @@ export const UserProvider: FC<PropsWithChildren<{ isActive: boolean }>> = ({isAc
       return;
     }
 
-    console.log("Fetching ref code");
     try {
       const myReferralCode = (await clientApiServices.distribrainNodesUsersApi.usersControllerGetMyReferralCode()).data;
       setReferralCode(myReferralCode!.code);

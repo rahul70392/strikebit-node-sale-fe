@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 import { HeaderSEO } from "@/components/main-layout/HeaderSEO";
 import { MainLayout } from "@/components/main-layout/MainLayout";
 import { FauxAuthenticationPortal } from "@/components/FauxAuthenticationPortal";
-import Bowser from "bowser";
+import { MaintenanceAlert } from "@/components/main-layout/MaintenanceAlert";
 
 const baiJamjureeFont = Bai_Jamjuree({
   weight: ['400', '500', '600', '700'],
@@ -23,7 +23,7 @@ function ToastInitializer() {
   return <>
     <ToastContainer
       position="top-center"
-      autoClose={3500}
+      autoClose={4000}
       hideProgressBar={true}
       newestOnTop={true}
       closeOnClick
@@ -49,6 +49,8 @@ export default function MyApp(appProps: AppProps) {
             --font-primary: ${baiJamjureeFont.style.fontFamily};
           }
       `}</style>
+
+      <MaintenanceAlert/>
 
       {fauxAuthenticationPortal != null && fauxAuthenticationPortal}
       {fauxAuthenticationPortal == null && <>
