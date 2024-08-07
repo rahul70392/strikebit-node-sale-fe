@@ -264,6 +264,12 @@ export interface NodesInformationDto {
     'holdingRewardErc20Token': Erc20TokenDto;
     /**
      * 
+     * @type {Erc20TokenDto}
+     * @memberof NodesInformationDto
+     */
+    'dePinKeyPurchaseRewardErc20Token': Erc20TokenDto;
+    /**
+     * 
      * @type {number}
      * @memberof NodesInformationDto
      */
@@ -435,6 +441,12 @@ export interface UserNodesAccountSummaryDto {
      * @memberof UserNodesAccountSummaryDto
      */
     'totalHoldingRewardConvertableVestedTokenAmount': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserNodesAccountSummaryDto
+     */
+    'totalDePinKeyPurchaseRewardAvailableTokenAmount': string;
 }
 /**
  * 

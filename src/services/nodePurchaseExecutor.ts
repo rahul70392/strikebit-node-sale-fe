@@ -59,8 +59,6 @@ const createAndSendNodePurchaseTransaction = async (
 
   const transactionParameters = {
     to: unsignedTransaction.to!,
-    //nonce: unsignedTransaction.nonce,
-    //gasPrice: unsignedTransaction.gasPrice?.toBigInt(),
     gas: gasLimit,
     data: unsignedTransaction.data as any,
     value: unsignedTransaction.value!,

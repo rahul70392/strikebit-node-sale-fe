@@ -65,6 +65,9 @@ const HomePageBody = (
   const formatReferralTokenAmount = (amount: bigint) =>
     formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals ?? 0);
 
+  const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
+    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.decimals ?? 0);
+
   const onNodePurchased = async () => {
     setShowNodePurchaseDialog(false);
     refetchData();
@@ -287,6 +290,16 @@ const HomePageBody = (
                     {formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardAvailableTokenAmount))}
                   </span>
                   <span className="card-subtitle h4"> {commonTerms.holdingRewardTokenName}</span>
+                </div>
+              </div>
+
+              <div>
+                <Card.Title>{commonTerms.dePinKeyPurchaseRewardTokenName} Rewards</Card.Title>
+                <div>
+                  <span className="card-subtitle h3">
+                    {formatHoldingTokenAmount(BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount))}
+                  </span>
+                  <span className="card-subtitle h4"> {commonTerms.dePinKeyPurchaseRewardTokenName}</span>
                 </div>
               </div>
             </Stack>
