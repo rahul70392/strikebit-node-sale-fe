@@ -79,6 +79,12 @@ export interface Erc20TokenDto {
      * @memberof Erc20TokenDto
      */
     'decimals': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Erc20TokenDto
+     */
+    'chainId'?: number;
 }
 /**
  * 
@@ -231,6 +237,12 @@ export interface NodesFeatureFlags {
      * @memberof NodesFeatureFlags
      */
     'referralRewardsWithdrawDisabled': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof NodesFeatureFlags
+     */
+    'dePinKeyPurchaseRewardsWithdrawDisabled': boolean;
 }
 /**
  * 
@@ -463,10 +475,10 @@ export interface UserNodesReferralPurchasesDto {
 }
 
 /**
- * DefaultApi - axios parameter creator
+ * HealthApi - axios parameter creator
  * @export
  */
-export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+export const HealthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -501,11 +513,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * DefaultApi - functional programming interface
+ * HealthApi - functional programming interface
  * @export
  */
-export const DefaultApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
+export const HealthApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HealthApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -515,18 +527,18 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         async healthControllerReadiness(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HealthControllerReadiness200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.healthControllerReadiness(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.healthControllerReadiness']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['HealthApi.healthControllerReadiness']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * DefaultApi - factory interface
+ * HealthApi - factory interface
  * @export
  */
-export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = DefaultApiFp(configuration)
+export const HealthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HealthApiFp(configuration)
     return {
         /**
          * 
@@ -540,20 +552,20 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
 };
 
 /**
- * DefaultApi - object-oriented interface
+ * HealthApi - object-oriented interface
  * @export
- * @class DefaultApi
+ * @class HealthApi
  * @extends {BaseAPI}
  */
-export class DefaultApi extends BaseAPI {
+export class HealthApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof HealthApi
      */
     public healthControllerReadiness(options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).healthControllerReadiness(options).then((request) => request(this.axios, this.basePath));
+        return HealthApiFp(this.configuration).healthControllerReadiness(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -799,6 +811,45 @@ export const NodesApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @param {RewardsWithdrawRequestDto} rewardsWithdrawRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        nodesControllerPostDePinKeyPurchaseRewardsWithdraw: async (rewardsWithdrawRequestDto: RewardsWithdrawRequestDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'rewardsWithdrawRequestDto' is not null or undefined
+            assertParamExists('nodesControllerPostDePinKeyPurchaseRewardsWithdraw', 'rewardsWithdrawRequestDto', rewardsWithdrawRequestDto)
+            const localVarPath = `/v1/nodes/me/depin-key-purchase-rewards/withdraw`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(rewardsWithdrawRequestDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {HoldingRewardsWithdrawRequestDto} holdingRewardsWithdrawRequestDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -966,6 +1017,18 @@ export const NodesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {RewardsWithdrawRequestDto} rewardsWithdrawRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto: RewardsWithdrawRequestDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['NodesApi.nodesControllerPostDePinKeyPurchaseRewardsWithdraw']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {HoldingRewardsWithdrawRequestDto} holdingRewardsWithdrawRequestDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1055,6 +1118,15 @@ export const NodesApiFactory = function (configuration?: Configuration, basePath
          */
         nodesControllerPostCreatePurchaseTransaction(createPurchaseTransactionRequestDto: CreatePurchaseTransactionRequestDto, options?: any): AxiosPromise<CreatePurchaseTransactionResponseDto> {
             return localVarFp.nodesControllerPostCreatePurchaseTransaction(createPurchaseTransactionRequestDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {RewardsWithdrawRequestDto} rewardsWithdrawRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto: RewardsWithdrawRequestDto, options?: any): AxiosPromise<void> {
+            return localVarFp.nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1154,6 +1226,17 @@ export class NodesApi extends BaseAPI {
      */
     public nodesControllerPostCreatePurchaseTransaction(createPurchaseTransactionRequestDto: CreatePurchaseTransactionRequestDto, options?: RawAxiosRequestConfig) {
         return NodesApiFp(this.configuration).nodesControllerPostCreatePurchaseTransaction(createPurchaseTransactionRequestDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {RewardsWithdrawRequestDto} rewardsWithdrawRequestDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NodesApi
+     */
+    public nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto: RewardsWithdrawRequestDto, options?: RawAxiosRequestConfig) {
+        return NodesApiFp(this.configuration).nodesControllerPostDePinKeyPurchaseRewardsWithdraw(rewardsWithdrawRequestDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

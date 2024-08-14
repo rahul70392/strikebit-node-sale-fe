@@ -6,13 +6,13 @@ import { useAccount } from "wagmi";
 import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
 import { BasicWithdrawDialogBody } from "@/components/dialogs/BasicWithdrawDialogBody";
 import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
-import { UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
+import { Erc20TokenDto, UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
 import { Spinner } from "react-bootstrap";
 import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 
 interface WithdrawNodesReferralRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
-  referralRewardTokenDecimals: number;
+  referralRewardToken: Erc20TokenDto;
   confirmCallback: () => void;
   successCallback: () => void;
   refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
@@ -39,7 +39,7 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
 
   const formattedReferralRewardTokenAmount =
     openProps != null && referralRewardTokenAmount != null ?
-      `${formatTokenAmountUI(referralRewardTokenAmount, openProps.referralRewardTokenDecimals)} USDT` :
+      `${formatTokenAmountUI(referralRewardTokenAmount, openProps.referralRewardToken.decimals)} USDT` :
       "";
 
   const handleConfirm = useCallback(async function (confirmCallback?: () => void, successCallback?: () => void) {

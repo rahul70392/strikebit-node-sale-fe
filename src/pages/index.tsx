@@ -27,6 +27,7 @@ import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
 import { useNodesReferralPurchasesHistoryDialog } from "@/hooks/dialogs/useNodesReferralPurchasesHistoryDialog";
 import { useWithdrawNodesReferralRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesReferralRewardsDialog";
 import { useWithdrawNodesHoldingRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesHoldingRewardsDialog";
+import { useWithdrawDePinKeyPurchaseRewardsDialog } from "@/hooks/dialogs/useWithdrawDePinKeyPurchaseRewardsDialog";
 import commonTerms from "@/data/commonTerms";
 import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
@@ -41,6 +42,7 @@ const HomePageBody = (
     onViewReferralPurchasesHistoryClicked,
     onWithdrawReferralRewardsClicked,
     onWithdrawHoldingRewardsClicked,
+    onWithdrawDePinKeyPurchaseRewardsClicked
   }: {
     referralCode: UserMyReferralCodeResponseDto;
     userNodesSummary: UserNodesAccountSummaryDto;
@@ -49,6 +51,7 @@ const HomePageBody = (
     onViewReferralPurchasesHistoryClicked: () => void;
     onWithdrawReferralRewardsClicked: () => void;
     onWithdrawHoldingRewardsClicked: () => void;
+    onWithdrawDePinKeyPurchaseRewardsClicked: () => void;
   }
 ) => {
   const router = useRouter();
@@ -59,14 +62,17 @@ const HomePageBody = (
   const canWithdrawHoldingRewards =
     BigInt(userNodesSummary.totalHoldingRewardBalanceTokenAmount) > 0;
 
+  const canWithdrawDePinKeyPurchaseRewards =
+    BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount) > 100_000n; // ignore dust
+
   const formatHoldingTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals!);
 
   const formatReferralTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals!);
 
   const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.decimals!);
 
   const onNodePurchased = async () => {
     setShowNodePurchaseDialog(false);
@@ -293,26 +299,36 @@ const HomePageBody = (
                 </div>
               </div>
 
+              {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
+                  <Button
+                      variant="primary p-3 px-4 fs-5"
+                      disabled={!canWithdrawHoldingRewards}
+                      onClick={() => onWithdrawHoldingRewardsClicked()}
+                  >
+                      <TbShare2 className="me-2"/> Claim {commonTerms.holdingRewardTokenName}
+                  </Button>
+              </>}
+
               <div>
                 <Card.Title>{commonTerms.dePinKeyPurchaseRewardTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
-                    {formatHoldingTokenAmount(BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount))}
+                    {formatDePinKeyPurchaseRewardTokenAmount(BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount))}
                   </span>
                   <span className="card-subtitle h4"> {commonTerms.dePinKeyPurchaseRewardTokenName}</span>
                 </div>
               </div>
-            </Stack>
 
-            {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
-                <Button
-                    variant="primary p-3 px-4 fs-5"
-                    disabled={!canWithdrawHoldingRewards}
-                    onClick={() => onWithdrawHoldingRewardsClicked()}
-                >
-                    <TbShare2 className="me-2"/> Claim {commonTerms.holdingRewardTokenName}
-                </Button>
-            </>}
+              {!nodesInformation.featureFlags.dePinKeyPurchaseRewardsWithdrawDisabled && <>
+                  <Button
+                      variant="primary p-3 px-4 fs-5"
+                      disabled={!canWithdrawDePinKeyPurchaseRewards}
+                      onClick={() => onWithdrawDePinKeyPurchaseRewardsClicked()}
+                  >
+                      <TbShare2 className="me-2"/> Claim {commonTerms.dePinKeyPurchaseRewardTokenName}
+                  </Button>
+              </>}
+            </Stack>
           </Card.Body>
         </Card>
       </Col>
@@ -421,6 +437,7 @@ const HomePage: NextPage = () => {
   const referralPurchasesHistoryDialog = useNodesReferralPurchasesHistoryDialog();
   const withdrawReferralRewardsDialog = useWithdrawNodesReferralRewardsDialog();
   const withdrawHoldingRewardsDialog = useWithdrawNodesHoldingRewardsDialog();
+  const withdrawDePinKeyPurchaseRewardsDialog = useWithdrawDePinKeyPurchaseRewardsDialog();
 
   const showReferralPurchasesHistoryDialog = () => {
     referralPurchasesHistoryDialog.open({
@@ -431,7 +448,7 @@ const HomePage: NextPage = () => {
   const showWithdrawReferralRewardsDialog = () => {
     withdrawReferralRewardsDialog.open({
       userNodesSummary: userNodesSummary,
-      referralRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
+      referralRewardToken: nodesInformation!.holdingRewardErc20Token,
       confirmCallback: () => {
       },
       successCallback: async () => await fetchData(),
@@ -442,8 +459,7 @@ const HomePage: NextPage = () => {
   const showWithdrawHoldingRewardsDialog = () => {
     withdrawHoldingRewardsDialog.open({
       userNodesSummary: userNodesSummary,
-      holdingRewardTokenAddress: nodesInformation!.holdingRewardErc20Token?.address,
-      holdingRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
+      holdingRewardToken: nodesInformation!.holdingRewardErc20Token,
       holdingRewardEarlyWithdrawalPenaltyBps: nodesInformation!.holdingRewardEarlyWithdrawalPenaltyBps,
       holdingRewardMinAmountOnWalletRequiredForWithdrawal: BigInt(nodesInformation!.holdingRewardMinAmountOnWalletRequiredForWithdrawal),
       confirmCallback: () => {
@@ -451,6 +467,17 @@ const HomePage: NextPage = () => {
       successCallback: async () => await fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     });
+  }
+
+  const showWithdrawDePinKeyPurchaseRewardsDialog = () => {
+    withdrawDePinKeyPurchaseRewardsDialog.open({
+      userNodesSummary: userNodesSummary,
+      dePinKeyPurchaseRewardToken: nodesInformation!.dePinKeyPurchaseRewardErc20Token,
+      confirmCallback: () => {
+      },
+      successCallback: async () => await fetchData(),
+      refetchUserSummary: fetchUserSummaryData,
+    })
   }
 
   const loaded = user.user && referralCode != null && userNodesSummary != null && nodesInformation != null;
@@ -491,6 +518,7 @@ const HomePage: NextPage = () => {
                 onViewReferralPurchasesHistoryClicked={() => showReferralPurchasesHistoryDialog()}
                 onWithdrawReferralRewardsClicked={() => showWithdrawReferralRewardsDialog()}
                 onWithdrawHoldingRewardsClicked={() => showWithdrawHoldingRewardsDialog()}
+                onWithdrawDePinKeyPurchaseRewardsClicked={() => showWithdrawDePinKeyPurchaseRewardsDialog()}
             />
         </>}
       </Container>
