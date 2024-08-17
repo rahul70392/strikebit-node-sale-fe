@@ -31,6 +31,7 @@ import commonTerms from "@/data/commonTerms";
 import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
+import { pow } from "@/utils/bigint/bigIntMath";
 
 const HomePageBody = (
   {
@@ -66,7 +67,7 @@ const HomePageBody = (
     formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals ?? 0);
 
   const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(BigInt(userNodesSummary.totalDePinKeyCount) * 100_000n * pow(10n, 6), 6);
 
   const onNodePurchased = async () => {
     setShowNodePurchaseDialog(false);
@@ -297,7 +298,7 @@ const HomePageBody = (
                 <Card.Title>{commonTerms.dePinKeyPurchaseRewardTokenName} Rewards</Card.Title>
                 <div>
                   <span className="card-subtitle h3">
-                    {formatHoldingTokenAmount(BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount))}
+                    {formatDePinKeyPurchaseRewardTokenAmount(BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount))}
                   </span>
                   <span className="card-subtitle h4"> {commonTerms.dePinKeyPurchaseRewardTokenName}</span>
                 </div>
