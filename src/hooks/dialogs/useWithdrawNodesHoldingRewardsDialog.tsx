@@ -19,8 +19,8 @@ interface WithdrawNodesHoldingRewardsDialogOpenProps {
   holdingRewardToken: Erc20TokenDto;
   holdingRewardEarlyWithdrawalPenaltyBps: number;
   holdingRewardMinAmountOnWalletRequiredForWithdrawal: bigint;
-  confirmCallback: () => void;
-  successCallback: () => void;
+  confirmCallback: () => Promise<void>;
+  successCallback: () => Promise<void>;
   refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
 }
 
@@ -122,9 +122,11 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}` :
         "...";
 
-    const handleConfirm = async function (confirmCallback?: () => void, successCallback?: () => void) {
+    const handleConfirm = async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {
       try {
-        confirmCallback?.();
+        if (confirmCallback) {
+          await confirmCallback();
+        }
 
         const address = web3Account.address;
         await clientApiServices.distribrainNodesApi.nodesControllerPostHoldingRewardsWithdraw({
@@ -132,11 +134,13 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
           includeVested: includeVested
         });
         toast.success(`Successfully withdrawn ${formattedWithdrawalAmount} to address ${address}!`);
-
-        successCallback?.();
       } catch (err: any) {
         defaultErrorHandler(err, "Failed to withdraw holding reward: ");
         return false;
+      }
+
+      if (successCallback) {
+        await successCallback();
       }
 
       return true;
@@ -165,7 +169,8 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
             </span>
 
               <span className="">
-              <span className="fw-bolder">Wallet {commonTerms.holdingRewardTokenName} Balance: </span>{formattedUserBalance}
+              <span
+                  className="fw-bolder">Wallet {commonTerms.holdingRewardTokenName} Balance: </span>{formattedUserBalance}
             </span>
           </>}
         </Stack>
@@ -175,8 +180,10 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         </Stack>
 
         <Stack className="fs-5 mt-3">
-          <span><span className="fw-bolder">{commonTerms.holdingRewardTokenName} Balance: </span>{formattedAvailableAmount}</span>
-          <span><span className="fw-bolder">{commonTerms.holdingRewardVestedTokenName} Balance: </span>{formattedVestedAmount}</span>
+          <span><span
+            className="fw-bolder">{commonTerms.holdingRewardTokenName} Balance: </span>{formattedAvailableAmount}</span>
+          <span><span
+            className="fw-bolder">{commonTerms.holdingRewardVestedTokenName} Balance: </span>{formattedVestedAmount}</span>
 
           <span className="mt-3">
             <span className="fw-bolder">Convertable {commonTerms.holdingRewardVestedTokenName} Balance: </span>
@@ -203,7 +210,8 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
             <Alert variant="warning">
                 Minimum
                 of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardToken.decimals)} {commonTerms.holdingRewardTokenName}
-                on the connected wallet is required for withdrawal. You can buy more {commonTerms.holdingRewardTokenName} on any supported exchange.
+                on the connected wallet is required for withdrawal. You can buy
+                more {commonTerms.holdingRewardTokenName} on any supported exchange.
             </Alert>
         </>}
 

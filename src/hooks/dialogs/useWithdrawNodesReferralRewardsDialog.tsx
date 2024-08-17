@@ -13,8 +13,8 @@ import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs
 interface WithdrawNodesReferralRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
   referralRewardToken: Erc20TokenDto;
-  confirmCallback: () => void;
-  successCallback: () => void;
+  confirmCallback: () => Promise<void>;
+  successCallback: () => Promise<void>;
   refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
 }
 
@@ -42,20 +42,24 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
       `${formatTokenAmountUI(referralRewardTokenAmount, openProps.referralRewardToken.decimals)} USDT` :
       "";
 
-  const handleConfirm = useCallback(async function (confirmCallback?: () => void, successCallback?: () => void) {
+  const handleConfirm = useCallback(async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {
     try {
-      confirmCallback?.();
+      if (confirmCallback) {
+        await confirmCallback();
+      }
 
       const address = web3Account.address;
       await clientApiServices.distribrainNodesApi.nodesControllerPostReferralRewardsWithdraw({
         address: address!
       });
       toast.success(`Successfully withdrawn ${formattedReferralRewardTokenAmount} to address ${address}!`);
-
-      successCallback?.();
     } catch (err: any) {
       defaultErrorHandler(err, "Failed to withdraw referral reward: ");
       return false;
+    }
+
+    if (successCallback) {
+      await successCallback();
     }
 
     return true;

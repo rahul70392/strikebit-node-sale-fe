@@ -15,14 +15,14 @@ import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
 
 export interface PurchaseNodesDialogOpenProps {
   referralCodeRequired: boolean;
-  pricePerNode: bigint,
-  globalTotalPurchasedNodes: number,
-  currentNodeLimit: number,
-  purchaseTokenAddress: string,
-  purchaseTokenDecimals: number,
-  isOpen: boolean
-  onClose: () => void
-  purchasedCallback: () => void
+  pricePerNode: bigint;
+  globalTotalPurchasedNodes: number;
+  currentNodeLimit: number;
+  purchaseTokenAddress: string;
+  purchaseTokenDecimals: number;
+  isOpen: boolean;
+  onClose: () => void;
+  purchasedCallback: () => Promise<void>;
 }
 
 export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
@@ -53,7 +53,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const maxEnteredAmountPerPurchase = props.currentNodeLimit - props.globalTotalPurchasedNodes;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
-    isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data< finalPrice);
+    isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data < finalPrice);
 
   const [condition1Accepted, setCondition1Accepted] = useState(false);
   const [condition2Accepted, setCondition2Accepted] = useState(false);
@@ -70,7 +70,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
     console.log("Using ref code from link: " + referralCodeFromQuery.referralCode);
     setReferralCode(referralCodeFromQuery.referralCode ?? "");
   }, [props.isOpen, referralCodeFromQuery.loaded, referralCodeFromQuery.referralCode]);
-  
+
   const onAmountTextChanged = (valueText: string) => {
     let value: number | null = parseInt(valueText);
     if (value && value > maxEnteredAmountPerPurchase) {
@@ -91,7 +91,10 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
   const onPurchasedSucceeded = async () => {
     toast.success("Purchased DistriBrain Engines successfully.");
-    props.purchasedCallback();
+
+    if (props.purchasedCallback) {
+      await props.purchasedCallback();
+    }
   }
 
   return <>
@@ -202,7 +205,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                   referralCode={referralCode}
                   disabled={purchaseButtonDisabled}
                   disabledText={(!uiDisabled && isInsufficientBalance) ? `Insufficient USDT Balance` : null}
-                  onPurchasedFailed={() => {
+                  onPurchasedFailed={async () => {
                   }}
                   onPurchasedSucceeded={() => onPurchasedSucceeded()}
                   isExecutingPurchase={isExecutingPurchase}

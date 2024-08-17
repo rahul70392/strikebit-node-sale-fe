@@ -15,8 +15,8 @@ import Link from "next/link";
 interface WithdrawDePinKeyPurchaseRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
   dePinKeyPurchaseRewardToken: CosmosTokenDto;
-  confirmCallback: () => void;
-  successCallback: () => void;
+  confirmCallback: () => Promise<void>;
+  successCallback: () => Promise<void>;
   refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
 }
 
@@ -53,22 +53,26 @@ export const useWithdrawDePinKeyPurchaseRewardsDialog = (): WithdrawDePinKeyPurc
       `${formatTokenAmountUI(dePinKeyPurchaseRewardTokenAmount, openProps.dePinKeyPurchaseRewardToken.exponent)} ${commonTerms.dePinKeyPurchaseRewardTokenName}` :
       "";
 
-  const handleConfirm = useCallback(async function (confirmCallback?: () => void, successCallback?: () => void) {
+  const handleConfirm = useCallback(async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {
     if (!isWithdrawalAddressValid)
       return false;
     
     try {
-      confirmCallback?.();
+      if (confirmCallback) {
+        await confirmCallback();
+      }
 
       await clientApiServices.distribrainNodesApi.nodesControllerPostDePinKeyPurchaseRewardsWithdraw({
         address: address
       });
       toast.success(`Successfully withdrawn ${formattedDePinKeyPurchaseRewardTokenAmount} to address ${address}!`);
-
-      successCallback?.();
     } catch (err: any) {
       defaultErrorHandler(err, `Failed to withdraw ${commonTerms.dePinKeyPurchaseRewardTokenName} reward: `);
       return false;
+    }
+
+    if (successCallback) {
+      await successCallback();
     }
 
     return true;

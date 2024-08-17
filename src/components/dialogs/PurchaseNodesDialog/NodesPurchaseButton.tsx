@@ -18,8 +18,8 @@ export function NodesPurchaseButton(
     disabledText?: string | null,
     isExecutingPurchase: boolean,
     setIsExecutingPurchase: (isExecutingPurchase: boolean) => void,
-    onPurchasedFailed: (error: string) => void
-    onPurchasedSucceeded: () => void
+    onPurchasedFailed: (error: string) => Promise<void>
+    onPurchasedSucceeded: () => Promise<void>
   }) {
 
   const web3Account = useAccount();
@@ -64,7 +64,7 @@ export function NodesPurchaseButton(
       //undeliveredTransactions.remove(mainTransactionResult.hash);
       console.log("Purchase confirmed", transactionHash);
 
-      props.onPurchasedSucceeded();
+      await props.onPurchasedSucceeded();
     } catch (error: any) {
       let errorMessage: string | null;
       if (error instanceof BaseError) {

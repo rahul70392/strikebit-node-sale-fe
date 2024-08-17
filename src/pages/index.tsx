@@ -47,7 +47,7 @@ const HomePageBody = (
     referralCode: UserMyReferralCodeResponseDto;
     userNodesSummary: UserNodesAccountSummaryDto;
     nodesInformation: NodesInformationDto;
-    refetchData: () => void;
+    refetchData: () => Promise<void>;
     onViewReferralPurchasesHistoryClicked: () => void;
     onWithdrawReferralRewardsClicked: () => void;
     onWithdrawHoldingRewardsClicked: () => void;
@@ -75,8 +75,8 @@ const HomePageBody = (
     formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.exponent!);
 
   const onNodePurchased = async () => {
+    await refetchData();
     setShowNodePurchaseDialog(false);
-    refetchData();
   }
 
   const onLogoutClicked = async () => {
@@ -391,16 +391,22 @@ const HomePage: NextPage = () => {
   const fetchData = async () => {
     console.log("Fetching data");
 
-    const options = {
-      headers: noCacheHeaders
-    };
-    const myReferralCodePromise = remoteData.getMyReferralCode(clientApiServices, null, null, options);
-    const myNodesSummaryPromise = remoteData.getMyNodesSummary(clientApiServices, null, null, options);
-    const nodesInformationPromise = remoteData.getNodesInformation(clientApiServices, null, null, options);
+    try {
+      const options = {
+        headers: noCacheHeaders
+      };
+      const myReferralCodePromise = remoteData.getMyReferralCode(clientApiServices, null, null, options);
+      const myNodesSummaryPromise = remoteData.getMyNodesSummary(clientApiServices, null, null, options);
+      const nodesInformationPromise = remoteData.getNodesInformation(clientApiServices, null, null, options);
 
-    setReferralCode(await myReferralCodePromise);
-    setUserNodesSummary(await myNodesSummaryPromise);
-    setNodesInformation(await nodesInformationPromise);
+      setReferralCode(await myReferralCodePromise);
+      setUserNodesSummary(await myNodesSummaryPromise);
+      setNodesInformation(await nodesInformationPromise);
+
+      //await new Promise(r => setTimeout(r, 4500));
+    } catch (err: any) {
+      defaultErrorHandler(err, "Failed to update user data: ");
+    }
   }
 
   const fetchUserSummaryData = async (clearCurrentData: boolean) => {
@@ -449,9 +455,9 @@ const HomePage: NextPage = () => {
     withdrawReferralRewardsDialog.open({
       userNodesSummary: userNodesSummary,
       referralRewardToken: nodesInformation!.holdingRewardErc20Token,
-      confirmCallback: () => {
+      confirmCallback: async () => {
       },
-      successCallback: async () => await fetchData(),
+      successCallback: () => fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     })
   }
@@ -462,9 +468,9 @@ const HomePage: NextPage = () => {
       holdingRewardToken: nodesInformation!.holdingRewardErc20Token,
       holdingRewardEarlyWithdrawalPenaltyBps: nodesInformation!.holdingRewardEarlyWithdrawalPenaltyBps,
       holdingRewardMinAmountOnWalletRequiredForWithdrawal: BigInt(nodesInformation!.holdingRewardMinAmountOnWalletRequiredForWithdrawal),
-      confirmCallback: () => {
+      confirmCallback: async () => {
       },
-      successCallback: async () => await fetchData(),
+      successCallback: () => fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     });
   }
@@ -473,9 +479,9 @@ const HomePage: NextPage = () => {
     withdrawDePinKeyPurchaseRewardsDialog.open({
       userNodesSummary: userNodesSummary,
       dePinKeyPurchaseRewardToken: nodesInformation!.dePinKeyPurchaseRewardErc20Token,
-      confirmCallback: () => {
+      confirmCallback: async () => {
       },
-      successCallback: async () => await fetchData(),
+      successCallback: () => fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     })
   }
