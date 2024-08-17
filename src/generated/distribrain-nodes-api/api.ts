@@ -26,6 +26,37 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface CosmosTokenDto
+ */
+export interface CosmosTokenDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof CosmosTokenDto
+     */
+    'denom': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CosmosTokenDto
+     */
+    'exponent': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CosmosTokenDto
+     */
+    'chainId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CosmosTokenDto
+     */
+    'chainPrefix': string;
+}
+/**
+ * 
+ * @export
  * @interface CreatePurchaseTransactionRequestDto
  */
 export interface CreatePurchaseTransactionRequestDto {
@@ -276,10 +307,10 @@ export interface NodesInformationDto {
     'holdingRewardErc20Token': Erc20TokenDto;
     /**
      * 
-     * @type {Erc20TokenDto}
+     * @type {CosmosTokenDto}
      * @memberof NodesInformationDto
      */
-    'dePinKeyPurchaseRewardErc20Token': Erc20TokenDto;
+    'dePinKeyPurchaseRewardErc20Token': CosmosTokenDto;
     /**
      * 
      * @type {number}

@@ -63,7 +63,7 @@ const HomePageBody = (
     BigInt(userNodesSummary.totalHoldingRewardBalanceTokenAmount) > 0;
 
   const canWithdrawDePinKeyPurchaseRewards =
-    BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount) > 100_000n; // ignore dust
+    BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount) > 1_000n; // ignore dust
 
   const formatHoldingTokenAmount = (amount: bigint) =>
     formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals!);
@@ -72,7 +72,7 @@ const HomePageBody = (
     formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals!);
 
   const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.decimals!);
+    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.exponent!);
 
   const onNodePurchased = async () => {
     setShowNodePurchaseDialog(false);
