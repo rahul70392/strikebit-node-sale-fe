@@ -368,8 +368,7 @@ const HomePageBody = (
 
     <PurchaseNodesDialog
       referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
-      pricePerNode={BigInt(nodesInformation.purchaseInfo.currentPricePerNode)}
-      currentNodeLimit={nodesInformation.purchaseInfo.limitAtPrice}
+      nodeTypes={nodesInformation.purchaseInfo.nodeTypes}
       globalTotalPurchasedNodes={nodesInformation.purchaseInfo.globalPurchasedNodesCount}
       purchaseTokenAddress={nodesInformation.purchaseInfo.erc20Token.address}
       purchaseTokenDecimals={nodesInformation.purchaseInfo.erc20Token.decimals}

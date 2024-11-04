@@ -62,6 +62,12 @@ export interface CosmosTokenDto {
 export interface CreatePurchaseTransactionRequestDto {
     /**
      * 
+     * @type {number}
+     * @memberof CreatePurchaseTransactionRequestDto
+     */
+    'nodeTypeId': number;
+    /**
+     * 
      * @type {string}
      * @memberof CreatePurchaseTransactionRequestDto
      */
@@ -344,16 +350,10 @@ export interface NodesPurchaseInfoDto {
     'erc20Token': Erc20TokenDto;
     /**
      * 
-     * @type {string}
+     * @type {Array<NodesTypePurchaseInfoDto>}
      * @memberof NodesPurchaseInfoDto
      */
-    'currentPricePerNode': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof NodesPurchaseInfoDto
-     */
-    'limitAtPrice': number;
+    'nodeTypes': Array<NodesTypePurchaseInfoDto>;
     /**
      * 
      * @type {number}
@@ -403,6 +403,37 @@ export interface NodesReferralPurchaseDto {
      * @memberof NodesReferralPurchaseDto
      */
     'rewardEarnedTokenAmount': string;
+}
+/**
+ * 
+ * @export
+ * @interface NodesTypePurchaseInfoDto
+ */
+export interface NodesTypePurchaseInfoDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof NodesTypePurchaseInfoDto
+     */
+    'id': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof NodesTypePurchaseInfoDto
+     */
+    'currentPricePerNode': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodesTypePurchaseInfoDto
+     */
+    'limitAtPrice': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodesTypePurchaseInfoDto
+     */
+    'globalPurchasedCount': number;
 }
 /**
  * 

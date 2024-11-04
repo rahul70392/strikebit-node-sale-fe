@@ -25,6 +25,7 @@ const confirmNodePurchaseTransaction = async(
 
 const createAndSendNodePurchaseTransaction = async (
   buyerAddress: Address,
+  nodeTypeId: number,
   amount: number,
   referralCode: string,
   setState: (state: NodePurchaseState) => void,
@@ -36,10 +37,11 @@ const createAndSendNodePurchaseTransaction = async (
 
   const createPurchaseTransactionResult =
     await clientApiServices.distribrainNodesApi.nodesControllerPostCreatePurchaseTransaction({
-    amount: amount,
-    address: buyerAddress,
-    referralCode: referralCode
-  });
+      nodeTypeId: nodeTypeId,
+      amount: amount,
+      address: buyerAddress,
+      referralCode: referralCode
+    });
 
   const unsignedTransactionHex = createPurchaseTransactionResult.data.unsignedTransactionHex;
   const unsignedTransaction = parseTransaction(<TransactionSerializedGeneric>unsignedTransactionHex);

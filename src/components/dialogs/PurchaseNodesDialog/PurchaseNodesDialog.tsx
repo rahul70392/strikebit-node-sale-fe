@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { Address, erc20Abi } from "viem";
 import { toast } from "react-toastify";
@@ -12,14 +12,16 @@ import { StarIcon } from "@/components/visual/StarIcon";
 import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/NodesPurchaseButton";
 import { routes } from "@/data/routes";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
+import { NodesTypePurchaseInfoDto } from "@/generated/distribrain-nodes-api";
+
+const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
 export interface PurchaseNodesDialogOpenProps {
   referralCodeRequired: boolean;
-  pricePerNode: bigint;
-  globalTotalPurchasedNodes: number;
-  currentNodeLimit: number;
+  nodeTypes: NodesTypePurchaseInfoDto[];
   purchaseTokenAddress: string;
   purchaseTokenDecimals: number;
+  globalTotalPurchasedNodes: number;
   isOpen: boolean;
   onClose: () => void;
   purchasedCallback: () => Promise<void>;
@@ -48,9 +50,27 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const [enteredAmountText, setEnteredAmountText] = useState("1");
   const enteredAmount = parseInt(enteredAmountText) || 0;
 
-  const finalPrice = BigInt(enteredAmount) * props.pricePerNode;
+  const [selectedNodeTypeId, setSelectedNodeTypeId] = useState(props.nodeTypes[0].id);
+  const selectedNodeType = useMemo(() => {
+    return props.nodeTypes.find(x => x.id === selectedNodeTypeId)!;
+  }, [props.nodeTypes, selectedNodeTypeId]);
 
-  const maxEnteredAmountPerPurchase = props.currentNodeLimit - props.globalTotalPurchasedNodes;
+  const getNodeTypeIdName = (nodeTypeId: number) => {
+    switch (nodeTypeId) {
+      case 1:
+        return "Basic";
+      case 2:
+        return "Pro";
+      case 3:
+        return "Ultimate";
+      default:
+        return `Node type ${nodeTypeId}`;
+    }
+  }
+
+  const finalPrice = BigInt(enteredAmount) * BigInt(selectedNodeType.currentPricePerNode);
+
+  const maxEnteredAmountPerPurchase = selectedNodeType.limitAtPrice - props.globalTotalPurchasedNodes;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
     isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data < finalPrice);
@@ -89,7 +109,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
     props.onClose();
   }
 
-  const onPurchasedSucceeded = async () => {
+  const onPurchaseSucceeded = async () => {
     toast.success("Purchased DistriBrain Engines successfully.");
 
     if (props.purchasedCallback) {
@@ -112,6 +132,27 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       <Modal.Body>
         <Stack gap={2}>
           {(web3Account.isConnected && isCorrectChain) && <>
+              {showNodeTypesSelection && <>
+                  <FloatingLabel
+                      controlId="purchase-node-type"
+                      label="Node Type"
+                  >
+                      <Form.Select
+                          required
+                          value={selectedNodeTypeId}
+                          onChange={e => setSelectedNodeTypeId(parseInt(e.currentTarget.value))}
+                      >
+                        {props.nodeTypes.map((nodeType) =>
+                          <option
+                            key={`purchase-node-type-id-${nodeType.id}`}
+                            value={nodeType.id}>
+                            {getNodeTypeIdName(nodeType.id)}
+                          </option>
+                        )}
+                      </Form.Select>
+                  </FloatingLabel>
+              </>}
+
               <FloatingLabel
                   controlId="purchase-amount"
                   label="DistriBrain Engines to buy *"
@@ -154,7 +195,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
               <Stack direction="vertical" gap={2} className="fs-5 mb-2">
                 <span>
-                    Price per Engine: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(props.pricePerNode, props.purchaseTokenDecimals))} USDT
+                    Price per Engine: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT
                 </span>
 
                 {isEnteredAmountValid && <span>
@@ -201,13 +242,14 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
               </InputGroup>
 
               <NodesPurchaseButton
+                  nodeTypeId={selectedNodeType.id}
                   amount={enteredAmount}
                   referralCode={referralCode}
                   disabled={purchaseButtonDisabled}
                   disabledText={(!uiDisabled && isInsufficientBalance) ? `Insufficient USDT Balance` : null}
-                  onPurchasedFailed={async () => {
+                  onPurchaseFailed={async () => {
                   }}
-                  onPurchasedSucceeded={() => onPurchasedSucceeded()}
+                  onPurchaseSucceeded={() => onPurchaseSucceeded()}
                   isExecutingPurchase={isExecutingPurchase}
                   setIsExecutingPurchase={(val) => setIsExecutingPurchase(val)}
               />

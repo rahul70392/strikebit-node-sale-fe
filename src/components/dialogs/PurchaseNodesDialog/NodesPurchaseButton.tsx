@@ -12,14 +12,15 @@ import ButtonLoadable from "@/components/shared/ButtonLoadable";
 
 export function NodesPurchaseButton(
   props: {
+    nodeTypeId: number,
     amount: number,
     referralCode: string,
     disabled: boolean,
     disabledText?: string | null,
     isExecutingPurchase: boolean,
     setIsExecutingPurchase: (isExecutingPurchase: boolean) => void,
-    onPurchasedFailed: (error: string) => Promise<void>
-    onPurchasedSucceeded: () => Promise<void>
+    onPurchaseFailed: (error: string) => Promise<void>
+    onPurchaseSucceeded: () => Promise<void>
   }) {
 
   const web3Account = useAccount();
@@ -37,6 +38,7 @@ export function NodesPurchaseButton(
   const executePurchase = useCallback(async (): Promise<string> => {
     const transactionHash = await nodePurchaseExecutor.createAndSendNodePurchaseTransaction(
       web3Account.address!,
+      props.nodeTypeId,
       props.amount,
       props.referralCode,
       setState,
@@ -64,7 +66,7 @@ export function NodesPurchaseButton(
       //undeliveredTransactions.remove(mainTransactionResult.hash);
       console.log("Purchase confirmed", transactionHash);
 
-      await props.onPurchasedSucceeded();
+      await props.onPurchaseSucceeded();
     } catch (error: any) {
       let errorMessage: string | null;
       if (error instanceof BaseError) {
