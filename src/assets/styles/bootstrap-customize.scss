@@ -7,7 +7,8 @@ body {
   //--bs-body-color: #{$body-color};
   //--bs-secondary-color: #6c757d;
 
-  background: radial-gradient(circle at center, rgba(6, 188, 191, 0.15), var(--bs-body-bg) 60%);
+  // background: radial-gradient(circle at center, rgba(6, 188, 191, 0.15), var(--bs-body-bg) 60%);
+  background-color: black;
 }
 
 .badge {
