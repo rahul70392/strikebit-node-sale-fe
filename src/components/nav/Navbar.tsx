@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 export const Navbar = () => {
     const user = useUser();
     const router = useRouter();
+    const [userName, setUserName] = useState<string>("");
 
     const [selectedValue, setSelectedValue] = useState<string>('');
 
@@ -128,7 +129,7 @@ export const Navbar = () => {
                                         }}
                                     />
                                 )}
-                                {user.user!.userDisplayName}
+                                {user.user?.name}
                             </button>
                             {isOpen && (
                                 <div

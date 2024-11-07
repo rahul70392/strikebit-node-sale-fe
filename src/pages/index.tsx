@@ -1,6 +1,6 @@
 import { Badge, Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import Logo from "../assets/images/Logo.svg";
 import logo2 from "../assets/images/logo2.png"
 import Image from "next/image";
@@ -34,7 +34,10 @@ import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
 import { Navbar } from "@/components/nav/Navbar";
-import { Copy, Share2 } from 'lucide-react'
+import { Copy, Share2 } from 'lucide-react';
+// import Button from '@mui/material/Button';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const HomePageBody = (
   {
@@ -61,6 +64,7 @@ const HomePageBody = (
   const user = useUser();
   const referralCodeFromQuery = useReferralCodeFromQuery();
   const [showPurchaseDialog, setShowNodePurchaseDialog] = useState(false);
+  const [openCopyToast, setOpenCopyToast] = useState<boolean>(false);
 
   const canWithdrawHoldingRewards =
     BigInt(userNodesSummary.totalHoldingRewardBalanceTokenAmount) > 0;
@@ -86,6 +90,17 @@ const HomePageBody = (
     toast.info("Signing out...");
     await router.push(routes.auth.logout());
   }
+
+  // const handleCloseCopyToast = (
+  //   event?: SyntheticEvent,
+  //   reason?: SnackbarCloseReason,
+  // ) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+
+  //   setOpenCopyToast(false);
+  // };
 
   return <div>
     <Navbar />
@@ -162,7 +177,7 @@ const HomePageBody = (
               style={{
               }}
             >
-              XXXXXXXXXXXXX
+              {user.user?.referralCode}
             </div>
 
             <div className=""
@@ -173,7 +188,14 @@ const HomePageBody = (
                 justifyContent: "center"
               }}
             >
-              <Copy size={24} color="#1214FD" />
+              <CopyToClipboard
+                text={referralCode.code}
+                onCopy={() => toast.info("Referral code copied!", { autoClose: 1500 })}
+              >
+                <button title="Copy referral code" className="bg-white border-0">
+                  <Copy size={24} color="#1214FD" />
+                </button>
+              </CopyToClipboard>
               <Share2 size={24} color="#1214FD" />
             </div>
           </div>
@@ -203,7 +225,9 @@ const HomePageBody = (
                 fontWeight: 700,
                 fontSize: "20px"
               }}
-            >user@gmail.com</p>
+            >
+              {user?.user?.email}
+            </p>
           </div>
         </div>
 
@@ -215,7 +239,7 @@ const HomePageBody = (
         >
           <button className="bg-gray text-mid"
             style={{
-              height:"100%",
+              height: "100%",
               padding: "0 2rem",
               border: "none"
             }}
@@ -226,8 +250,346 @@ const HomePageBody = (
       </div>
     </section>
 
+    <section className='m-top'
+      style={{
+      }}
+    >
+      <div
+        className='text-big bg-dark-gray'
+        style={{
+          padding: "1rem 3rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <p>Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
+        <p>Daily StrikeBit reward pull 1,000,000</p>
+      </div>
+    </section>
 
-    <Container className="h1 p-0 text-center">
+    <section className='m-top'
+      style={{
+        position: "relative"
+      }}
+    >
+      <Image
+        src="/bg-shadow-1.svg"
+        alt=''
+        width={1334.08}
+        height={1327.82}
+        style={{
+          position: "absolute",
+          zIndex: "-5",
+          top: "-40%",
+          left: "-10%"
+        }}
+      />
+      <div className='bg-dark-gray'
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "3rem 0"
+        }}
+      >
+        <h2 className='text-heading'>Radiant Node Referrals</h2>
+
+        <div className=''
+          style={{
+            display: "flex",
+            gap: "2rem"
+          }}
+        >
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">CORE</h2>
+            <Image
+              src="/core.svg"
+              alt='CORE'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY CORE
+            </button>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">PRIME</h2>
+            <Image
+              src="/prime.svg"
+              alt='PRIME'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY PRIME
+            </button>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">ELITE</h2>
+            <Image
+              src="/elite.svg"
+              alt='ELITE'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY ELITE
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className='m-top relative'
+      style={{
+        position: "relative",
+        marginBottom: "12rem"
+      }}
+    >
+      <div className='bg-dark-gray'
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "4rem",
+          padding: '3rem 12rem'
+        }}
+      >
+        <h2 className='text-heading'>My Holdings</h2>
+
+        <div className=''
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4rem"
+          }}
+        >
+          <div className=''
+            style={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >CORE</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >PRIME</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >ELITE</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly"
+            }}
+          >
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >rStrike</p>
+              <p className='text-heading'>XXX</p>
+              <button className='blue-btn'
+                style={{
+                  border: 0
+                }}
+              >
+                CLAIM
+              </button>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >USDT</p>
+              <p className='text-heading'>XXX</p>
+              <button className='blue-btn'
+                style={{
+                  border: 0
+                }}
+              >
+                WITHDRAW
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className='m-top'
+      style={{
+        position: "relative",
+        marginBottom: "3rem"
+      }}
+    >
+      <Image
+        src="/bg-shadow-2.svg"
+        alt=""
+        height={1327.82}
+        width={1334.08}
+        className=""
+        style={{
+          position: "absolute",
+          zIndex: "-5",
+          bottom: "-4rem",
+          right: "-25%"
+        }}
+      />
+      <div className=''
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "3rem"
+        }}
+      >
+        <div className=''
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly"
+          }}
+        >
+          <div>Privacy Policy</div>
+          <div>Terms and Condition</div>
+          <div>Support</div>
+        </div>
+        <div className=''
+          style={{
+            textAlign: "center"
+          }}
+        >
+          © 2024 StrikeBit
+        </div>
+      </div>
+    </section>
+
+    {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
         {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
       </Badge> DistriBrain Engines Sold
@@ -237,7 +599,7 @@ const HomePageBody = (
       Total <Badge bg="primary" pill>
         {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedDePinKeysCount)}
       </Badge> DePIN Keys Sold
-    </Container>
+    </Container> */}
 
     <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
@@ -254,7 +616,7 @@ const HomePageBody = (
       </div>
     </Container>
 
-    <Container className="mb-1 h2 text-center">
+    {/* <Container className="mb-1 h2 text-center">
       <StarIcon /><span className="mx-3">My Referral Code</span><StarIcon />
     </Container>
 
@@ -303,7 +665,7 @@ const HomePageBody = (
           </Card.Body>
         </Card>
       </Col>
-    </Row>
+    </Row> */}
 
     <Container className="mt-2 mb-1 h2 text-center">
       <StarIcon /><span className="mx-3">My Engines</span><StarIcon />
