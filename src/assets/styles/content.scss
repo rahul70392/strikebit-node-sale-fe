@@ -83,12 +83,12 @@
 
   justify-content: center;
   align-items: center;
-}
 
-.web3-connect-button-wrapper > * {
-  width: 100%;
-  max-width: 50%;
-  min-width: 12rem;
+  > * {
+    width: 100%;
+    max-width: 75%;
+    min-width: 12rem;
+  }
 }
 
 button[data-testid="rk-connect-button"],

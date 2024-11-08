@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { handleBackendError } from "@/services/backend-errors/backendErrorHandling";
+import { handleBackendError, handleBackendErrorOptional } from "@/services/backend-errors/backendErrorHandling";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -9,7 +9,7 @@ export const defaultErrorHandler = (
 ) => {
   console.error(error);
   if (isBrowser) {
-    const backendError = handleBackendError(error)!;
-    toast.error(toastPrefix + (backendError.message ?? error.message));
+    const backendError = handleBackendErrorOptional(error);
+    toast.error(toastPrefix + (backendError?.message ?? error.message));
   }
 }

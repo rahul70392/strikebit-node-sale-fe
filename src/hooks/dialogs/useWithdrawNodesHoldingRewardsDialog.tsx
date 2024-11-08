@@ -9,19 +9,18 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { uiPercentageNumberNiceFormat } from "@/utils/uiNiceFormat";
 import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
 import { Address, erc20Abi } from "viem";
-import { UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
+import { Erc20TokenDto, UserNodesAccountSummaryDto } from "@/generated/distribrain-nodes-api";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 import { DialogConfig, useGenericConfirmationDialog } from "@/components/dialogs/GenericConfirmationDialog";
 import commonTerms from "@/data/commonTerms";
 
 interface WithdrawNodesHoldingRewardsDialogOpenProps {
   userNodesSummary: UserNodesAccountSummaryDto | null,
-  holdingRewardTokenAddress: string;
-  holdingRewardTokenDecimals: number;
+  holdingRewardToken: Erc20TokenDto;
   holdingRewardEarlyWithdrawalPenaltyBps: number;
   holdingRewardMinAmountOnWalletRequiredForWithdrawal: bigint;
-  confirmCallback: () => void;
-  successCallback: () => void;
+  confirmCallback: () => Promise<void>;
+  successCallback: () => Promise<void>;
   refetchUserSummary: (clearCurrentData: boolean) => Promise<UserNodesAccountSummaryDto | null>;
 }
 
@@ -48,7 +47,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
 
   const holdingRewardTokenUserWalletBalance = useReadContract({
     abi: erc20Abi,
-    address: openProps?.holdingRewardTokenAddress as Address,
+    address: openProps?.holdingRewardToken.address as Address,
     chainId: wagmiConfig.chain.id,
     functionName: "balanceOf",
     args: [web3Account.address as Address],
@@ -101,31 +100,33 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
     const isWithdrawable = isWithdrawableWithoutMinUserBalanceCheck && isMinUserWalletBalanceReached;
 
     const formattedVestedAmount =
-      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}`
+      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedConvertableVestedAmount =
-      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}`
+      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedAvailableAmount =
-      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
+      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedWithdrawalAmount =
-      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
+      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedDeductionAmount =
       includeVested ?
-        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName} + 
-          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardVestedTokenName}` :
-        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}`;
+        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName} + 
+          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}` :
+        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedUserBalance =
       holdingRewardTokenUserWalletBalance.data != null ?
-        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardTokenDecimals)} ${commonTerms.holdingRewardTokenName}` :
+        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}` :
         "...";
 
-    const handleConfirm = async function (confirmCallback?: () => void, successCallback?: () => void) {
+    const handleConfirm = async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {
       try {
-        confirmCallback?.();
+        if (confirmCallback) {
+          await confirmCallback();
+        }
 
         const address = web3Account.address;
         await clientApiServices.distribrainNodesApi.nodesControllerPostHoldingRewardsWithdraw({
@@ -133,11 +134,13 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
           includeVested: includeVested
         });
         toast.success(`Successfully withdrawn ${formattedWithdrawalAmount} to address ${address}!`);
-
-        successCallback?.();
       } catch (err: any) {
         defaultErrorHandler(err, "Failed to withdraw holding reward: ");
         return false;
+      }
+
+      if (successCallback) {
+        await successCallback();
       }
 
       return true;
@@ -166,7 +169,8 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
             </span>
 
               <span className="">
-              <span className="fw-bolder">Wallet {commonTerms.holdingRewardTokenName} Balance: </span>{formattedUserBalance}
+              <span
+                  className="fw-bolder">Wallet {commonTerms.holdingRewardTokenName} Balance: </span>{formattedUserBalance}
             </span>
           </>}
         </Stack>
@@ -176,8 +180,10 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         </Stack>
 
         <Stack className="fs-5 mt-3">
-          <span><span className="fw-bolder">{commonTerms.holdingRewardTokenName} Balance: </span>{formattedAvailableAmount}</span>
-          <span><span className="fw-bolder">{commonTerms.holdingRewardVestedTokenName} Balance: </span>{formattedVestedAmount}</span>
+          <span><span
+            className="fw-bolder">{commonTerms.holdingRewardTokenName} Balance: </span>{formattedAvailableAmount}</span>
+          <span><span
+            className="fw-bolder">{commonTerms.holdingRewardVestedTokenName} Balance: </span>{formattedVestedAmount}</span>
 
           <span className="mt-3">
             <span className="fw-bolder">Convertable {commonTerms.holdingRewardVestedTokenName} Balance: </span>
@@ -203,8 +209,9 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         {(!isWithdrawable && isWithdrawableWithoutMinUserBalanceCheck) && <>
             <Alert variant="warning">
                 Minimum
-                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardTokenDecimals)} {commonTerms.holdingRewardTokenName}
-                on the connected wallet is required for withdrawal. You can buy more {commonTerms.holdingRewardTokenName} on any supported exchange.
+                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardToken.decimals)} {commonTerms.holdingRewardTokenName}
+                on the connected wallet is required for withdrawal. You can buy
+                more {commonTerms.holdingRewardTokenName} on any supported exchange.
             </Alert>
         </>}
 

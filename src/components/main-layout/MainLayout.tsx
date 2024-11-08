@@ -25,7 +25,7 @@ export const MainLayout = ({children}: { children: React.ReactNode }) => {
 
   return <>
     <Container as="main" className={extraMainClass}>
-      <DistribrainEngineBackgroundImage/>
+      {/* <DistribrainEngineBackgroundImage/> */}
 
       <Auth0UserProvider>
         <UserProvider isActive={true}>

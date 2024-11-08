@@ -1,7 +1,8 @@
 import { Badge, Button, Card, Col, Container, Row, Spinner, Stack } from "react-bootstrap";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import Logo from "../assets/images/Logo.svg";
+import logo2 from "../assets/images/logo2.png"
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useAsyncEffect from "use-async-effect";
@@ -27,11 +28,17 @@ import { defaultErrorHandler } from "@/utils/defaultErrorHandler";
 import { useNodesReferralPurchasesHistoryDialog } from "@/hooks/dialogs/useNodesReferralPurchasesHistoryDialog";
 import { useWithdrawNodesReferralRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesReferralRewardsDialog";
 import { useWithdrawNodesHoldingRewardsDialog } from "@/hooks/dialogs/useWithdrawNodesHoldingRewardsDialog";
+import { useWithdrawDePinKeyPurchaseRewardsDialog } from "@/hooks/dialogs/useWithdrawDePinKeyPurchaseRewardsDialog";
 import commonTerms from "@/data/commonTerms";
 import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
-import { pow } from "@/utils/bigint/bigIntMath";
+
+import { Navbar } from "@/components/nav/Navbar";
+import { Copy, Share2 } from 'lucide-react';
+// import Button from '@mui/material/Button';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const HomePageBody = (
   {
@@ -42,36 +49,42 @@ const HomePageBody = (
     onViewReferralPurchasesHistoryClicked,
     onWithdrawReferralRewardsClicked,
     onWithdrawHoldingRewardsClicked,
+    onWithdrawDePinKeyPurchaseRewardsClicked
   }: {
     referralCode: UserMyReferralCodeResponseDto;
     userNodesSummary: UserNodesAccountSummaryDto;
     nodesInformation: NodesInformationDto;
-    refetchData: () => void;
+    refetchData: () => Promise<void>;
     onViewReferralPurchasesHistoryClicked: () => void;
     onWithdrawReferralRewardsClicked: () => void;
     onWithdrawHoldingRewardsClicked: () => void;
+    onWithdrawDePinKeyPurchaseRewardsClicked: () => void;
   }
 ) => {
   const router = useRouter();
   const user = useUser();
   const referralCodeFromQuery = useReferralCodeFromQuery();
   const [showPurchaseDialog, setShowNodePurchaseDialog] = useState(false);
+  const [openCopyToast, setOpenCopyToast] = useState<boolean>(false);
 
   const canWithdrawHoldingRewards =
     BigInt(userNodesSummary.totalHoldingRewardBalanceTokenAmount) > 0;
 
+  const canWithdrawDePinKeyPurchaseRewards =
+    BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount) > 1_000n; // ignore dust
+
   const formatHoldingTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals!);
 
   const formatReferralTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals ?? 0);
+    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals!);
 
   const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(BigInt(userNodesSummary.totalDePinKeyCount) * 100_000n * pow(10n, 6), 6);
+    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.exponent!);
 
   const onNodePurchased = async () => {
+    await refetchData();
     setShowNodePurchaseDialog(false);
-    refetchData();
   }
 
   const onLogoutClicked = async () => {
@@ -79,8 +92,20 @@ const HomePageBody = (
     await router.push(routes.auth.logout());
   }
 
-  return <>
-    <Container
+  // const handleCloseCopyToast = (
+  //   event?: SyntheticEvent,
+  //   reason?: SnackbarCloseReason,
+  // ) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+
+  //   setOpenCopyToast(false);
+  // };
+
+  return <div>
+    <Navbar />
+    {/* <Container
       className="d-flex w-auto mb-2 flex-column flex-sm-row align-items-center gap-3"
       style={{
         minHeight: "2.9rem"
@@ -117,21 +142,465 @@ const HomePageBody = (
         className="d-flex h-100 px-3 py-2 align-items-center rounded-pill no-primary-gradient"
         onClick={() => onLogoutClicked()}
       >
-        <span className="d-flex fs-4 me-2"><FiLogOut/></span> Sign Out
+        <span className="d-flex fs-4 me-2"><FiLogOut /></span> Sign Out
       </Button>
+    </Container> */}
+
+    <section className="m-top">
+      <div className="bg-blue"
+        style={{
+          padding: "4rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))"
+        }}
+      >
+        <div className="flex flex-col gap-7"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.75rem"
+          }}
+        >
+          <h2 className="text-big">
+            Your Personal Referral Code:
+          </h2>
+          <div
+            className="bg-white"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0.5rem 1rem"
+            }}
+          >
+            <div
+              className="text-blue text-mid"
+              style={{
+              }}
+            >
+              {user.user?.referralCode}
+            </div>
+
+            <div className=""
+              style={{
+                display: "flex",
+                gap: "1rem",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <CopyToClipboard
+                text={referralCode.code}
+                onCopy={() => toast.info("Referral code copied!", { autoClose: 1500 })}
+              >
+                <button title="Copy referral code" className="bg-white border-0">
+                  <Copy size={24} color="#1214FD" />
+                </button>
+              </CopyToClipboard>
+              <Share2 size={24} color="#1214FD" />
+            </div>
+          </div>
+        </div>
+
+        <div className=""
+          style={{
+            display: "flex",
+            alignItems: "end",
+            padding: "0 3rem"
+          }}
+        >
+          <Image
+            src="/google.svg"
+            alt="Google"
+            height={56}
+            width={56}
+          />
+          <div className=""
+            style={{
+              padding: "0 1rem"
+            }}
+          >
+            <p className="text-small">Google ID</p>
+            <p className=""
+              style={{
+                fontWeight: 700,
+                fontSize: "20px"
+              }}
+            >
+              {user?.user?.email}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-end"
+          style={{
+            display: "flex",
+            justifyContent: "end"
+          }}
+        >
+          <button className="bg-gray text-mid"
+            style={{
+              height: "100%",
+              padding: "0 2rem",
+              border: "none"
+            }}
+          >
+            Free Plan
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section className='m-top'
+      style={{
+      }}
+    >
+      <div
+        className='text-big bg-dark-gray'
+        style={{
+          padding: "1rem 3rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <p>Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
+        <p>Daily StrikeBit reward pull 1,000,000</p>
+      </div>
+    </section>
+
+    <section className='m-top'
+      style={{
+        position: "relative"
+      }}
+    >
+      <Image
+        src="/bg-shadow-1.svg"
+        alt=''
+        width={1334.08}
+        height={1327.82}
+        style={{
+          position: "absolute",
+          zIndex: "-5",
+          top: "-40%",
+          left: "-10%"
+        }}
+      />
+      <div className='bg-dark-gray'
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "3rem 0"
+        }}
+      >
+        <h2 className='text-heading'>Radiant Node Referrals</h2>
+
+        <div className=''
+          style={{
+            display: "flex",
+            gap: "2rem"
+          }}
+        >
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">CORE</h2>
+            <Image
+              src="/core.svg"
+              alt='CORE'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY CORE
+            </button>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">PRIME</h2>
+            <Image
+              src="/prime.svg"
+              alt='PRIME'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY PRIME
+            </button>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem",
+              justifyContent: "space-between"
+            }}
+          >
+            <h2 className="text-bigger">ELITE</h2>
+            <Image
+              src="/elite.svg"
+              alt='ELITE'
+              height={360}
+              width={362.67}
+            />
+            <ul className=''
+              style={{
+                listStyleType: "disc"
+              }}
+            >
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>Lorem ipsum dolor sit amet, consectetur</li>
+            </ul>
+            <button
+              className='white-btn'
+              style={{
+                border: 0
+              }}
+              onClick={() => setShowNodePurchaseDialog(true)}
+              disabled={nodesInformation.featureFlags.purchasingDisabled}
+            >
+              BUY ELITE
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className='m-top relative'
+      style={{
+        position: "relative",
+        marginBottom: "12rem"
+      }}
+    >
+      <div className='bg-dark-gray'
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "4rem",
+          padding: '3rem 12rem'
+        }}
+      >
+        <h2 className='text-heading'>My Holdings</h2>
+
+        <div className=''
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4rem"
+          }}
+        >
+          <div className=''
+            style={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >CORE</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >PRIME</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >ELITE</p>
+              <p className='text-heading'>XXX</p>
+            </div>
+          </div>
+          <div className=''
+            style={{
+              display: "flex",
+              justifyContent: "space-evenly"
+            }}
+          >
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >rStrike</p>
+              <p className='text-heading'>XXX</p>
+              <button className='blue-btn'
+                style={{
+                  border: 0
+                }}
+              >
+                CLAIM
+              </button>
+            </div>
+            <div className=''
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <p className='text-big'
+                style={{
+                  color: "rgba(255,255,255,0.7)"
+                }}
+              >USDT</p>
+              <p className='text-heading'>XXX</p>
+              <button className='blue-btn'
+                style={{
+                  border: 0
+                }}
+              >
+                WITHDRAW
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className='m-top'
+      style={{
+        position: "relative",
+        marginBottom: "3rem"
+      }}
+    >
+      <Image
+        src="/bg-shadow-2.svg"
+        alt=""
+        height={1327.82}
+        width={1334.08}
+        className=""
+        style={{
+          position: "absolute",
+          zIndex: "-5",
+          bottom: "-4rem",
+          right: "-25%"
+        }}
+      />
+      <div className=''
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "3rem"
+        }}
+      >
+        <div className=''
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly"
+          }}
+        >
+          <div>Privacy Policy</div>
+          <div>Terms and Condition</div>
+          <div>Support</div>
+        </div>
+        <div className=''
+          style={{
+            textAlign: "center"
+          }}
+        >
+          © 2024 StrikeBit
+        </div>
+      </div>
+    </section>
+
+    {/* <Container className="h1 p-0 text-center">
+      Total <Badge bg="primary" pill>
+        {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
+      </Badge> DistriBrain Engines Sold
     </Container>
 
     <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
-      {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
-    </Badge> DistriBrain Engines Sold
-    </Container>
-
-    <Container className="h1 p-0 text-center">
-      Total <Badge bg="primary" pill>
-      {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedDePinKeysCount)}
-    </Badge> DePIN Keys Sold
-    </Container>
+        {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedDePinKeysCount)}
+      </Badge> DePIN Keys Sold
+    </Container> */}
 
     <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
@@ -148,8 +617,8 @@ const HomePageBody = (
       </div>
     </Container>
 
-    <Container className="mb-1 h2 text-center">
-      <StarIcon/><span className="mx-3">My Referral Code</span><StarIcon/>
+    {/* <Container className="mb-1 h2 text-center">
+      <StarIcon /><span className="mx-3">My Referral Code</span><StarIcon />
     </Container>
 
     <Row>
@@ -169,19 +638,19 @@ const HomePageBody = (
 
                 <CopyToClipboard
                   text={referralCode.code}
-                  onCopy={() => toast.info("Referral code copied!", {autoClose: 1500})}
+                  onCopy={() => toast.info("Referral code copied!", { autoClose: 1500 })}
                 >
                   <Button variant="primary ms-3" title="Copy referral code">
-                    <MdOutlineContentCopy/>
+                    <MdOutlineContentCopy />
                   </Button>
                 </CopyToClipboard>
 
                 <CopyToClipboard
                   text={routes.referralLink(referralCode.code)}
-                  onCopy={() => toast.info("Referral link copied!", {autoClose: 1500})}
+                  onCopy={() => toast.info("Referral link copied!", { autoClose: 1500 })}
                 >
                   <Button variant="primary ms-2" title="Copy referral link">
-                    <TbLink/>
+                    <TbLink />
                   </Button>
                 </CopyToClipboard>
               </Col>
@@ -197,10 +666,10 @@ const HomePageBody = (
           </Card.Body>
         </Card>
       </Col>
-    </Row>
+    </Row> */}
 
     <Container className="mt-2 mb-1 h2 text-center">
-      <StarIcon/><span className="mx-3">My Engines</span><StarIcon/>
+      <StarIcon /><span className="mx-3">My Engines</span><StarIcon />
     </Container>
 
     <Row>
@@ -236,17 +705,17 @@ const HomePageBody = (
               </Col>
 
               <Col xs={12}
-                   md={6}
-                   className="d-flex flex-column justify-content-evenly m-0 mt-3 mt-md-0 h6"
+                md={6}
+                className="d-flex flex-column justify-content-evenly m-0 mt-3 mt-md-0 h6"
               >
                 <p>
                   For every 5 purchased Engines, you are granted a <a
-                  href={routes.docs.dePinKey()}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  DePIN Key
-                </a>!
+                    href={routes.docs.dePinKey()}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    DePIN Key
+                  </a>!
                 </p>
 
                 <p className="mb-0">Each Engine and each DePIN Key generate
@@ -260,7 +729,7 @@ const HomePageBody = (
     </Row>
 
     <Container className="mt-2 mb-1 h2 text-center">
-      <StarIcon/><span className="mx-3">My Balance</span><StarIcon/>
+      <StarIcon /><span className="mx-3">My Balance</span><StarIcon />
     </Container>
 
     <Card
@@ -294,6 +763,16 @@ const HomePageBody = (
                 </div>
               </div>
 
+              {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
+                <Button
+                  variant="primary p-3 px-4 fs-5"
+                  disabled={!canWithdrawHoldingRewards}
+                  onClick={() => onWithdrawHoldingRewardsClicked()}
+                >
+                  <TbShare2 className="me-2" /> Claim {commonTerms.holdingRewardTokenName}
+                </Button>
+              </>}
+
               <div>
                 <Card.Title>{commonTerms.dePinKeyPurchaseRewardTokenName} Rewards</Card.Title>
                 <div>
@@ -303,17 +782,17 @@ const HomePageBody = (
                   <span className="card-subtitle h4"> {commonTerms.dePinKeyPurchaseRewardTokenName}</span>
                 </div>
               </div>
-            </Stack>
 
-            {!nodesInformation.featureFlags.holdingRewardsWithdrawDisabled && <>
+              {!nodesInformation.featureFlags.dePinKeyPurchaseRewardsWithdrawDisabled && <>
                 <Button
-                    variant="primary p-3 px-4 fs-5"
-                    disabled={!canWithdrawHoldingRewards}
-                    onClick={() => onWithdrawHoldingRewardsClicked()}
+                  variant="primary p-3 px-4 fs-5"
+                  disabled={!canWithdrawDePinKeyPurchaseRewards}
+                  onClick={() => onWithdrawDePinKeyPurchaseRewardsClicked()}
                 >
-                    <TbShare2 className="me-2"/> Claim {commonTerms.holdingRewardTokenName}
+                  <TbShare2 className="me-2" /> Claim {commonTerms.dePinKeyPurchaseRewardTokenName}
                 </Button>
-            </>}
+              </>}
+            </Stack>
           </Card.Body>
         </Card>
       </Col>
@@ -330,20 +809,20 @@ const HomePageBody = (
               </div>
 
               {!nodesInformation.featureFlags.referralRewardsWithdrawDisabled && <>
-                  <Button
-                      variant="primary p-3 px-4 fs-5"
-                      disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
-                      onClick={() => onWithdrawReferralRewardsClicked()}
-                  >
-                      <BiMoneyWithdraw className="me-2"/> Withdraw
-                  </Button>
+                <Button
+                  variant="primary p-3 px-4 fs-5"
+                  disabled={BigInt(userNodesSummary.totalReferralRewardAvailableTokenAmount) <= 0}
+                  onClick={() => onWithdrawReferralRewardsClicked()}
+                >
+                  <BiMoneyWithdraw className="me-2" /> Withdraw
+                </Button>
               </>}
 
               <Button
                 variant="primary p-3 px-4 fs-5"
                 onClick={() => onViewReferralPurchasesHistoryClicked()}
               >
-                <MdOutlineHistory className="me-2"/> Reward History
+                <MdOutlineHistory className="me-2" /> Reward History
               </Button>
             </Stack>
           </Card.Body>
@@ -353,8 +832,7 @@ const HomePageBody = (
 
     <PurchaseNodesDialog
       referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
-      pricePerNode={BigInt(nodesInformation.purchaseInfo.currentPricePerNode)}
-      currentNodeLimit={nodesInformation.purchaseInfo.limitAtPrice}
+      nodeTypes={nodesInformation.purchaseInfo.nodeTypes}
       globalTotalPurchasedNodes={nodesInformation.purchaseInfo.globalPurchasedNodesCount}
       purchaseTokenAddress={nodesInformation.purchaseInfo.erc20Token.address}
       purchaseTokenDecimals={nodesInformation.purchaseInfo.erc20Token.decimals}
@@ -362,7 +840,7 @@ const HomePageBody = (
       onClose={() => setShowNodePurchaseDialog(false)}
       purchasedCallback={() => onNodePurchased()}
     />
-  </>
+  </div>
 }
 
 const HomePage: NextPage = () => {
@@ -376,16 +854,22 @@ const HomePage: NextPage = () => {
   const fetchData = async () => {
     console.log("Fetching data");
 
-    const options = {
-      headers: noCacheHeaders
-    };
-    const myReferralCodePromise = remoteData.getMyReferralCode(clientApiServices, null, null, options);
-    const myNodesSummaryPromise = remoteData.getMyNodesSummary(clientApiServices, null, null, options);
-    const nodesInformationPromise = remoteData.getNodesInformation(clientApiServices, null, null, options);
+    try {
+      const options = {
+        headers: noCacheHeaders
+      };
+      const myReferralCodePromise = remoteData.getMyReferralCode(clientApiServices, null, null, options);
+      const myNodesSummaryPromise = remoteData.getMyNodesSummary(clientApiServices, null, null, options);
+      const nodesInformationPromise = remoteData.getNodesInformation(clientApiServices, null, null, options);
 
-    setReferralCode(await myReferralCodePromise);
-    setUserNodesSummary(await myNodesSummaryPromise);
-    setNodesInformation(await nodesInformationPromise);
+      setReferralCode(await myReferralCodePromise);
+      setUserNodesSummary(await myNodesSummaryPromise);
+      setNodesInformation(await nodesInformationPromise);
+
+      //await new Promise(r => setTimeout(r, 4500));
+    } catch (err: any) {
+      defaultErrorHandler(err, "Failed to update user data: ");
+    }
   }
 
   const fetchUserSummaryData = async (clearCurrentData: boolean) => {
@@ -422,6 +906,7 @@ const HomePage: NextPage = () => {
   const referralPurchasesHistoryDialog = useNodesReferralPurchasesHistoryDialog();
   const withdrawReferralRewardsDialog = useWithdrawNodesReferralRewardsDialog();
   const withdrawHoldingRewardsDialog = useWithdrawNodesHoldingRewardsDialog();
+  const withdrawDePinKeyPurchaseRewardsDialog = useWithdrawDePinKeyPurchaseRewardsDialog();
 
   const showReferralPurchasesHistoryDialog = () => {
     referralPurchasesHistoryDialog.open({
@@ -432,10 +917,10 @@ const HomePage: NextPage = () => {
   const showWithdrawReferralRewardsDialog = () => {
     withdrawReferralRewardsDialog.open({
       userNodesSummary: userNodesSummary,
-      referralRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
-      confirmCallback: () => {
+      referralRewardToken: nodesInformation!.holdingRewardErc20Token,
+      confirmCallback: async () => {
       },
-      successCallback: async () => await fetchData(),
+      successCallback: () => fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     })
   }
@@ -443,15 +928,25 @@ const HomePage: NextPage = () => {
   const showWithdrawHoldingRewardsDialog = () => {
     withdrawHoldingRewardsDialog.open({
       userNodesSummary: userNodesSummary,
-      holdingRewardTokenAddress: nodesInformation!.holdingRewardErc20Token?.address,
-      holdingRewardTokenDecimals: nodesInformation!.holdingRewardErc20Token?.decimals ?? 0,
+      holdingRewardToken: nodesInformation!.holdingRewardErc20Token,
       holdingRewardEarlyWithdrawalPenaltyBps: nodesInformation!.holdingRewardEarlyWithdrawalPenaltyBps,
       holdingRewardMinAmountOnWalletRequiredForWithdrawal: BigInt(nodesInformation!.holdingRewardMinAmountOnWalletRequiredForWithdrawal),
-      confirmCallback: () => {
+      confirmCallback: async () => {
       },
-      successCallback: async () => await fetchData(),
+      successCallback: () => fetchData(),
       refetchUserSummary: fetchUserSummaryData,
     });
+  }
+
+  const showWithdrawDePinKeyPurchaseRewardsDialog = () => {
+    withdrawDePinKeyPurchaseRewardsDialog.open({
+      userNodesSummary: userNodesSummary,
+      dePinKeyPurchaseRewardToken: nodesInformation!.dePinKeyPurchaseRewardErc20Token,
+      confirmCallback: async () => {
+      },
+      successCallback: () => fetchData(),
+      refetchUserSummary: fetchUserSummaryData,
+    })
   }
 
   const loaded = user.user && referralCode != null && userNodesSummary != null && nodesInformation != null;
@@ -459,40 +954,43 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Container
-        className="d-flex position-relative mt-4 vstack justify-content-center gap-3"
+        className="d-flex position-relative vstack justify-content-center gap-3"
         style={{
-          maxWidth: "735px",
+          maxWidth: "",
         }}
       >
-        <Image
-          src={Logo}
-          alt="DistriBrain"
-          priority={true}
-          className="w-100 h-auto px-3 mb-3"
+        {/* <Image
+          src={logo2}
+          alt="StrikeBit"
+          height={168}
+          width={161}
+          className=""
           style={{
-            maxHeight: "80px"
+            width: "100%",
+            objectFit: "contain"
           }}
-        />
+        /> */}
 
         {!loaded && <>
-            <Spinner style={{
-              alignSelf: "center",
-              // @ts-ignore
-              "--bs-spinner-width": "5rem",
-              "--bs-spinner-height": "5rem"
-            }}/>
+          <Spinner style={{
+            alignSelf: "center",
+            // @ts-ignore
+            "--bs-spinner-width": "5rem",
+            "--bs-spinner-height": "5rem"
+          }} />
         </>}
 
         {loaded && <>
-            <HomePageBody
-                nodesInformation={nodesInformation}
-                userNodesSummary={userNodesSummary}
-                referralCode={referralCode}
-                refetchData={() => fetchData()}
-                onViewReferralPurchasesHistoryClicked={() => showReferralPurchasesHistoryDialog()}
-                onWithdrawReferralRewardsClicked={() => showWithdrawReferralRewardsDialog()}
-                onWithdrawHoldingRewardsClicked={() => showWithdrawHoldingRewardsDialog()}
-            />
+          <HomePageBody
+            nodesInformation={nodesInformation}
+            userNodesSummary={userNodesSummary}
+            referralCode={referralCode}
+            refetchData={() => fetchData()}
+            onViewReferralPurchasesHistoryClicked={() => showReferralPurchasesHistoryDialog()}
+            onWithdrawReferralRewardsClicked={() => showWithdrawReferralRewardsDialog()}
+            onWithdrawHoldingRewardsClicked={() => showWithdrawHoldingRewardsDialog()}
+            onWithdrawDePinKeyPurchaseRewardsClicked={() => showWithdrawDePinKeyPurchaseRewardsDialog()}
+          />
         </>}
       </Container>
     </>

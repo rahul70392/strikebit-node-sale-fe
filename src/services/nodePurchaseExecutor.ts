@@ -25,6 +25,7 @@ const confirmNodePurchaseTransaction = async(
 
 const createAndSendNodePurchaseTransaction = async (
   buyerAddress: Address,
+  nodeTypeId: number,
   amount: number,
   referralCode: string,
   setState: (state: NodePurchaseState) => void,
@@ -36,10 +37,11 @@ const createAndSendNodePurchaseTransaction = async (
 
   const createPurchaseTransactionResult =
     await clientApiServices.distribrainNodesApi.nodesControllerPostCreatePurchaseTransaction({
-    amount: amount,
-    address: buyerAddress,
-    referralCode: referralCode
-  });
+      nodeTypeId: nodeTypeId,
+      amount: amount,
+      address: buyerAddress,
+      referralCode: referralCode
+    });
 
   const unsignedTransactionHex = createPurchaseTransactionResult.data.unsignedTransactionHex;
   const unsignedTransaction = parseTransaction(<TransactionSerializedGeneric>unsignedTransactionHex);
@@ -86,13 +88,14 @@ const createAndSendNodePurchaseTransaction = async (
 
   setState(NodePurchaseState.WaitingForTransaction);
 
-  const maxWaitAttempts = 4;
+  const maxWaitAttempts = 5;
   for (let i = 1; i <= maxWaitAttempts; i++) {
     try {
       console.info(`Waiting for transaction (attempt ${i})`);
       await waitForTransactionReceipt(wagmiConfig.config, {
         hash: transactionHash,
-        confirmations: 3
+        confirmations: 3,
+        timeout: 3 * 60 * 1000
       });
       break;
     } catch (err: any) {
