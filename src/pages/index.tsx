@@ -146,14 +146,14 @@ const HomePageBody = (
     </Container> */}
 
     <section className="m-top">
-      <div className="bg-blue referral-code-section-outer-div"
+      <div className="bg-blue d-flex flex-column p-2 p-md-5 flex-md-row flex-wrap gap-3"
         style={{
-          padding: "4rem",
-          display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))"
+          // padding: "4rem",
+          // display: "grid",
+          // gridTemplateColumns: "repeat(3, minmax(0, 1fr))"
         }}
       >
-        <div className="flex flex-col gap-7 referral-code-section-inner-div"
+        <div className="d-flex flex-column col-12 col-lg-4"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -164,7 +164,7 @@ const HomePageBody = (
             Your Personal Referral Code:
           </h2>
           <div
-            className="bg-white"
+            className="bg-white d-flex justify-content-between align-items-center"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -180,7 +180,7 @@ const HomePageBody = (
               {user.user?.referralCode}
             </div>
 
-            <div className=""
+            <div className="d-flex align-items-center justify-content-center"
               style={{
                 display: "flex",
                 gap: "1rem",
@@ -196,12 +196,19 @@ const HomePageBody = (
                   <Copy size={24} color="#1214FD" />
                 </button>
               </CopyToClipboard>
-              <Share2 size={24} color="#1214FD" />
+              <CopyToClipboard
+                text={routes.referralLink(referralCode.code)}
+                onCopy={() => toast.info("Referral link copied!", { autoClose: 1500 })}
+              >
+                <button title="Copy referral link" className="bg-white border-0">
+                  <Share2 size={24} color="#1214FD" />
+                </button>
+              </CopyToClipboard>
             </div>
           </div>
         </div>
 
-        <div className=""
+        <div className="d-flex align-items-end px-0 px-lg-3"
           style={{
             display: "flex",
             alignItems: "end",
@@ -216,14 +223,19 @@ const HomePageBody = (
           />
           <div className=""
             style={{
-              padding: "0 1rem"
+              padding: "0 1rem",
+              textWrap: "wrap"
             }}
           >
             <p className="text-small">Google ID</p>
             <p className=""
               style={{
                 fontWeight: 700,
-                fontSize: "20px"
+                fontSize: "20px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: "16rem"
               }}
             >
               {user?.user?.email}
@@ -231,13 +243,14 @@ const HomePageBody = (
           </div>
         </div>
 
-        <div className="flex justify-end"
+        <div className="d-flex justify-content-center justify-content-md-end"
           style={{
             display: "flex",
-            justifyContent: "end"
+            justifyContent: "end",
+            flexGrow: "1"
           }}
         >
-          <button className="bg-gray text-mid"
+          <button className="bg-gray text-mid h-full py-3 px-4"
             style={{
               height: "100%",
               padding: "0 2rem",
@@ -250,12 +263,9 @@ const HomePageBody = (
       </div>
     </section>
 
-    <section className='m-top'
-      style={{
-      }}
-    >
+    <section className='m-top'>
       <div
-        className='text-big bg-dark-gray'
+        className='text-big bg-dark-gray py-4 px-8 px-lg-12 d-flex flex-column flex-lg-row gap-5 justify-content-center justify-content-lg-between align-items-center'
         style={{
           padding: "1rem 3rem",
           display: "flex",
@@ -263,14 +273,14 @@ const HomePageBody = (
           alignItems: "center"
         }}
       >
-        <p>Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
-        <p>Daily StrikeBit reward pull 1,000,000</p>
+        <p className="text-center">Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
+        <p className="text-center">Daily StrikeBit reward pull 1,000,000</p>
       </div>
     </section>
 
     <section className='m-top'
       style={{
-        position: "relative"
+        position: "relative",
       }}
     >
       <Image
@@ -290,12 +300,12 @@ const HomePageBody = (
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "3rem 0"
+          padding: "3rem 1rem"
         }}
       >
-        <h2 className='text-heading'>Radiant Node Referrals</h2>
+        <h2 className='text-heading text-center'>Radiant Node Referrals</h2>
 
-        <div className=''
+        <div className='d-flex flex-column flex-lg-row flex-wrap gap-5 gap-lg-0'
           style={{
             display: "flex",
             gap: "2rem"
@@ -319,7 +329,8 @@ const HomePageBody = (
             />
             <ul className=''
               style={{
-                listStyleType: "disc"
+                listStyleType: "disc",
+                marginLeft: "-25px"
               }}
             >
               <li>Lorem ipsum dolor sit amet, consectetur</li>
@@ -356,7 +367,8 @@ const HomePageBody = (
             />
             <ul className=''
               style={{
-                listStyleType: "disc"
+                listStyleType: "disc",
+                marginLeft: "-25px"
               }}
             >
               <li>Lorem ipsum dolor sit amet, consectetur</li>
@@ -393,7 +405,8 @@ const HomePageBody = (
             />
             <ul className=''
               style={{
-                listStyleType: "disc"
+                listStyleType: "disc",
+                marginLeft: "-25px"
               }}
             >
               <li>Lorem ipsum dolor sit amet, consectetur</li>
@@ -422,16 +435,17 @@ const HomePageBody = (
         marginBottom: "12rem"
       }}
     >
-      <div className='bg-dark-gray'
+      <div className='bg-dark-gray padding-x'
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "4rem",
-          padding: '3rem 12rem'
+          paddingTop: "3rem",
+          paddingBottom: "3rem"
         }}
       >
-        <h2 className='text-heading'>My Holdings</h2>
+        <h2 className='text-heading text-center'>My Holdings</h2>
 
         <div className=''
           style={{
@@ -441,7 +455,7 @@ const HomePageBody = (
             gap: "4rem"
           }}
         >
-          <div className=''
+          <div className='d-flex flex-column flex-md-row gap-5 gap-md-0'
             style={{
               display: "flex",
               justifyContent: "space-between"
@@ -490,7 +504,7 @@ const HomePageBody = (
               <p className='text-heading'>XXX</p>
             </div>
           </div>
-          <div className=''
+          <div className='d-flex flex-column flex-md-row gap-5 gap-md-0'
             style={{
               display: "flex",
               justifyContent: "space-evenly"

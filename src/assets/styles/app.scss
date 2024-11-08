@@ -159,13 +159,31 @@ main.container {
   font-size: 32px;
 }
 
+@media (max-width: 640px) {
+  .text-big{
+    font-size: 48px;
+  }
+}
+
 .text-bigger{
   font-size: 48px;
+}
+
+@media (max-width: 640px) {
+  .text-bigger{
+    font-size: 32px;
+  }
 }
 
 .text-heading{
   font-size: 72px;
   font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .text-heading{
+    font-size: 48px;
+  }
 }
 
 .text-blue{
@@ -183,7 +201,13 @@ main.container {
 
 /* PADDING */
 .padding-x{
-  padding: 0 5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .padding-x{
+    padding: 0 7rem;
+  }
 }
 
 // RESPONSIVE
