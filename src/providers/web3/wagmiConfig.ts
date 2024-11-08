@@ -16,7 +16,7 @@ if (!chain)
   throw new Error("Invalid NEXT_PUBLIC_EVM_CHAIN_ID " + chainId);
 
 const wagmiConfig = getDefaultConfig({
-  appName: 'DistriBrain',
+  appName: 'StrikeBit',
   projectId: '98e3a178b58e7a726f08e22381be14a6',
   chains: [chain],
   transports: {

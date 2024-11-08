@@ -47,12 +47,13 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
         Sign In / Register
       </ButtonLoadable> */}
 
-      {loading || user.user != null ? <div className="white-btn"
+      {loading || user.user != null ? <div className="white-btn media-auth-card-load-button"
         style={{
           width: "50%",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          border: 0
         }}
       >
         <Spinner
@@ -67,14 +68,15 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
         />
       </div> :
 
-        <div className="d-flex justify-content-evenly" style={{
+        <div className="d-flex justify-content-evenly media-auth-card-buttons" style={{
           width: "100%"
         }}>
           <button
             type="submit"
             className="white-btn"
             style={{
-              cursor: "pointer"
+              cursor: "pointer",
+              border: 0
             }}
             disabled={loading || user.user != null}
             onClick={() => onSignInClick()}
@@ -85,7 +87,8 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
             type="submit"
             className="white-btn"
             style={{
-              cursor: "pointer"
+              cursor: "pointer",
+              border: 0
             }}
             disabled={loading || user.user != null}
             onClick={() => onSignInClick()}

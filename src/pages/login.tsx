@@ -25,15 +25,16 @@ const LoginPage: NextPage = (props) => {
 
   return (
     <>
-    <DistribrainEngineBackgroundImage/>
+      <DistribrainEngineBackgroundImage />
       <Container
         className="d-flex my-4 vstack justify-content-center gap-3"
         style={{
-          maxWidth: "40rem"
+          maxWidth: "40rem",
+          width: "100%"
         }}
       >
         <Card className="p-4 bg-blue rounded-0 border-0"
-          style={{
+          style={{ 
             boxShadow: "8px 8px 15px 0px rgba(4,11,37,0.15)"
           }}
         >
@@ -51,7 +52,7 @@ const LoginPage: NextPage = (props) => {
                 }}
               />
 
-              <AuthCardBody/>
+              <AuthCardBody />
             </Stack>
           </Card.Body>
         </Card>

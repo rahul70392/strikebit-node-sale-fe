@@ -146,14 +146,14 @@ const HomePageBody = (
     </Container> */}
 
     <section className="m-top">
-      <div className="bg-blue"
+      <div className="bg-blue referral-code-section-outer-div"
         style={{
           padding: "4rem",
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))"
         }}
       >
-        <div className="flex flex-col gap-7"
+        <div className="flex flex-col gap-7 referral-code-section-inner-div"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -592,7 +592,7 @@ const HomePageBody = (
     {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
         {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
-      </Badge> DistriBrain Engines Sold
+      </Badge> StrikeBit Engines Sold
     </Container>
 
     <Container className="h1 p-0 text-center">
@@ -611,7 +611,7 @@ const HomePageBody = (
         >
           {nodesInformation.featureFlags.purchasingDisabled && <>Temporarily Unavailable</>}
 
-          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy DistriBrain Engines</>}
+          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy StrikeBit Engines</>}
         </Button>
       </div>
     </Container>
@@ -682,7 +682,7 @@ const HomePageBody = (
               <Col xs={12} md={6}>
                 <Stack gap={3}>
                   <div>
-                    <Card.Title>DistriBrain Engines</Card.Title>
+                    <Card.Title>StrikeBit Engines</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalPurchasedNodesCount}

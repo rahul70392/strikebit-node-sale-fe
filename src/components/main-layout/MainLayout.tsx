@@ -24,7 +24,9 @@ export const MainLayout = ({children}: { children: React.ReactNode }) => {
   }, []);
 
   return <>
-    <Container as="main" className={extraMainClass}>
+    <Container as="main" className={extraMainClass} style={{
+      padding: 0
+    }}>
       {/* <DistribrainEngineBackgroundImage/> */}
 
       <Auth0UserProvider>
@@ -61,7 +63,7 @@ export const MainLayout = ({children}: { children: React.ReactNode }) => {
           </a>
         </Stack>
 
-        <span>© {new Date().getUTCFullYear()} DistriBrain</span>
+        <span>© {new Date().getUTCFullYear()} StrikeBit</span>
       </Stack>
     </Container>
   </>;
