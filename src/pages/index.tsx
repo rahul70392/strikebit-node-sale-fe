@@ -33,6 +33,7 @@ import commonTerms from "@/data/commonTerms";
 import { useUser } from "@/hooks/useUser";
 import { FiLogOut } from "react-icons/fi";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
+
 import { Navbar } from "@/components/nav/Navbar";
 import { Copy, Share2 } from 'lucide-react';
 // import Button from '@mui/material/Button';
