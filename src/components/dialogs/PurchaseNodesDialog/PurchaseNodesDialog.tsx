@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { Address, erc20Abi } from "viem";
 import { toast } from "react-toastify";
-import { FloatingLabel, Form, InputGroup, Modal, Stack } from "react-bootstrap";
+import { FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { uiFloatNumberNiceFormat, uiIntNumberNiceFormat } from "@/utils/uiNiceFormat";
 import { calculateFormattedTokenPrice } from "@/utils/bigint/bigIntMathUI";
@@ -13,6 +13,23 @@ import { NodesPurchaseButton } from "@/components/dialogs/PurchaseNodesDialog/No
 import { routes } from "@/data/routes";
 import useReferralCodeFromQuery from "@/hooks/useReferralCodeFromQuery";
 import { NodesTypePurchaseInfoDto } from "@/generated/distribrain-nodes-api";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Stack
+} from "@mui/material";
+import { X, Plus, Minus } from 'lucide-react';
 
 const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
@@ -117,8 +134,252 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
     }
   }
 
+  const [openDialog, setOpenDialog] = useState(false);
+
+
+  useEffect(() => {
+    if (props.isOpen) {
+      setOpenDialog(true);
+    }
+  }, [props.isOpen]);
+
+  // const handleClickOpen = () => {
+  //   setOpenDialog(true);
+  // };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const onAmountChanged = (newAmount:string) => {
+    // Ensure that the amount stays within the valid range
+    if (Number(newAmount) >= 1 && Number(newAmount) <= maxEnteredAmountPerPurchase) {
+      setEnteredAmountText(newAmount);
+    }
+  };
+
+  const increaseAmount = () => {
+    if (Number(enteredAmountText) < Number(maxEnteredAmountPerPurchase)) {
+      onAmountChanged((Number(enteredAmountText) + 1).toString());
+    }
+  };
+
+  const decreaseAmount = () => {
+    if (Number(enteredAmountText) > 1) {
+      onAmountChanged((Number(enteredAmountText) - 1).toString());
+    }
+  };
+
   return <>
-    <Modal
+    <Dialog
+      open={props.isOpen}
+      onClose={onClose}
+      aria-labelledby="purchase-dialog-title"
+      aria-describedby="purchase-dialog-description"
+      style={{
+        backdropFilter: "blur(10px)",
+        backgroundColor: "rgba(0,0,0,0.5)"
+      }}
+      className="rounded-0"
+    >
+      <DialogTitle
+        id="purchase-dialog-title"
+        className="bg-dark-gray rounded-0"
+        sx={{
+          borderRadius: 0,
+          color: "white",
+          display: "flex",
+          justifyContent: "space-between"
+        }}
+      >
+        {(web3Account.isConnected && isCorrectChain) ? "Purchase StrikeBit Nodes" : "Connect a Wallet"}
+        <X />
+      </DialogTitle>
+
+      <DialogContent className="bg-dark-gray" sx={{ color: "white" }}>
+        <Stack gap={2} className="">
+          {(web3Account.isConnected && isCorrectChain) && <>
+            {showNodeTypesSelection && (
+              <FormControl
+                variant="filled"
+                fullWidth
+                sx={{
+                  color: "white",
+                  backgroundColor: "rgba(255,255,255,0.1)",
+                  borderRadius: "0"
+                }}>
+                <InputLabel id="purchase-node-type-label" sx={{ color: "white" }}>Node Type</InputLabel>
+                <Select
+                  labelId="purchase-node-type-label"
+                  value={selectedNodeTypeId}
+                  onChange={e => setSelectedNodeTypeId(Number(e.target.value))}
+                  sx={{
+                    color: "white",
+                    "& .MuiSelect-icon": {
+                      color: "white"
+                    },
+                  }}
+
+                >
+                  {props.nodeTypes.map(nodeType => (
+                    <MenuItem key={`purchase-node-type-id-${nodeType.id}`} value={nodeType.id}>
+                      {getNodeTypeIdName(nodeType.id)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+
+            <div>
+              <p style={{ fontWeight: 700 }}>StrikeBit Nodes to buy</p>
+              <div
+                style={{
+                  position: "relative",
+                  color: "white"
+                }}
+              >
+                <Button
+                  sx={{
+                    position: "absolute",
+                    height: "100%",
+                    zIndex: "10",
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    borderRadius: 0
+                  }}
+                  onClick={decreaseAmount}
+                  disabled={uiDisabled}
+                >
+                  <Minus color="white" />
+                </Button>
+                <TextField
+                  required
+                  fullWidth
+                  id="purchase-amount"
+                  type="number"
+                  slotProps={{
+                    htmlInput: {
+                      min: 1,
+                      max: Number(maxEnteredAmountPerPurchase),
+                      pattern: "[0-9]*"
+                    }
+                  }}
+                  error={!isEnteredAmountValid}
+                  disabled={uiDisabled}
+                  value={enteredAmountText}
+                  onChange={e => onAmountTextChanged(e.target.value)}
+                  // helperText={maxEnteredAmountPerPurchase > 0 && (
+                  //   `Amount must be between 1 and ${uiIntNumberNiceFormat(maxEnteredAmountPerPurchase)}.`
+                  // )}
+                  sx={{
+                    color: "white",
+                    textAlign: "center",
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    "& .MuiInputBase-input": {
+                      textAlign: "center", // Ensure the input text is centered as well
+                      color: "white", // Ensure text inside the input is white
+                    },
+                    "& input[type='number']::-webkit-outer-spin-button": {
+                      display: "none",
+                    },
+                    "& input[type='number']::-webkit-inner-spin-button": {
+                      display: "none",
+                    },
+                    "& input[type='number']": {
+                      "-moz-appearance": "textfield", // For Firefox
+                    }
+                  }}
+                  className={classes.prettyInput}
+                />
+                <Button
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    height: "100%",
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    borderRadius: 0
+                  }}
+                  onClick={increaseAmount}
+                  disabled={uiDisabled}
+                >
+                  <Plus color="white" />
+                </Button>
+              </div>
+            </div>
+
+            <TextField
+              required={props.referralCodeRequired}
+              fullWidth
+              id="purchase-refcode"
+              label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
+              autoComplete="off"
+              disabled={uiDisabled}
+              inputProps={{ maxLength: 20 }}
+              error={!isReferralCodeValid}
+              value={referralCode}
+              onChange={e => setReferralCode(e.target.value)}
+              className={`${classes.prettyInput} text-uppercase`}
+            />
+
+            <Stack direction="column" gap={2} className="fs-5 mb-2">
+              <span>
+                Price per Engine: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT
+              </span>
+              {isEnteredAmountValid && (
+                <span>
+                  Purchase Total: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(finalPrice, props.purchaseTokenDecimals))} USDT
+                </span>
+              )}
+            </Stack>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={condition1Accepted}
+                  onChange={e => setCondition1Accepted(e.target.checked)}
+                  disabled={uiDisabled}
+                  id="purchase-modal-acknowledge1-check"
+                />
+              }
+              label={<>
+                I have read and accepted the <a href={routes.legal.privacyPolicy()} target="_blank" rel="noreferrer">Privacy Policy</a> and <a href={routes.legal.termsAndConditions()} target="_blank" rel="noreferrer">Terms & Conditions</a>.
+              </>}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={condition2Accepted}
+                  onChange={e => setCondition2Accepted(e.target.checked)}
+                  disabled={uiDisabled}
+                  id="purchase-modal-acknowledge2-check"
+                />
+              }
+              label="I acknowledge this purchase is not to be considered an investment."
+            />
+
+            <NodesPurchaseButton
+              nodeTypeId={selectedNodeType.id}
+              amount={enteredAmount}
+              referralCode={referralCode}
+              disabled={purchaseButtonDisabled}
+              disabledText={(!uiDisabled && isInsufficientBalance) ? `Insufficient USDT Balance` : null}
+              onPurchaseFailed={async () => { }}
+              onPurchaseSucceeded={() => onPurchaseSucceeded()}
+              isExecutingPurchase={isExecutingPurchase}
+              setIsExecutingPurchase={val => setIsExecutingPurchase(val)}
+            />
+          </>}
+
+          <Stack className="web3-connect-button-wrapper bg-dark-gray">
+            <ConnectButton showBalance={false} />
+          </Stack>
+        </Stack>
+      </DialogContent>
+      <DialogActions className="bg-dark-gray">
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
+    {/* <Modal
       show={props.isOpen}
       onHide={onClose}
       backdrop={isExecutingPurchase ? "static" : true}
@@ -260,6 +521,6 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
           </Stack>
         </Stack>
       </Modal.Body>
-    </Modal>
+    </Modal> */}
   </>
 }
