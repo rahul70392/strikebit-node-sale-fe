@@ -192,7 +192,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
 
           {holdingRewardConvertableVestedTokenAmount > 0 && <>
               <ButtonLoadable
-                  variant="outline-secondary"
+                  variant="outlined"
                   className="mb-2 d-flex align-items-center justify-content-center"
                   disabled={isConvertingConvertableVestedTokens}
                   loading={isConvertingConvertableVestedTokens}
