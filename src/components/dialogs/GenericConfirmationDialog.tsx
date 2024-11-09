@@ -119,7 +119,7 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
                         await executeButtonClick(button, index)
                       }
                     }}
-                    variant="outline-primary"
+                    variant="outlined"
                     loading={awaitingButtons.has(index)}
                     autoFocus={button.kind == "confirm"}
                     {...restButton}
