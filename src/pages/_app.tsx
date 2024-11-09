@@ -40,7 +40,7 @@ export default function MyApp(appProps: AppProps) {
   return (
     <>
       <Head>
-        <title>DistriBrain</title>
+        <title>StrikeBit</title>
         <HeaderSEO/>
       </Head>
 

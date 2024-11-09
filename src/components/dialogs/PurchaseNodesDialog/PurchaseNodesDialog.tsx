@@ -30,6 +30,7 @@ import {
   Stack
 } from "@mui/material";
 import { X, Plus, Minus } from 'lucide-react';
+import Image from "next/image";
 
 const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
@@ -127,7 +128,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   }
 
   const onPurchaseSucceeded = async () => {
-    toast.success("Purchased DistriBrain Engines successfully.");
+    toast.success("Purchased StrikeBit Engines successfully.");
 
     if (props.purchasedCallback) {
       await props.purchasedCallback();
@@ -151,7 +152,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
     setOpenDialog(false);
   };
 
-  const onAmountChanged = (newAmount:string) => {
+  const onAmountChanged = (newAmount: string) => {
     // Ensure that the amount stays within the valid range
     if (Number(newAmount) >= 1 && Number(newAmount) <= maxEnteredAmountPerPurchase) {
       setEnteredAmountText(newAmount);
@@ -193,7 +194,12 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
         }}
       >
         {(web3Account.isConnected && isCorrectChain) ? "Purchase StrikeBit Nodes" : "Connect a Wallet"}
-        <X />
+        <button style={{
+          border: "none",
+          background: "none"
+        }} onClick={onClose}>
+          <X />
+        </button>
       </DialogTitle>
 
       <DialogContent className="bg-dark-gray" sx={{ color: "white" }}>
@@ -306,19 +312,37 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
               </div>
             </div>
 
-            <TextField
-              required={props.referralCodeRequired}
-              fullWidth
-              id="purchase-refcode"
-              label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
-              autoComplete="off"
-              disabled={uiDisabled}
-              inputProps={{ maxLength: 20 }}
-              error={!isReferralCodeValid}
-              value={referralCode}
-              onChange={e => setReferralCode(e.target.value)}
-              className={`${classes.prettyInput} text-uppercase`}
-            />
+            <div>
+              <p style={{ fontWeight: 700 }}>Referral Code{props.referralCodeRequired ? ' *' : ''}</p>
+              <TextField
+                required={props.referralCodeRequired}
+                fullWidth
+                id="purchase-refcode"
+                // label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
+                placeholder={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
+                autoComplete="off"
+                disabled={uiDisabled}
+                slotProps={{
+                  input: {
+                    inputProps: { maxLength: 20 }
+                  },
+                  inputLabel: {
+                    style: { color: "white" }
+                  }
+                }}
+                error={!isReferralCodeValid}
+                value={referralCode}
+                onChange={e => setReferralCode(e.target.value)}
+                sx={{
+                  color: "white",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  "& input::placeholder": {
+                    color: "rgba(255,255,255,0.8)"
+                  }
+                }}
+                className={`${classes.prettyInput} text-uppercase`}
+              />
+            </div>
 
             <Stack direction="column" gap={2} className="fs-5 mb-2">
               <span>
@@ -371,7 +395,125 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
           </>}
 
           <Stack className="web3-connect-button-wrapper bg-dark-gray">
-            <ConnectButton showBalance={false} />
+            {/* <ConnectButton showBalance={false}/> */}
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                authenticationStatus,
+                mounted,
+              }) => {
+                // Note: If your app doesn't use authentication, you
+                // can remove all 'authenticationStatus' checks
+                const ready = mounted && authenticationStatus !== 'loading';
+                const connected =
+                  ready &&
+                  account &&
+                  chain &&
+                  (!authenticationStatus ||
+                    authenticationStatus === 'authenticated');
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      'style': {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+
+                    style={{
+                      width: "100%"
+                    }}
+                  >
+                    {(() => {
+                      if (!connected) {
+                        return (
+                          <button onClick={openConnectModal} type="button"
+                            style={{
+                              border: "0",
+                              width: "100%",
+                              padding: "1rem",
+                              color: "white",
+                              backgroundColor: "#1214FD"
+                            }}
+                          >
+                            Connect Wallet
+                          </button>
+                        );
+                      }
+
+                      if (chain.unsupported) {
+                        return (
+                          <button onClick={openChainModal} type="button"
+                            style={{
+                              border: "0",
+                              width: "100%",
+                              padding: "1rem",
+                              color: "black",
+                              backgroundColor: "#686868"
+                            }}
+                          >
+                            Wrong network
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <button
+                            onClick={openChainModal}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: "center",
+                              backgroundColor: "rgba(255,255,255,0.2)",
+                              border: "0",
+                              width: "50%"
+                            }}
+                            type="button"
+                          >
+                            {chain.hasIcon && (
+                              <div
+                              >
+                                {chain.iconUrl && (
+                                  <Image
+                                    src={chain.iconUrl}
+                                    alt={chain.name ?? 'Chain icon'}
+                                    height={25}
+                                    width={25}
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {chain.name}
+                          </button>
+
+                          <button onClick={openAccountModal} type="button"
+                            style={{
+                              backgroundColor: "rgba(255,255,255,0.2)",
+                              border: "0",
+                              width: "50%"
+                            }}
+                          >
+                            {account.displayName}
+                            {account.displayBalance
+                              ? ` (${account.displayBalance})`
+                              : ''}
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
+
           </Stack>
         </Stack>
       </DialogContent>
@@ -387,7 +529,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       data-rk=""
     >
       <Modal.Header closeButton>
-        <Modal.Title><StarIcon className="me-2"/>Purchase DistriBrain Engines</Modal.Title>
+        <Modal.Title><StarIcon className="me-2"/>Purchase StrikeBit Engines</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
