@@ -91,7 +91,7 @@ export const Navbar = () => {
                 />
             </button>
             {/* upgrade pro button */}
-            <button
+            {/* <button
                 style={{
                     backgroundColor: "#1214FD",
                     color: "white",
@@ -99,7 +99,7 @@ export const Navbar = () => {
                     fontWeight: "700",
                     border: "0"
                 }}
-            >Upgrade Pro</button>
+            >Upgrade Pro</button> */}
             {/* user details select tab */}
             <div
                 style={{
@@ -193,7 +193,7 @@ export const Navbar = () => {
                         />
                     </button>
                     {/* upgrade pro button */}
-                    <button
+                    {/* <button
                         style={{
                             backgroundColor: "#1214FD",
                             color: "white",
@@ -201,7 +201,7 @@ export const Navbar = () => {
                             fontWeight: "700",
                             border: "0"
                         }}
-                    >Upgrade Pro</button>
+                    >Upgrade Pro</button> */}
                     {/* user details select tab */}
                     <Box sx={{ minWidth: 120 }}>
                         <FormControl fullWidth>

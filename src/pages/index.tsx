@@ -147,7 +147,7 @@ const HomePageBody = (
     </Container> */}
 
     <section className="m-top">
-      <div className="bg-blue d-flex flex-column p-2 p-md-5 flex-md-row flex-wrap gap-3"
+      <div className="bg-blue d-flex flex-column justify-content-evenly p-3 p-md-5 flex-md-row flex-wrap gap-5 gap-md-3"
         style={{
           // padding: "4rem",
           // display: "grid",
@@ -244,7 +244,7 @@ const HomePageBody = (
           </div>
         </div>
 
-        <div className="d-flex justify-content-center justify-content-md-end"
+        {/* <div className="d-flex justify-content-center justify-content-md-end"
           style={{
             display: "flex",
             justifyContent: "end",
@@ -260,7 +260,7 @@ const HomePageBody = (
           >
             Free Plan
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
 
