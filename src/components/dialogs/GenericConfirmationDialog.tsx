@@ -1,7 +1,8 @@
 import React, { createContext, ReactNode, useState } from "react";
-import { ButtonProps, Modal, ModalFooterProps, ModalProps } from "react-bootstrap";
+import { Modal, ModalFooterProps, ModalProps } from "react-bootstrap";
 import ButtonLoadable from "@/components/shared/ButtonLoadable";
 import { StarIcon } from "@/components/visual/StarIcon";
+import { ButtonProps } from "@mui/material";
 
 export interface DialogButtonProps extends ButtonProps {
   kind: "confirm" | "dismiss" | "generic";
@@ -29,7 +30,7 @@ const GenericConfirmationDialogContext = createContext<GenericConfirmationDialog
   {} as GenericConfirmationDialogContextProps
 )
 
-export const GenericConfirmationDialogProvider = ({children}: { children: ReactNode }) => {
+export const GenericConfirmationDialogProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [config, setConfig] = useState<DialogConfig | null>(null);
   const [awaitingButtons, setAwaitingButtons] = useState(new Set<number>());
@@ -91,46 +92,46 @@ export const GenericConfirmationDialogProvider = ({children}: { children: ReactN
       {children}
 
       {config && <>
-          <Modal
-              show={isOpen}
-              onHide={handleDialogClose}
-              backdrop={isBusy ? "static" : true}
-              centered
-              data-rk=""
-              {...config.modalProps}
-          >
-              <Modal.Header closeButton>
-                  <Modal.Title><StarIcon className="me-2"/>{config.title}</Modal.Title>
-              </Modal.Header>
+        <Modal
+          show={isOpen}
+          onHide={handleDialogClose}
+          backdrop={isBusy ? "static" : true}
+          centered
+          data-rk=""
+          {...config.modalProps}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title><StarIcon className="me-2" />{config.title}</Modal.Title>
+          </Modal.Header>
 
-              <Modal.Body>
-                {config.content instanceof Function ? config.content() : config.content}
-              </Modal.Body>
+          <Modal.Body>
+            {config.content instanceof Function ? config.content() : config.content}
+          </Modal.Body>
 
-              <Modal.Footer {...config.modalFooterProps}>
-                {config.buttons.map((button, index) => {
-                  const {title, preventCloseOnClick, onClick, kind, ...restButton} = button;
-                  const buttonDisabled = isBusy || button.disabled;
+          <Modal.Footer {...config.modalFooterProps}>
+            {config.buttons.map((button, index) => {
+              const { title, preventCloseOnClick, onClick, kind, ...restButton } = button;
+              const buttonDisabled = isBusy || button.disabled;
 
-                  return <ButtonLoadable
-                    key={`dialogButton_${index}`}
-                    onClick={async () => {
-                      if (!buttonDisabled) {
-                        await executeButtonClick(button, index)
-                      }
-                    }}
-                    variant="outlined"
-                    loading={awaitingButtons.has(index)}
-                    autoFocus={button.kind == "confirm"}
-                    {...restButton}
-                    className={`d-flex align-items-center p-2 px-3 fs-4`}
-                    disabled={buttonDisabled}
-                  >
-                    {button.title}
-                  </ButtonLoadable>
-                })}
-              </Modal.Footer>
-          </Modal>
+              return <ButtonLoadable
+                key={`dialogButton_${index}`}
+                onClick={async () => {
+                  if (!buttonDisabled) {
+                    await executeButtonClick(button, index)
+                  }
+                }}
+                variant="contained"
+                loading={awaitingButtons.has(index)}
+                autoFocus={button.kind == "confirm"}
+                {...restButton}
+                className={`d-flex align-items-center p-2 px-3 fs-4`}
+                disabled={buttonDisabled}
+              >
+                {button.title}
+              </ButtonLoadable>
+            })}
+          </Modal.Footer>
+        </Modal>
       </>}
     </GenericConfirmationDialogContext.Provider>
   );

@@ -1,10 +1,11 @@
 import React, { FC, ReactNode } from "react";
 import { Button, CircularProgress, ButtonProps } from "@mui/material";
 
-interface ButtonLoadableProps extends ButtonProps {
+interface ButtonLoadableProps extends Omit<ButtonProps, 'variant'> {
   children: ReactNode;
   loading: boolean;
   loadingChildren?: ReactNode;
+  variant?: "text" | "contained" | "outlined";
 }
 
 export const ButtonLoadable: FC<ButtonLoadableProps> = ({
