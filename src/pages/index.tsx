@@ -558,13 +558,7 @@ const HomePageBody = (
       </div>
     </section>
 
-    <section className='m-top'
-      style={{
-        position: "relative",
-        marginBottom: "3rem"
-      }}
-    >
-      <Image
+    <Image
         src="/bg-shadow-2.svg"
         alt=""
         height={1327.82}
@@ -573,36 +567,10 @@ const HomePageBody = (
         style={{
           position: "absolute",
           zIndex: "-5",
-          bottom: "-4rem",
+          bottom: "-15rem",
           right: "-25%"
         }}
       />
-      <div className=''
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "3rem"
-        }}
-      >
-        <div className=''
-          style={{
-            display: "flex",
-            justifyContent: "space-evenly"
-          }}
-        >
-          <div>Privacy Policy</div>
-          <div>Terms and Condition</div>
-          <div>Support</div>
-        </div>
-        <div className=''
-          style={{
-            textAlign: "center"
-          }}
-        >
-          © 2024 StrikeBit
-        </div>
-      </div>
-    </section>
 
     {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
@@ -616,7 +584,7 @@ const HomePageBody = (
       </Badge> DePIN Keys Sold
     </Container> */}
 
-    <Container className="h1 m-0 text-center position-relative">
+    {/* <Container className="h1 m-0 text-center position-relative">
       <div className="animated-edge-button-wrapper">
         <Button
           variant="primary"
@@ -629,7 +597,7 @@ const HomePageBody = (
           {!nodesInformation.featureFlags.purchasingDisabled && <>Buy StrikeBit Engines</>}
         </Button>
       </div>
-    </Container>
+    </Container> */}
 
     {/* <Container className="mb-1 h2 text-center">
       <StarIcon /><span className="mx-3">My Referral Code</span><StarIcon />
@@ -682,7 +650,7 @@ const HomePageBody = (
       </Col>
     </Row> */}
 
-    <Container className="mt-2 mb-1 h2 text-center">
+    {/* <Container className="mt-2 mb-1 h2 text-center">
       <StarIcon /><span className="mx-3">My Engines</span><StarIcon />
     </Container>
 
@@ -853,7 +821,7 @@ const HomePageBody = (
       isOpen={showPurchaseDialog}
       onClose={() => setShowNodePurchaseDialog(false)}
       purchasedCallback={() => onNodePurchased()}
-    />
+    /> */}
   </div>
 }
 
