@@ -276,7 +276,6 @@ const HomePageBody = (
         }}
       >
         <p className="text-center">Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
-        <p className="text-center">Daily StrikeBit reward pull 1,000,000</p>
       </div>
     </section>
 
