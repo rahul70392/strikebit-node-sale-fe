@@ -176,8 +176,7 @@ const HomePageBody = (
           >
             <div
               className="text-blue text-mid"
-              style={{
-              }}
+              style={{ fontWeight: 700 }}
             >
               {user.user?.referralCode}
             </div>
@@ -301,12 +300,13 @@ const HomePageBody = (
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "3rem 1rem"
+          padding: "3rem 1rem",
+          gap: "4rem"
         }}
       >
         <h2 className='text-heading text-center'>Radiant Node Referrals</h2>
 
-        <div className='d-flex flex-column flex-lg-row flex-wrap gap-5 gap-lg-0'
+        <div className='d-flex flex-column flex-lg-row flex-wrap gap-5'
           style={{
             display: "flex",
             gap: "2rem"
@@ -321,23 +321,22 @@ const HomePageBody = (
               justifyContent: "space-between"
             }}
           >
-            <h2 className="text-bigger">CORE</h2>
+            <h2 className="text-bigger" style={{ fontWeight: 400 }}>CORE</h2>
             <Image
               src="/core.svg"
               alt='CORE'
               height={360}
               width={362.67}
             />
+            <p style={{ fontWeight: 700 }}>$299 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
                 marginLeft: "-25px"
               }}
             >
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>2M Monthly rStrike Reward Pool</li>
+              <li>1 year membership</li>
             </ul>
             <button
               className='white-btn'
@@ -359,23 +358,22 @@ const HomePageBody = (
               justifyContent: "space-between"
             }}
           >
-            <h2 className="text-bigger">PRIME</h2>
+            <h2 className="text-bigger" style={{ fontWeight: 400 }}>PRIME</h2>
             <Image
               src="/prime.svg"
               alt='PRIME'
               height={360}
               width={362.67}
             />
+            <p style={{ fontWeight: 700 }}>$499 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
                 marginLeft: "-25px"
               }}
             >
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>2.3M Monthly rStrike Reward Pool</li>
+              <li>5 years Membership</li>
             </ul>
             <button
               className='white-btn'
@@ -397,23 +395,24 @@ const HomePageBody = (
               justifyContent: "space-between"
             }}
           >
-            <h2 className="text-bigger">ELITE</h2>
+            <h2 className="text-bigger" style={{ fontWeight: 400 }}>ELITE</h2>
             <Image
               src="/elite.svg"
               alt='ELITE'
               height={360}
               width={362.67}
             />
+            <p style={{ fontWeight: 700 }}>$699 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
                 marginLeft: "-25px"
               }}
             >
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
-              <li>Lorem ipsum dolor sit amet, consectetur</li>
+              <li>4M Monthly rStrike Reward Pool</li>
+              <li>5M Strike Tokens Reward Pool</li>
+              <li>20% Vates Rev. Share</li>
+              <li>Lifetime Membership</li>
             </ul>
             <button
               className='white-btn'
@@ -459,7 +458,8 @@ const HomePageBody = (
           <div className='d-flex flex-column flex-md-row gap-5 gap-md-0'
             style={{
               display: "flex",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+              padding: "0 3rem"
             }}
           >
             <div className=''
@@ -559,18 +559,18 @@ const HomePageBody = (
     </section>
 
     <Image
-        src="/bg-shadow-2.svg"
-        alt=""
-        height={1327.82}
-        width={1334.08}
-        className=""
-        style={{
-          position: "absolute",
-          zIndex: "-5",
-          bottom: "-15rem",
-          right: "-25%"
-        }}
-      />
+      src="/bg-shadow-2.svg"
+      alt=""
+      height={1327.82}
+      width={1334.08}
+      className=""
+      style={{
+        position: "absolute",
+        zIndex: "-5",
+        bottom: "-15rem",
+        right: "-25%"
+      }}
+    />
 
     {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
@@ -810,7 +810,7 @@ const HomePageBody = (
           </Card.Body>
         </Card>
       </Col>
-    </Card>
+    </Card> */}
 
     <PurchaseNodesDialog
       referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
@@ -821,7 +821,7 @@ const HomePageBody = (
       isOpen={showPurchaseDialog}
       onClose={() => setShowNodePurchaseDialog(false)}
       purchasedCallback={() => onNodePurchased()}
-    /> */}
+    />
   </div>
 }
 
