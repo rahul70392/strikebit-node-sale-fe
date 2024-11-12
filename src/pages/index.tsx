@@ -147,7 +147,7 @@ const HomePageBody = (
     </Container> */}
 
     <section className="m-top">
-      <div className="bg-blue d-flex flex-column justify-content-evenly p-3 p-md-5 flex-md-row flex-wrap gap-5 gap-md-3"
+      <div className="bg-blue d-flex flex-column justify-content-evenly align-items-center p-3 p-md-5 flex-md-row flex-wrap gap-5 gap-md-3"
         style={{
           // padding: "4rem",
           // display: "grid",
@@ -210,7 +210,7 @@ const HomePageBody = (
           </div>
         </div>
 
-        <div className="d-flex align-items-end px-0 px-lg-3"
+        <div className="d-flex align-items-center px-0 px-lg-3"
           style={{
             display: "flex",
             alignItems: "end",
