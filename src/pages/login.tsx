@@ -35,7 +35,7 @@ const LoginPage: NextPage = (props) => {
       >
         <Card className="p-4 bg-blue rounded-0 border-0"
           style={{ 
-            boxShadow: "8px 8px 15px 0px rgba(4,11,37,0.15)"
+            boxShadow: "8px 8px 15px 0px rgba(4,11,37,0.15)",
           }}
         >
           <Card.Body>
