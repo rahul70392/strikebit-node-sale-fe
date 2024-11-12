@@ -47,7 +47,7 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
         Sign In / Register
       </ButtonLoadable> */}
 
-      {loading || user.user != null ? <div className="white-btn media-auth-card-load-button"
+      {loading || user.user != null ? <div className="media-auth-card-load-button"
         style={{
           width: "50%",
           display: "flex",

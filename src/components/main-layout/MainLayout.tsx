@@ -39,41 +39,6 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
         </UserProvider>
       </Auth0UserProvider>
 
-
-      <section className='m-top'
-        style={{
-          position: "relative",
-          marginBottom: "5rem",
-          top: "2rem"
-        }}
-      >
-        <div className=''
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "3rem"
-          }}
-        >
-          <div className=''
-            style={{
-              display: "flex",
-              justifyContent: "space-evenly"
-            }}
-          >
-            <div>Privacy Policy</div>
-            <div>Terms and Condition</div>
-            <div>Support</div>
-          </div>
-          <div className=''
-            style={{
-              textAlign: "center"
-            }}
-          >
-            © 2024 StrikeBit
-          </div>
-        </div>
-      </section>
-
       {/* <Stack gap={3} className="flex-grow-0 my-4 font-weight-light align-items-center">
         <Stack gap={3} className="flex-grow-0 align-self-center align-items-center flex-column flex-sm-row">
           <a href={routes.legal.privacyPolicy()}
