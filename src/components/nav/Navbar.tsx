@@ -22,6 +22,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { Menu } from 'lucide-react';
+import Link from "next/link";
 
 export const Navbar = () => {
     const user = useUser();
@@ -76,7 +77,7 @@ export const Navbar = () => {
             gap: "20px"
         }}>
             {/* discord button */}
-            <button className=""
+            <Link href="https://discord.com/invite/strikebit" target="_blank"
                 style={{
                     background: "transparent",
                     padding: "16px 16px",
@@ -89,7 +90,7 @@ export const Navbar = () => {
                     height={18.85}
                     width={24.35}
                 />
-            </button>
+            </Link>
             {/* upgrade pro button */}
             {/* <button
                 style={{
@@ -178,7 +179,7 @@ export const Navbar = () => {
             <div>
                 <div className="d-none d-md-flex align-items-center gap-3">
                     {/* discord button */}
-                    <button className=""
+                    <Link href="https://discord.com/invite/strikebit" target="_blank"
                         style={{
                             background: "transparent",
                             padding: "16px 16px",
@@ -191,7 +192,7 @@ export const Navbar = () => {
                             height={18.85}
                             width={24.35}
                         />
-                    </button>
+                    </Link>
                     {/* upgrade pro button */}
                     {/* <button
                         style={{
