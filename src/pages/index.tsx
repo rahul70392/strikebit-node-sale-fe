@@ -337,7 +337,7 @@ const HomePageBody = (
                 marginLeft: "-25px"
               }}
             >
-              <li>2M Monthly rStrike Reward Pool</li>
+              <li>1,000,000 rStrike / 30 days</li>
               <li>1 year membership</li>
             </ul>
             <button
@@ -374,7 +374,7 @@ const HomePageBody = (
                 marginLeft: "-25px"
               }}
             >
-              <li>2.3M Monthly rStrike Reward Pool</li>
+              <li>2,500,000 rStrike / 30 days</li>
               <li>5 years Membership</li>
             </ul>
             <button
@@ -411,7 +411,7 @@ const HomePageBody = (
                 marginLeft: "-25px"
               }}
             >
-              <li>4M Monthly rStrike Reward Pool</li>
+              <li>4,000,000 rStrike / 30 days</li>
               <li>5M Strike Tokens Reward Pool</li>
               <li>20% Vates Rev. Share</li>
               <li>Lifetime Membership</li>
