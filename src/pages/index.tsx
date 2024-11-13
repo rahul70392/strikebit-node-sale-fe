@@ -39,6 +39,7 @@ import { Copy, Share2 } from 'lucide-react';
 // import Button from '@mui/material/Button';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import { Footer } from "@/components/Footer";
 
 const HomePageBody = (
   {
@@ -244,6 +245,7 @@ const HomePageBody = (
           </div>
         </div>
 
+        <Footer />
         {/* <div className="d-flex justify-content-center justify-content-md-end"
           style={{
             display: "flex",
