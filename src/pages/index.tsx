@@ -40,6 +40,7 @@ import { Copy, Share2 } from 'lucide-react';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { Footer } from "@/components/Footer";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const HomePageBody = (
   {
@@ -340,7 +341,7 @@ const HomePageBody = (
               <li>1,000,000 rStrike / 30 days</li>
               <li>1 year membership</li>
             </ul>
-            <button
+            {/* <button
               className='white-btn'
               style={{
                 border: 0
@@ -349,7 +350,59 @@ const HomePageBody = (
               disabled={nodesInformation.featureFlags.purchasingDisabled}
             >
               BUY CORE
-            </button>
+            </button> */}
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openConnectModal,
+                authenticationStatus,
+                mounted,
+              }) => {
+                // Note: If your app doesn't use authentication, you
+                // can remove all 'authenticationStatus' checks
+                const ready = mounted && authenticationStatus !== 'loading';
+                const connected =
+                  ready &&
+                  account &&
+                  chain &&
+                  (!authenticationStatus ||
+                    authenticationStatus === 'authenticated');
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      'style': {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+                  >
+                    {(() => {
+                      return (
+                        <button onClick={() => {
+                          openConnectModal()
+                          setShowNodePurchaseDialog(true);
+                        }} type="button"
+                          style={{
+                            border: "0",
+                            width: "10rem",
+                            padding: "1rem",
+                            color: "#1214FD",
+                            backgroundColor: "white",
+                            fontWeight: 700
+                          }}
+                        >
+                          BUY CORE
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
           <div className=''
             style={{
@@ -377,7 +430,7 @@ const HomePageBody = (
               <li>2,500,000 rStrike / 30 days</li>
               <li>5 years Membership</li>
             </ul>
-            <button
+            {/* <button
               className='white-btn'
               style={{
                 border: 0
@@ -386,7 +439,59 @@ const HomePageBody = (
               disabled={nodesInformation.featureFlags.purchasingDisabled}
             >
               BUY PRIME
-            </button>
+            </button> */}
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openConnectModal,
+                authenticationStatus,
+                mounted,
+              }) => {
+                // Note: If your app doesn't use authentication, you
+                // can remove all 'authenticationStatus' checks
+                const ready = mounted && authenticationStatus !== 'loading';
+                const connected =
+                  ready &&
+                  account &&
+                  chain &&
+                  (!authenticationStatus ||
+                    authenticationStatus === 'authenticated');
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      'style': {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+                  >
+                    {(() => {
+                      return (
+                        <button onClick={() => {
+                          openConnectModal()
+                          setShowNodePurchaseDialog(true);
+                        }} type="button"
+                          style={{
+                            border: "0",
+                            width: "10rem",
+                            padding: "1rem",
+                            color: "#1214FD",
+                            backgroundColor: "white",
+                            fontWeight: 700
+                          }}
+                        >
+                          BUY PRIME
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
           <div className=''
             style={{
@@ -416,7 +521,7 @@ const HomePageBody = (
               <li>20% Vates Rev. Share</li>
               <li>Lifetime Membership</li>
             </ul>
-            <button
+            {/* <button
               className='white-btn'
               style={{
                 border: 0
@@ -425,7 +530,59 @@ const HomePageBody = (
               disabled={nodesInformation.featureFlags.purchasingDisabled}
             >
               BUY ELITE
-            </button>
+            </button> */}
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openConnectModal,
+                authenticationStatus,
+                mounted,
+              }) => {
+                // Note: If your app doesn't use authentication, you
+                // can remove all 'authenticationStatus' checks
+                const ready = mounted && authenticationStatus !== 'loading';
+                const connected =
+                  ready &&
+                  account &&
+                  chain &&
+                  (!authenticationStatus ||
+                    authenticationStatus === 'authenticated');
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      'style': {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+                  >
+                    {(() => {
+                      return (
+                        <button onClick={() => {
+                          openConnectModal()
+                          setShowNodePurchaseDialog(true);
+                        }} type="button"
+                          style={{
+                            border: "0",
+                            width: "10rem",
+                            padding: "1rem",
+                            color: "#1214FD",
+                            backgroundColor: "white",
+                            fontWeight: 700
+                          }}
+                        >
+                          BUY ELITE
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
         </div>
       </div>

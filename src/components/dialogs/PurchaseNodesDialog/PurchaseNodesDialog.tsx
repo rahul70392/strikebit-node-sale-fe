@@ -404,7 +404,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                 openChainModal,
                 openConnectModal,
                 authenticationStatus,
-                mounted,
+                mounted
               }) => {
                 // Note: If your app doesn't use authentication, you
                 // can remove all 'authenticationStatus' checks
@@ -448,7 +448,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                         );
                       }
 
-                      if (chain.unsupported) {
+                      if (chain?.unsupported) {
                         return (
                           <button onClick={openChainModal} type="button"
                             style={{
@@ -478,20 +478,20 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                             }}
                             type="button"
                           >
-                            {chain.hasIcon && (
+                            {chain?.hasIcon && (
                               <div
                               >
-                                {chain.iconUrl && (
+                                {chain?.iconUrl && (
                                   <Image
-                                    src={chain.iconUrl}
-                                    alt={chain.name ?? 'Chain icon'}
+                                    src={chain?.iconUrl}
+                                    alt={chain?.name ?? 'Chain icon'}
                                     height={25}
                                     width={25}
                                   />
                                 )}
                               </div>
                             )}
-                            {chain.name}
+                            {chain?.name}
                           </button>
 
                           <button onClick={openAccountModal} type="button"
@@ -501,9 +501,9 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                               width: "50%"
                             }}
                           >
-                            {account.displayName}
-                            {account.displayBalance
-                              ? ` (${account.displayBalance})`
+                            {account?.displayName}
+                            {account?.displayBalance
+                              ? ` (${account?.displayBalance})`
                               : ''}
                           </button>
                         </div>
