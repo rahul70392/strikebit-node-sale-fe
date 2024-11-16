@@ -31,6 +31,8 @@ import {
 } from "@mui/material";
 import { X, Plus, Minus } from 'lucide-react';
 import Image from "next/image";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import {Spinner} from "react-bootstrap";
 
 const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
@@ -47,6 +49,7 @@ export interface PurchaseNodesDialogOpenProps {
 
 export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const [isExecutingPurchase, setIsExecutingPurchase] = useState(false);
+  const { connectModalOpen } = useConnectModal();
 
   const web3Account = useAccount();
 
@@ -404,7 +407,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                 openChainModal,
                 openConnectModal,
                 authenticationStatus,
-                mounted
+                mounted,
               }) => {
                 // Note: If your app doesn't use authentication, you
                 // can remove all 'authenticationStatus' checks
@@ -415,6 +418,10 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                   chain &&
                   (!authenticationStatus ||
                     authenticationStatus === 'authenticated');
+
+                if(!connectModalOpen && !web3Account.isConnected){
+                  onClose();
+                }
 
                 return (
                   <div
@@ -434,17 +441,20 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                     {(() => {
                       if (!connected) {
                         return (
-                          <button onClick={openConnectModal} type="button"
-                            style={{
-                              border: "0",
-                              width: "100%",
-                              padding: "1rem",
-                              color: "white",
-                              backgroundColor: "#1214FD"
-                            }}
-                          >
-                            Connect Wallet
-                          </button>
+                          <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
+                            {/* {openConnectModal && <button onClick={openConnectModal} type="button"
+                              style={{
+                                border: "0",
+                                width: "100%",
+                                padding: "1rem",
+                                color: "white",
+                                backgroundColor: "#1214FD"
+                              }}
+                            >
+                              Connect Wallet
+                            </button>} */}
+                            <Spinner />
+                          </div>
                         );
                       }
 
