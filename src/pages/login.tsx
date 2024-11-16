@@ -31,7 +31,8 @@ const LoginPage: NextPage = (props) => {
         className="d-flex my-4 vstack justify-content-center gap-3"
         style={{
           maxWidth: "40rem",
-          width: "100%"
+          width: "100%",
+          maxHeight: "23.813rem",
         }}
       >
         <Card className="p-4 bg-blue rounded-0 border-0"
@@ -48,8 +49,10 @@ const LoginPage: NextPage = (props) => {
                 width={161}
                 className=""
                 style={{
-                  width: "100%",
-                  objectFit: "contain"
+                  width: "10.063rem",
+                  objectFit: "contain",
+                  height: "10.5rem",
+                  margin: "auto"
                 }}
               />
 

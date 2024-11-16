@@ -25,10 +25,12 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
     className="d-flex"
     style={{
       flexDirection: "column",
-      gap: "1rem"
+      gap: "1rem",
+      marginBottom: "1.5rem",
+      marginTop: "1rem"
     }}
   >
-    <Card.Title className="text-center">Radiant Portal Log In</Card.Title>
+    <Card.Title className="text-center" style={{fontSize: "20px"}}>Radiant Portal Log In</Card.Title>
 
     <Stack gap={3}
       style={{
@@ -68,15 +70,20 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
         />
       </div> :
 
-        <div className="d-flex justify-content-evenly media-auth-card-buttons" style={{
-          width: "100%"
+        <div className="d-flex justify-content-center" style={{
+          width: "100%",
+          gap: "7px"
         }}>
           <button
             type="submit"
             className="white-btn"
             style={{
               cursor: "pointer",
-              border: 0
+              border: 0,
+              width: "7.5rem",
+              height: "2.188rem",
+              padding: "0",
+              fontSize: "12px"
             }}
             disabled={loading || user.user != null}
             onClick={() => onSignInClick()}
@@ -88,7 +95,11 @@ const LoginForm = ({ loading, onSubmitHandler }: AuthFormProps) => {
             className="white-btn"
             style={{
               cursor: "pointer",
-              border: 0
+              border: 0,
+              width: "7.5rem",
+              height: "2.188rem",
+              padding: "0",
+              fontSize: "12px"
             }}
             disabled={loading || user.user != null}
             onClick={() => onSignInClick()}
