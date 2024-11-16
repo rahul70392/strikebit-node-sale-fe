@@ -14,6 +14,7 @@ import clientApiServices from "@/services/clientApiServices";
 import {
   NodesInformationDto,
   UserMyReferralCodeResponseDto,
+  UserNodesAccountPurchaseNodeSummaryDto,
   UserNodesAccountSummaryDto
 } from "@/generated/distribrain-nodes-api";
 import { formatTokenAmountUI } from "@/utils/formatTokenAmountUI";
@@ -66,7 +67,8 @@ const HomePageBody = (
   const router = useRouter();
   const user = useUser();
   const referralCodeFromQuery = useReferralCodeFromQuery();
-  const [showPurchaseDialog, setShowNodePurchaseDialog] = useState(false);
+  const [showNodePurchaseDialog, setShowNodePurchaseDialog] = useState(false);
+  const [selectedNodeTypeId, setSelectedNodeTypeId] = useState(nodesInformation.nodeTypes[0].id);
   const [openCopyToast, setOpenCopyToast] = useState<boolean>(false);
 
   const canWithdrawHoldingRewards =
@@ -76,13 +78,24 @@ const HomePageBody = (
     BigInt(userNodesSummary.totalDePinKeyPurchaseRewardAvailableTokenAmount) > 1_000n; // ignore dust
 
   const formatHoldingTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals!);
+    formatTokenAmountUI(amount, nodesInformation?.holdingRewardErc20Token?.decimals!, 1);
 
   const formatReferralTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals!);
+    formatTokenAmountUI(amount, nodesInformation?.referralRewardErc20Token?.decimals!, 2);
 
   const formatDePinKeyPurchaseRewardTokenAmount = (amount: bigint) =>
-    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.exponent!);
+    formatTokenAmountUI(amount, nodesInformation?.dePinKeyPurchaseRewardErc20Token?.exponent!, 2);
+
+  const getUserNodeTypeInfo = (nodeTypeId: number) => {
+    const info = userNodesSummary.totalPurchasedNodesCount.find(x => x.nodeTypeId === nodeTypeId);
+    if (!info) {
+      return {
+        nodeTypeId: nodeTypeId,
+        count: 0,
+      } as UserNodesAccountPurchaseNodeSummaryDto;
+    }
+    return info;
+  };
 
   const onNodePurchased = async () => {
     await refetchData();
@@ -277,7 +290,7 @@ const HomePageBody = (
           alignItems: "center"
         }}
       >
-        <p className="text-center">Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}</span> Radiant Nodes sold.</p>
+        <p className="text-center">Total <span className='text-green'>{uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedAllNodesCount)}</span> Radiant Nodes sold.</p>
       </div>
     </section>
 
@@ -384,6 +397,7 @@ const HomePageBody = (
                       return (
                         <button onClick={() => {
                           openConnectModal()
+                          setSelectedNodeTypeId(commonTerms.nodeTypeCoreId);
                           setShowNodePurchaseDialog(true);
                         }} type="button"
                           style={{
@@ -473,6 +487,7 @@ const HomePageBody = (
                       return (
                         <button onClick={() => {
                           openConnectModal()
+                          setSelectedNodeTypeId(commonTerms.nodeTypePrimeId);
                           setShowNodePurchaseDialog(true);
                         }} type="button"
                           style={{
@@ -563,7 +578,8 @@ const HomePageBody = (
                     {(() => {
                       return (
                         <button onClick={() => {
-                          openConnectModal()
+                          openConnectModal();
+                          setSelectedNodeTypeId(commonTerms.nodeTypeEliteId);
                           setShowNodePurchaseDialog(true);
                         }} type="button"
                           style={{
@@ -633,7 +649,7 @@ const HomePageBody = (
                   color: "rgba(255,255,255,0.7)"
                 }}
               >CORE</p>
-              <p className='text-heading'>XXX</p>
+              <p className='text-heading'>{getUserNodeTypeInfo(commonTerms.nodeTypeCoreId).count}</p>
             </div>
             <div className=''
               style={{
@@ -647,7 +663,7 @@ const HomePageBody = (
                   color: "rgba(255,255,255,0.7)"
                 }}
               >PRIME</p>
-              <p className='text-heading'>XXX</p>
+              <p className='text-heading'>{getUserNodeTypeInfo(commonTerms.nodeTypePrimeId).count}</p>
             </div>
             <div className=''
               style={{
@@ -661,7 +677,7 @@ const HomePageBody = (
                   color: "rgba(255,255,255,0.7)"
                 }}
               >ELITE</p>
-              <p className='text-heading'>XXX</p>
+              <p className='text-heading'>{getUserNodeTypeInfo(commonTerms.nodeTypeEliteId).count}</p>
             </div>
           </div>
           <div className='d-flex flex-column flex-md-row gap-5 gap-md-0'
@@ -682,7 +698,7 @@ const HomePageBody = (
                   color: "rgba(255,255,255,0.7)"
                 }}
               >rStrike</p>
-              <p className='text-heading'>XXX</p>
+              <p className='text-heading'>{formatHoldingTokenAmount(BigInt(userNodesSummary.totalHoldingRewardVestedTokenAmount))}</p>
               <button className='blue-btn'
                 style={{
                   border: 0
@@ -703,7 +719,7 @@ const HomePageBody = (
                   color: "rgba(255,255,255,0.7)"
                 }}
               >USDT</p>
-              <p className='text-heading'>XXX</p>
+              <p className='text-heading'>{formatReferralTokenAmount(BigInt(userNodesSummary?.totalReferralRewardAvailableTokenAmount))}</p>
               <button className='blue-btn'
                 style={{
                   border: 0
@@ -974,9 +990,11 @@ const HomePageBody = (
     <PurchaseNodesDialog
       referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
       nodeTypes={nodesInformation.nodeTypes}
+      selectedNodeTypeId={selectedNodeTypeId}
+      setSelectedNodeTypeId={setSelectedNodeTypeId}
       purchaseTokenAddress={nodesInformation.purchaseInfo.erc20Token.address}
       purchaseTokenDecimals={nodesInformation.purchaseInfo.erc20Token.decimals}
-      isOpen={showPurchaseDialog}
+      isOpen={showNodePurchaseDialog}
       onClose={() => setShowNodePurchaseDialog(false)}
       purchasedCallback={() => onNodePurchased()}
     />
