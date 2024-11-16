@@ -733,7 +733,7 @@ const HomePageBody = (
 
     {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
-        {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedNodesCount)}
+        {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedAllNodesCount)}
       </Badge> StrikeBit Engines Sold
     </Container>
 
@@ -827,7 +827,7 @@ const HomePageBody = (
                     <Card.Title>StrikeBit Engines</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
-                        {userNodesSummary.totalPurchasedNodesCount}
+                        {userNodesSummary.totalPurchasedNodesCount.map((x) => x.count).reduce((prev, cur) => prev + cur, 0)}
                       </span>
                       <span className="card-subtitle h4"> holding</span>
                     </div>
@@ -973,8 +973,7 @@ const HomePageBody = (
 
     <PurchaseNodesDialog
       referralCodeRequired={nodesInformation.featureFlags.purchasingReferralCodeRequired}
-      nodeTypes={nodesInformation.purchaseInfo.nodeTypes}
-      globalTotalPurchasedNodes={nodesInformation.purchaseInfo.globalPurchasedNodesCount}
+      nodeTypes={nodesInformation.nodeTypes}
       purchaseTokenAddress={nodesInformation.purchaseInfo.erc20Token.address}
       purchaseTokenDecimals={nodesInformation.purchaseInfo.erc20Token.decimals}
       isOpen={showPurchaseDialog}

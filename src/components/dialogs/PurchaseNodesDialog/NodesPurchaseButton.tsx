@@ -48,7 +48,7 @@ export function NodesPurchaseButton(
     await nodePurchaseExecutor.confirmNodePurchaseTransaction(transactionHash, setState);
 
     return transactionHash;
-  }, [addRecentTransaction, props.amount, props.referralCode, web3Account.address])
+  }, [addRecentTransaction, props.amount, props.nodeTypeId, props.referralCode, web3Account.address])
 
   const onClick = useCallback(async () => {
     try {

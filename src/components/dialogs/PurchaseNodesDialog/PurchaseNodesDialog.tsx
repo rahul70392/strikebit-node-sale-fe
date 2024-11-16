@@ -39,7 +39,6 @@ export interface PurchaseNodesDialogOpenProps {
   nodeTypes: NodesTypePurchaseInfoDto[];
   purchaseTokenAddress: string;
   purchaseTokenDecimals: number;
-  globalTotalPurchasedNodes: number;
   isOpen: boolean;
   onClose: () => void;
   purchasedCallback: () => Promise<void>;
@@ -82,13 +81,13 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       case 3:
         return "Ultimate";
       default:
-        return `Node type ${nodeTypeId}`;
+        return `Node type id ${nodeTypeId}`;
     }
   }
 
   const finalPrice = BigInt(enteredAmount) * BigInt(selectedNodeType.currentPricePerNode);
 
-  const maxEnteredAmountPerPurchase = selectedNodeType.limitAtPrice - props.globalTotalPurchasedNodes;
+  const maxEnteredAmountPerPurchase = selectedNodeType.limitAtPrice - selectedNodeType.globalPurchasedCount;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
     isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data < finalPrice);
