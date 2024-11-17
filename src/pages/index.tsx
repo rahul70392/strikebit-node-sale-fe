@@ -703,6 +703,7 @@ const HomePageBody = (
                 style={{
                   border: 0
                 }}
+                onClick={() => onWithdrawHoldingRewardsClicked()}
               >
                 CLAIM
               </button>
@@ -724,6 +725,7 @@ const HomePageBody = (
                 style={{
                   border: 0
                 }}
+                onClick={() => onWithdrawReferralRewardsClicked()}
               >
                 WITHDRAW
               </button>
