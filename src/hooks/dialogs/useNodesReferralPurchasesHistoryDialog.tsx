@@ -53,7 +53,7 @@ const ReferralPurchaseCard = (
 
           <span className="mb-2">
             <span className="fw-bolder">Your Reward: </span>
-            {formatTokenAmountUI(purchase.rewardEarnedTokenAmount, referralRewardTokenDecimals)} USDT
+            {formatTokenAmountUI(purchase.rewardEarnedTokenAmount, referralRewardTokenDecimals, 3)} USDT
           </span>
 
           <Button

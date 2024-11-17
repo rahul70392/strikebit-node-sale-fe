@@ -50,7 +50,7 @@ export const useWithdrawDePinKeyPurchaseRewardsDialog = (): WithdrawDePinKeyPurc
 
   const formattedDePinKeyPurchaseRewardTokenAmount =
     openProps != null && dePinKeyPurchaseRewardTokenAmount != null ?
-      `${formatTokenAmountUI(dePinKeyPurchaseRewardTokenAmount, openProps.dePinKeyPurchaseRewardToken.exponent)} ${commonTerms.dePinKeyPurchaseRewardTokenName}` :
+      `${formatTokenAmountUI(dePinKeyPurchaseRewardTokenAmount, openProps.dePinKeyPurchaseRewardToken.exponent, 3)} ${commonTerms.dePinKeyPurchaseRewardTokenName}` :
       "";
 
   const handleConfirm = useCallback(async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {

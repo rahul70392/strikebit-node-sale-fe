@@ -39,7 +39,7 @@ export const useWithdrawNodesReferralRewardsDialog = (): WithdrawNodesReferralRe
 
   const formattedReferralRewardTokenAmount =
     openProps != null && referralRewardTokenAmount != null ?
-      `${formatTokenAmountUI(referralRewardTokenAmount, openProps.referralRewardToken.decimals)} USDT` :
+      `${formatTokenAmountUI(referralRewardTokenAmount, openProps.referralRewardToken.decimals, 3)} USDT` :
       "";
 
   const handleConfirm = useCallback(async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {

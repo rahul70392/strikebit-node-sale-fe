@@ -100,26 +100,26 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
     const isWithdrawable = isWithdrawableWithoutMinUserBalanceCheck && isMinUserWalletBalanceReached;
 
     const formattedVestedAmount =
-      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}`
+      `${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedConvertableVestedAmount =
-      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}`
+      `${formatTokenAmountUI(holdingRewardConvertableVestedTokenAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardVestedTokenName}`
 
     const formattedAvailableAmount =
-      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
+      `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedWithdrawalAmount =
-      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
+      `${formatTokenAmountUI(withdrawalAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedDeductionAmount =
       includeVested ?
-        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName} + 
-          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardVestedTokenName}` :
-        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}`;
+        `${formatTokenAmountUI(holdingRewardAvailableTokenAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardTokenName} + 
+          ${formatTokenAmountUI(holdingRewardVestedTokenAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardVestedTokenName}` :
+        `${formatTokenAmountUI(deductionAmount, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardTokenName}`;
 
     const formattedUserBalance =
       holdingRewardTokenUserWalletBalance.data != null ?
-        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardToken.decimals)} ${commonTerms.holdingRewardTokenName}` :
+        `${formatTokenAmountUI(holdingRewardTokenUserWalletBalance.data, openProps.holdingRewardToken.decimals, 3)} ${commonTerms.holdingRewardTokenName}` :
         "...";
 
     const handleConfirm = async function (confirmCallback?: () => Promise<void>, successCallback?: () => Promise<void>) {
@@ -209,7 +209,7 @@ export const useWithdrawNodesHoldingRewardsDialog = (): WithdrawNodesHoldingRewa
         {(!isWithdrawable && isWithdrawableWithoutMinUserBalanceCheck) && <>
             <Alert variant="warning">
                 Minimum
-                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardToken.decimals)} {commonTerms.holdingRewardTokenName}
+                of {formatTokenAmountUI(openProps.holdingRewardMinAmountOnWalletRequiredForWithdrawal, openProps.holdingRewardToken.decimals, 3)} {commonTerms.holdingRewardTokenName}
                 on the connected wallet is required for withdrawal. You can buy
                 more {commonTerms.holdingRewardTokenName} on any supported exchange.
             </Alert>
