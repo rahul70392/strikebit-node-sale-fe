@@ -28,7 +28,7 @@ function ToastInitializer() {
       newestOnTop={true}
       closeOnClick
       rtl={false}
-      theme="colored"
+      theme="dark"
     />
   </>
 }

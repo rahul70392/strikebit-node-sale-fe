@@ -301,6 +301,12 @@ export interface NodesInformationDto {
     'purchaseInfo': NodesPurchaseInfoDto;
     /**
      * 
+     * @type {Array<NodesTypePurchaseInfoDto>}
+     * @memberof NodesInformationDto
+     */
+    'nodeTypes': Array<NodesTypePurchaseInfoDto>;
+    /**
+     * 
      * @type {Erc20TokenDto}
      * @memberof NodesInformationDto
      */
@@ -350,16 +356,10 @@ export interface NodesPurchaseInfoDto {
     'erc20Token': Erc20TokenDto;
     /**
      * 
-     * @type {Array<NodesTypePurchaseInfoDto>}
-     * @memberof NodesPurchaseInfoDto
-     */
-    'nodeTypes': Array<NodesTypePurchaseInfoDto>;
-    /**
-     * 
      * @type {number}
      * @memberof NodesPurchaseInfoDto
      */
-    'globalPurchasedNodesCount': number;
+    'globalPurchasedAllNodesCount': number;
     /**
      * 
      * @type {number}
@@ -470,15 +470,34 @@ export interface UserMyReferralCodeResponseDto {
 /**
  * 
  * @export
+ * @interface UserNodesAccountPurchaseNodeSummaryDto
+ */
+export interface UserNodesAccountPurchaseNodeSummaryDto {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserNodesAccountPurchaseNodeSummaryDto
+     */
+    'nodeTypeId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserNodesAccountPurchaseNodeSummaryDto
+     */
+    'count': number;
+}
+/**
+ * 
+ * @export
  * @interface UserNodesAccountSummaryDto
  */
 export interface UserNodesAccountSummaryDto {
     /**
      * 
-     * @type {number}
+     * @type {Array<UserNodesAccountPurchaseNodeSummaryDto>}
      * @memberof UserNodesAccountSummaryDto
      */
-    'totalPurchasedNodesCount': number;
+    'totalPurchasedNodesCount': Array<UserNodesAccountPurchaseNodeSummaryDto>;
     /**
      * 
      * @type {number}

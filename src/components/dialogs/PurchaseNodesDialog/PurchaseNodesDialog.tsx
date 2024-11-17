@@ -31,6 +31,7 @@ import {
 } from "@mui/material";
 import { X, Plus, Minus } from 'lucide-react';
 import Image from "next/image";
+import commonTerms from "@/data/commonTerms";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {Spinner} from "react-bootstrap";
 
@@ -39,9 +40,10 @@ const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELEC
 export interface PurchaseNodesDialogOpenProps {
   referralCodeRequired: boolean;
   nodeTypes: NodesTypePurchaseInfoDto[];
+  selectedNodeTypeId: number;
+  setSelectedNodeTypeId: (nodeTypeId: number) => void;
   purchaseTokenAddress: string;
   purchaseTokenDecimals: number;
-  globalTotalPurchasedNodes: number;
   isOpen: boolean;
   onClose: () => void;
   purchasedCallback: () => Promise<void>;
@@ -71,27 +73,27 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const [enteredAmountText, setEnteredAmountText] = useState("1");
   const enteredAmount = parseInt(enteredAmountText) || 0;
 
-  const [selectedNodeTypeId, setSelectedNodeTypeId] = useState(props.nodeTypes[0].id);
+
   const selectedNodeType = useMemo(() => {
-    return props.nodeTypes.find(x => x.id === selectedNodeTypeId)!;
-  }, [props.nodeTypes, selectedNodeTypeId]);
+    return props.nodeTypes.find(x => x.id === props.selectedNodeTypeId)!;
+  }, [props.nodeTypes, props.selectedNodeTypeId]);
 
   const getNodeTypeIdName = (nodeTypeId: number) => {
     switch (nodeTypeId) {
-      case 1:
-        return "Basic";
-      case 2:
-        return "Pro";
-      case 3:
-        return "Ultimate";
+      case commonTerms.nodeTypeCoreId:
+        return "Core";
+      case commonTerms.nodeTypePrimeId:
+        return "Prime";
+      case commonTerms.nodeTypeEliteId:
+        return "Elite";
       default:
-        return `Node type ${nodeTypeId}`;
+        return `Node type id ${nodeTypeId}`;
     }
   }
 
   const finalPrice = BigInt(enteredAmount) * BigInt(selectedNodeType.currentPricePerNode);
 
-  const maxEnteredAmountPerPurchase = selectedNodeType.limitAtPrice - props.globalTotalPurchasedNodes;
+  const maxEnteredAmountPerPurchase = selectedNodeType.limitAtPrice - selectedNodeType.globalPurchasedCount;
   const isEnteredAmountValid = enteredAmount > 0 && enteredAmount <= maxEnteredAmountPerPurchase;
   const isInsufficientBalance =
     isEnteredAmountValid && (purchaseTokenBalance.data == null || purchaseTokenBalance.data < finalPrice);
@@ -220,8 +222,8 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                 <InputLabel id="purchase-node-type-label" sx={{ color: "white" }}>Node Type</InputLabel>
                 <Select
                   labelId="purchase-node-type-label"
-                  value={selectedNodeTypeId}
-                  onChange={e => setSelectedNodeTypeId(Number(e.target.value))}
+                  value={props.selectedNodeTypeId}
+                  onChange={e => props.setSelectedNodeTypeId(Number(e.target.value))}
                   sx={{
                     color: "white",
                     "& .MuiSelect-icon": {
@@ -349,7 +351,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
             <Stack direction="column" gap={2} className="fs-5 mb-2">
               <span>
-                Price per Engine: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT
+                Price per Node: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT
               </span>
               {isEnteredAmountValid && (
                 <span>
