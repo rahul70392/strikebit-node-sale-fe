@@ -348,7 +348,8 @@ const HomePageBody = (
             <ul className=''
               style={{
                 listStyleType: "disc",
-                marginLeft: "-25px"
+                marginLeft: "-25px",
+                height: "6.25rem"
               }}
             >
               <li>1,000,000 rStrike / 30 days</li>
@@ -438,7 +439,8 @@ const HomePageBody = (
             <ul className=''
               style={{
                 listStyleType: "disc",
-                marginLeft: "-25px"
+                marginLeft: "-25px",
+                height: "6.25rem"
               }}
             >
               <li>2,500,000 rStrike / 30 days</li>
@@ -528,7 +530,8 @@ const HomePageBody = (
             <ul className=''
               style={{
                 listStyleType: "disc",
-                marginLeft: "-25px"
+                marginLeft: "-25px",
+                height: "6.25rem"
               }}
             >
               <li>4,000,000 rStrike / 30 days</li>

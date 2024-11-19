@@ -33,7 +33,7 @@ import { X, Plus, Minus } from 'lucide-react';
 import Image from "next/image";
 import commonTerms from "@/data/commonTerms";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import {Spinner} from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 
 const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
@@ -187,179 +187,315 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
         backgroundColor: "rgba(0,0,0,0.5)"
       }}
       className="rounded-0"
+      maxWidth="md"
     >
-      <DialogTitle
-        id="purchase-dialog-title"
-        className="bg-dark-gray rounded-0"
-        sx={{
-          borderRadius: 0,
-          color: "white",
-          display: "flex",
-          justifyContent: "space-between"
-        }}
-      >
-        {(web3Account.isConnected && isCorrectChain) ? "Purchase StrikeBit Nodes" : "Connect a Wallet"}
-        <button style={{
-          border: "none",
-          background: "none"
-        }} onClick={onClose}>
-          <X />
-        </button>
-      </DialogTitle>
-
-      <DialogContent className="bg-dark-gray" sx={{ color: "white" }}>
-        <Stack gap={2} className="">
-          {(web3Account.isConnected && isCorrectChain) && <>
-            {showNodeTypesSelection && (
-              <FormControl
-                variant="filled"
-                fullWidth
-                sx={{
-                  color: "white",
-                  backgroundColor: "rgba(255,255,255,0.1)",
-                  borderRadius: "0"
-                }}>
-                <InputLabel id="purchase-node-type-label" sx={{ color: "white" }}>Node Type</InputLabel>
-                <Select
-                  labelId="purchase-node-type-label"
-                  value={props.selectedNodeTypeId}
-                  onChange={e => props.setSelectedNodeTypeId(Number(e.target.value))}
-                  sx={{
-                    color: "white",
-                    "& .MuiSelect-icon": {
+      <div style={{ display: "flex" }}>
+        <div style={{}}>
+          <DialogTitle
+            id="purchase-dialog-title"
+            className="bg-dark-gray rounded-0"
+            sx={{
+              borderRadius: 0,
+              color: "white",
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            {(web3Account.isConnected && isCorrectChain) ? "Purchase StrikeBit Nodes" : "Connect a Wallet"}
+          </DialogTitle>
+          <DialogContent className="bg-dark-gray" sx={{ color: "white" }}>
+            <Stack gap={2} className="" sx={{}}>
+              {(web3Account.isConnected && isCorrectChain) && <>
+                {showNodeTypesSelection && (
+                  <FormControl
+                    variant="filled"
+                    fullWidth
+                    sx={{
+                      color: "white",
+                      backgroundColor: "rgba(255,255,255,0.1)",
+                      borderRadius: "0"
+                    }}>
+                    <InputLabel id="purchase-node-type-label" sx={{ color: "white" }}>Node Type</InputLabel>
+                    <Select
+                      labelId="purchase-node-type-label"
+                      value={props.selectedNodeTypeId}
+                      onChange={e => props.setSelectedNodeTypeId(Number(e.target.value))}
+                      sx={{
+                        color: "white",
+                        "& .MuiSelect-icon": {
+                          color: "white"
+                        },
+                      }}
+                    >
+                      {props.nodeTypes.map(nodeType => (
+                        <MenuItem key={`purchase-node-type-id-${nodeType.id}`} value={nodeType.id}>
+                          {getNodeTypeIdName(nodeType.id)}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <div style={{borderBottom:"1px solid white", marginTop:"20px"}}>
+                  <span style={{lineHeight: "10px", display:"flex", justifyContent:"space-between"}}>
+                    <p>Price per Node</p>
+                    <p style={{fontSize:"20px"}}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT</p>
+                  </span>
+                </div>
+                <div>
+                  <p style={{ fontWeight: 700 }}>StrikeBit Nodes to buy</p>
+                  <div
+                    style={{
+                      position: "relative",
                       color: "white"
-                    },
-                  }}
-
-                >
-                  {props.nodeTypes.map(nodeType => (
-                    <MenuItem key={`purchase-node-type-id-${nodeType.id}`} value={nodeType.id}>
-                      {getNodeTypeIdName(nodeType.id)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-
-            <div>
-              <p style={{ fontWeight: 700 }}>StrikeBit Nodes to buy</p>
-              <div
-                style={{
-                  position: "relative",
-                  color: "white"
-                }}
-              >
-                <Button
-                  sx={{
-                    position: "absolute",
-                    height: "100%",
-                    zIndex: "10",
-                    backgroundColor: "rgba(255,255,255,0.2)",
-                    borderRadius: 0
-                  }}
-                  onClick={decreaseAmount}
-                  disabled={uiDisabled}
-                >
-                  <Minus color="white" />
-                </Button>
-                <TextField
-                  required
-                  fullWidth
-                  id="purchase-amount"
-                  type="number"
-                  slotProps={{
-                    htmlInput: {
-                      min: 1,
-                      max: Number(maxEnteredAmountPerPurchase),
-                      pattern: "[0-9]*"
-                    }
-                  }}
-                  error={!isEnteredAmountValid}
-                  disabled={uiDisabled}
-                  value={enteredAmountText}
-                  onChange={e => onAmountTextChanged(e.target.value)}
-                  // helperText={maxEnteredAmountPerPurchase > 0 && (
-                  //   `Amount must be between 1 and ${uiIntNumberNiceFormat(maxEnteredAmountPerPurchase)}.`
-                  // )}
-                  sx={{
-                    color: "white",
-                    textAlign: "center",
-                    backgroundColor: "rgba(255,255,255,0.1)",
-                    "& .MuiInputBase-input": {
-                      textAlign: "center", // Ensure the input text is centered as well
-                      color: "white", // Ensure text inside the input is white
-                    },
-                    "& input[type='number']::-webkit-outer-spin-button": {
-                      display: "none",
-                    },
-                    "& input[type='number']::-webkit-inner-spin-button": {
-                      display: "none",
-                    },
-                    "& input[type='number']": {
-                      "-moz-appearance": "textfield", // For Firefox
-                    }
-                  }}
-                  className={classes.prettyInput}
-                />
-                <Button
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    height: "100%",
-                    backgroundColor: "rgba(255,255,255,0.2)",
-                    borderRadius: 0
-                  }}
-                  onClick={increaseAmount}
-                  disabled={uiDisabled}
-                >
-                  <Plus color="white" />
-                </Button>
-              </div>
-            </div>
-
-            <div>
-              <p style={{ fontWeight: 700 }}>Referral Code{props.referralCodeRequired ? ' *' : ''}</p>
-              <TextField
-                required={props.referralCodeRequired}
-                fullWidth
-                id="purchase-refcode"
-                // label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
-                placeholder={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
-                autoComplete="off"
-                disabled={uiDisabled}
-                slotProps={{
-                  input: {
-                    inputProps: { maxLength: 20 }
-                  },
-                  inputLabel: {
-                    style: { color: "white" }
-                  }
-                }}
-                error={!isReferralCodeValid}
-                value={referralCode}
-                onChange={e => setReferralCode(e.target.value)}
-                sx={{
-                  color: "white",
-                  backgroundColor: "rgba(255,255,255,0.2)",
-                  "& input::placeholder": {
-                    color: "rgba(255,255,255,0.8)"
-                  }
-                }}
-                className={`${classes.prettyInput} text-uppercase`}
-              />
-            </div>
-
-            <Stack direction="column" gap={2} className="fs-5 mb-2">
-              <span>
-                Price per Node: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT
-              </span>
-              {isEnteredAmountValid && (
-                <span>
-                  Purchase Total: {uiFloatNumberNiceFormat(calculateFormattedTokenPrice(finalPrice, props.purchaseTokenDecimals))} USDT
-                </span>
-              )}
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        position: "absolute",
+                        height: "100%",
+                        zIndex: "10",
+                        backgroundColor: "rgba(255,255,255,0.2)",
+                        borderRadius: 0
+                      }}
+                      onClick={decreaseAmount}
+                      disabled={uiDisabled}
+                    >
+                      <Minus color="white" />
+                    </Button>
+                    <TextField
+                      required
+                      fullWidth
+                      id="purchase-amount"
+                      type="number"
+                      slotProps={{
+                        htmlInput: {
+                          min: 1,
+                          max: Number(maxEnteredAmountPerPurchase),
+                          pattern: "[0-9]*"
+                        }
+                      }}
+                      error={!isEnteredAmountValid}
+                      disabled={uiDisabled}
+                      value={enteredAmountText}
+                      onChange={e => onAmountTextChanged(e.target.value)}
+                      // helperText={maxEnteredAmountPerPurchase > 0 && (
+                      //   `Amount must be between 1 and ${uiIntNumberNiceFormat(maxEnteredAmountPerPurchase)}.`
+                      // )}
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        backgroundColor: "rgba(255,255,255,0.1)",
+                        "& .MuiInputBase-input": {
+                          textAlign: "center", // Ensure the input text is centered as well
+                          color: "white", // Ensure text inside the input is white
+                        },
+                        "& input[type='number']::-webkit-outer-spin-button": {
+                          display: "none",
+                        },
+                        "& input[type='number']::-webkit-inner-spin-button": {
+                          display: "none",
+                        },
+                        "& input[type='number']": {
+                          "-moz-appearance": "textfield", // For Firefox
+                        }
+                      }}
+                      className={classes.prettyInput}
+                    />
+                    <Button
+                      sx={{
+                        position: "absolute",
+                        right: 0,
+                        height: "100%",
+                        backgroundColor: "rgba(255,255,255,0.2)",
+                        borderRadius: 0
+                      }}
+                      onClick={increaseAmount}
+                      disabled={uiDisabled}
+                    >
+                      <Plus color="white" />
+                    </Button>
+                  </div>
+                </div>
+                <div>
+                  <p style={{ fontWeight: 700 }}>Referral Code{props.referralCodeRequired ? ' *' : ''}</p>
+                  <TextField
+                    required={props.referralCodeRequired}
+                    fullWidth
+                    id="purchase-refcode"
+                    // label={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
+                    placeholder={`Referral Code${props.referralCodeRequired ? ' *' : ''}`}
+                    autoComplete="off"
+                    disabled={uiDisabled}
+                    slotProps={{
+                      input: {
+                        inputProps: { maxLength: 20 }
+                      },
+                      inputLabel: {
+                        style: { color: "white" }
+                      }
+                    }}
+                    error={!isReferralCodeValid}
+                    value={referralCode}
+                    onChange={e => setReferralCode(e.target.value)}
+                    sx={{
+                      color: "white",
+                      backgroundColor: "rgba(255,255,255,0.2)",
+                      "& input::placeholder": {
+                        color: "rgba(255,255,255,0.8)"
+                      }
+                    }}
+                    className={`${classes.prettyInput} text-uppercase`}
+                  />
+                </div>
+                <Stack className="web3-connect-button-wrapper bg-dark-gray">
+                  {/* <ConnectButton showBalance={false}/> */}
+                  <ConnectButton.Custom>
+                    {({
+                      account,
+                      chain,
+                      openAccountModal,
+                      openChainModal,
+                      openConnectModal,
+                      authenticationStatus,
+                      mounted,
+                    }) => {
+                      // Note: If your app doesn't use authentication, you
+                      // can remove all 'authenticationStatus' checks
+                      const ready = mounted && authenticationStatus !== 'loading';
+                      const connected =
+                        ready &&
+                        account &&
+                        chain &&
+                        (!authenticationStatus ||
+                          authenticationStatus === 'authenticated');
+                      if (!connectModalOpen && !web3Account.isConnected) {
+                        onClose();
+                      }
+                      return (
+                        <div
+                          {...(!ready && {
+                            'aria-hidden': true,
+                            'style': {
+                              opacity: 0,
+                              pointerEvents: 'none',
+                              userSelect: 'none',
+                            },
+                          })}
+                          style={{
+                            width: "100%"
+                          }}
+                        >
+                          {(() => {
+                            if (!connected) {
+                              return (
+                                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                                  {/* {openConnectModal && <button onClick={openConnectModal} type="button"
+                                  style={{
+                                    border: "0",
+                                    width: "100%",
+                                    padding: "1rem",
+                                    color: "white",
+                                    backgroundColor: "#1214FD"
+                                  }}
+                                >
+                                  Connect Wallet
+                                </button>} */}
+                                  <Spinner />
+                                </div>
+                              );
+                            }
+                            if (chain?.unsupported) {
+                              return (
+                                <button onClick={openChainModal} type="button"
+                                  style={{
+                                    border: "0",
+                                    width: "100%",
+                                    padding: "1rem",
+                                    color: "black",
+                                    backgroundColor: "#686868"
+                                  }}
+                                >
+                                  Wrong network
+                                </button>
+                              );
+                            }
+                            return (
+                              <div style={{ display: 'flex', gap: 12 }}>
+                                <button
+                                  onClick={openChainModal}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: "center",
+                                    backgroundColor: "rgba(255,255,255,0.2)",
+                                    border: "0",
+                                    width: "50%"
+                                  }}
+                                  type="button"
+                                >
+                                  {chain?.hasIcon && (
+                                    <div
+                                    >
+                                      {chain?.iconUrl && (
+                                        <Image
+                                          src={chain?.iconUrl}
+                                          alt={chain?.name ?? 'Chain icon'}
+                                          height={25}
+                                          width={25}
+                                        />
+                                      )}
+                                    </div>
+                                  )}
+                                  {chain?.name}
+                                </button>
+                                <button onClick={openAccountModal} type="button"
+                                  style={{
+                                    backgroundColor: "rgba(255,255,255,0.2)",
+                                    border: "0",
+                                    width: "50%"
+                                  }}
+                                >
+                                  {account?.displayName}
+                                  {account?.displayBalance
+                                    ? ` (${account?.displayBalance})`
+                                    : ''}
+                                </button>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      );
+                    }}
+                  </ConnectButton.Custom>
+                </Stack>
+              </>}
             </Stack>
-
+          </DialogContent>
+        </div>
+        <div className="bg-blue" style={{ width: "22.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start", padding: "2rem", color: "white" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: 'flex-end'
+            }}
+          >
+            <button style={{
+              border: "none",
+              background: "none",
+            }} onClick={onClose}>
+              <X />
+            </button>
+          </div>
+          <Stack>
+            {isEnteredAmountValid && (
+              <span style={{ lineHeight: "15px" }}>
+                <p style={{ fontSize: "20px" }}>Purchase Total</p>
+                <p style={{ fontSize: "48px" }}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(finalPrice, props.purchaseTokenDecimals))} USDT</p>
+              </span>
+            )}
+          </Stack>
+          <div>
             <FormControlLabel
               control={
                 <Checkbox
@@ -369,11 +505,10 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                   id="purchase-modal-acknowledge1-check"
                 />
               }
-              label={<>
+              label={<div style={{ fontSize: "10px" }}>
                 I have read and accepted the <a href={routes.legal.privacyPolicy()} target="_blank" rel="noreferrer">Privacy Policy</a> and <a href={routes.legal.termsAndConditions()} target="_blank" rel="noreferrer">Terms & Conditions</a>.
-              </>}
+              </div>}
             />
-
             <FormControlLabel
               control={
                 <Checkbox
@@ -383,9 +518,8 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                   id="purchase-modal-acknowledge2-check"
                 />
               }
-              label="I acknowledge this purchase is not to be considered an investment."
+              label={<div style={{ fontSize: "10px" }}>I acknowledge this purchase is not to be considered an investment.</div>}
             />
-
             <NodesPurchaseButton
               nodeTypeId={selectedNodeType.id}
               amount={enteredAmount}
@@ -397,141 +531,9 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
               isExecutingPurchase={isExecutingPurchase}
               setIsExecutingPurchase={val => setIsExecutingPurchase(val)}
             />
-          </>}
-
-          <Stack className="web3-connect-button-wrapper bg-dark-gray">
-            {/* <ConnectButton showBalance={false}/> */}
-            <ConnectButton.Custom>
-              {({
-                account,
-                chain,
-                openAccountModal,
-                openChainModal,
-                openConnectModal,
-                authenticationStatus,
-                mounted,
-              }) => {
-                // Note: If your app doesn't use authentication, you
-                // can remove all 'authenticationStatus' checks
-                const ready = mounted && authenticationStatus !== 'loading';
-                const connected =
-                  ready &&
-                  account &&
-                  chain &&
-                  (!authenticationStatus ||
-                    authenticationStatus === 'authenticated');
-
-                if(!connectModalOpen && !web3Account.isConnected){
-                  onClose();
-                }
-
-                return (
-                  <div
-                    {...(!ready && {
-                      'aria-hidden': true,
-                      'style': {
-                        opacity: 0,
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                      },
-                    })}
-
-                    style={{
-                      width: "100%"
-                    }}
-                  >
-                    {(() => {
-                      if (!connected) {
-                        return (
-                          <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
-                            {/* {openConnectModal && <button onClick={openConnectModal} type="button"
-                              style={{
-                                border: "0",
-                                width: "100%",
-                                padding: "1rem",
-                                color: "white",
-                                backgroundColor: "#1214FD"
-                              }}
-                            >
-                              Connect Wallet
-                            </button>} */}
-                            <Spinner />
-                          </div>
-                        );
-                      }
-
-                      if (chain?.unsupported) {
-                        return (
-                          <button onClick={openChainModal} type="button"
-                            style={{
-                              border: "0",
-                              width: "100%",
-                              padding: "1rem",
-                              color: "black",
-                              backgroundColor: "#686868"
-                            }}
-                          >
-                            Wrong network
-                          </button>
-                        );
-                      }
-
-                      return (
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={openChainModal}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: "center",
-                              backgroundColor: "rgba(255,255,255,0.2)",
-                              border: "0",
-                              width: "50%"
-                            }}
-                            type="button"
-                          >
-                            {chain?.hasIcon && (
-                              <div
-                              >
-                                {chain?.iconUrl && (
-                                  <Image
-                                    src={chain?.iconUrl}
-                                    alt={chain?.name ?? 'Chain icon'}
-                                    height={25}
-                                    width={25}
-                                  />
-                                )}
-                              </div>
-                            )}
-                            {chain?.name}
-                          </button>
-
-                          <button onClick={openAccountModal} type="button"
-                            style={{
-                              backgroundColor: "rgba(255,255,255,0.2)",
-                              border: "0",
-                              width: "50%"
-                            }}
-                          >
-                            {account?.displayName}
-                            {account?.displayBalance
-                              ? ` (${account?.displayBalance})`
-                              : ''}
-                          </button>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                );
-              }}
-            </ConnectButton.Custom>
-
-          </Stack>
-        </Stack>
-      </DialogContent>
-      <DialogActions className="bg-dark-gray">
-        <Button onClick={onClose}>Close</Button>
-      </DialogActions>
+          </div>
+        </div>
+      </div>
     </Dialog>
     {/* <Modal
       show={props.isOpen}

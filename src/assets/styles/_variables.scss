@@ -3,18 +3,18 @@
 
 // Import the custom font in both normal and bold weights
 @font-face {
-    font-family: 'Blatant';
-    src: url('/Blatant.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'Blatant';
-    src: url('/Blatant-Bold.otf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-  }
+  font-family: 'Blatant';
+  src: url('/fonts/Blatant.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Blatant';
+  src: url('/fonts/Blatant-Bold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
   
   // Set Blatant as the primary font
   $font-family-base: 'Blatant', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;

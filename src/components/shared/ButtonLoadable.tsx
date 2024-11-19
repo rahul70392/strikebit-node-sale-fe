@@ -18,13 +18,13 @@ export const ButtonLoadable: FC<ButtonLoadableProps> = ({
     <Button
       {...props}
       sx={{
-        backgroundColor: "#1214FD",
-        color: "black",
+        backgroundColor: "white",
+        color: "#1214FD",
         padding: "1rem 0",
         borderRadius: 0,
         '&.Mui-disabled': {
           color: "gray"
-        },
+        }
       }}
     >
       {loading ? (

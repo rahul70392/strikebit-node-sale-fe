@@ -104,7 +104,7 @@ export function NodesPurchaseButton(
         </motion.div>
       )}
 
-      <div className="animated-edge-button-wrapper mt-3 mb-4">
+      <div className="animated-edge-button-wrapper" style={{ width:"100%"}}>
         <ButtonLoadable
           className="action-button animated-edge-button"
           onClick={onClick}
