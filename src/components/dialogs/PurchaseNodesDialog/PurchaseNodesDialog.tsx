@@ -189,8 +189,27 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       className="rounded-0"
       maxWidth="md"
     >
-      <div style={{ display: "flex" }}>
-        <div style={{}}>
+      <div className={`${!web3Account.isConnected && "d-none"} purchase-nodes-dialog`}>
+        <div style={{position:"relative"}}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: 'flex-end',
+              position:"absolute",
+              top:"1rem",
+              right:"1rem",
+            }}
+          >
+            <button
+              className="purchase-nodes-dialog-close-in-black"
+              style={{
+                border: "none",
+                background: "none"
+              }} onClick={onClose}>
+              <X />
+            </button>
+          </div>
           <DialogTitle
             id="purchase-dialog-title"
             className="bg-dark-gray rounded-0"
@@ -235,10 +254,10 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                     </Select>
                   </FormControl>
                 )}
-                <div style={{borderBottom:"1px solid white", marginTop:"20px"}}>
-                  <span style={{lineHeight: "10px", display:"flex", justifyContent:"space-between"}}>
+                <div style={{ borderBottom: "1px solid white", marginTop: "20px" }}>
+                  <span style={{ lineHeight: "10px", display: "flex", justifyContent: "space-between" }}>
                     <p>Price per Node</p>
-                    <p style={{fontSize:"20px"}}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT</p>
+                    <p style={{ fontSize: "20px" }}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(selectedNodeType.currentPricePerNode, props.purchaseTokenDecimals))} USDT</p>
                   </span>
                 </div>
                 <div>
@@ -420,7 +439,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                               );
                             }
                             return (
-                              <div style={{ display: 'flex', gap: 12 }}>
+                              <div className="flex-column flex-sm-row" style={{ display: 'flex', gap: 12 }}>
                                 <button
                                   onClick={openChainModal}
                                   style={{
@@ -428,8 +447,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                                     alignItems: 'center',
                                     justifyContent: "center",
                                     backgroundColor: "rgba(255,255,255,0.2)",
-                                    border: "0",
-                                    width: "50%"
+                                    border: "0"
                                   }}
                                   type="button"
                                 >
@@ -451,8 +469,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                                 <button onClick={openAccountModal} type="button"
                                   style={{
                                     backgroundColor: "rgba(255,255,255,0.2)",
-                                    border: "0",
-                                    width: "50%"
+                                    border: "0"
                                   }}
                                 >
                                   {account?.displayName}
@@ -472,7 +489,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
             </Stack>
           </DialogContent>
         </div>
-        <div className="bg-blue" style={{ width: "22.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start", padding: "2rem", color: "white" }}>
+        <div className="bg-blue purchase-nodes-dialog-right" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start", padding: "2rem", color: "white" }}>
           <div
             style={{
               width: "100%",
@@ -480,10 +497,12 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
               justifyContent: 'flex-end'
             }}
           >
-            <button style={{
-              border: "none",
-              background: "none",
-            }} onClick={onClose}>
+            <button
+              className="purchase-nodes-dialog-close-in-blue"
+              style={{
+                border: "none",
+                background: "none",
+              }} onClick={onClose}>
               <X />
             </button>
           </div>
@@ -491,11 +510,14 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
             {isEnteredAmountValid && (
               <span style={{ lineHeight: "15px" }}>
                 <p style={{ fontSize: "20px" }}>Purchase Total</p>
-                <p style={{ fontSize: "48px" }}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(finalPrice, props.purchaseTokenDecimals))} USDT</p>
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  <p style={{ fontSize: "48px" }}>{uiFloatNumberNiceFormat(calculateFormattedTokenPrice(finalPrice, props.purchaseTokenDecimals))}</p>
+                  <p style={{ fontSize: "48px" }}>USDT</p>
+                </div>
               </span>
             )}
           </Stack>
-          <div>
+          <div className="">
             <FormControlLabel
               control={
                 <Checkbox
