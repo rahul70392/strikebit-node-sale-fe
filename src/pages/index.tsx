@@ -344,7 +344,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700 }}>$299 USD</p>
+            <p style={{ fontWeight: 700, fontSize:"24px " }}>$299 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
@@ -435,7 +435,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700 }}>$499 USD</p>
+            <p style={{ fontWeight: 700, fontSize:"24px " }}>$499 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
@@ -526,7 +526,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700 }}>$699 USD</p>
+            <p style={{ fontWeight: 700, fontSize:"24px " }}>$699 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
