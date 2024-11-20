@@ -34,6 +34,7 @@ import Image from "next/image";
 import commonTerms from "@/data/commonTerms";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Spinner } from "react-bootstrap";
+import { useSearchParams } from 'next/navigation';
 
 const showNodeTypesSelection = !!(+process.env.NEXT_PUBLIC_SHOW_NODE_TYPES_SELECTION!);
 
@@ -52,6 +53,9 @@ export interface PurchaseNodesDialogOpenProps {
 export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   const [isExecutingPurchase, setIsExecutingPurchase] = useState(false);
   const { connectModalOpen } = useConnectModal();
+  const searchParams = useSearchParams();
+
+  const eref = searchParams.get('eref');
 
   const web3Account = useAccount();
 
@@ -153,6 +157,12 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   //   setOpenDialog(true);
   // };
 
+  useEffect(() => {
+    if (eref) {
+      setReferralCode(eref);
+    }
+  }, [eref]);
+
   const handleClose = () => {
     setOpenDialog(false);
   };
@@ -190,15 +200,15 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       maxWidth="md"
     >
       <div className={`${!web3Account.isConnected && "d-none"} purchase-nodes-dialog`}>
-        <div style={{position:"relative"}}>
+        <div style={{ position: "relative" }}>
           <div
             style={{
               width: "100%",
               display: "flex",
               justifyContent: 'flex-end',
-              position:"absolute",
-              top:"1rem",
-              right:"1rem",
+              position: "absolute",
+              top: "1rem",
+              right: "1rem",
             }}
           >
             <button
@@ -335,7 +345,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                     </Button>
                   </div>
                 </div>
-                <div>
+                <div style={{ color: 'white' }}>
                   <p style={{ fontWeight: 700 }}>Referral Code{props.referralCodeRequired ? ' *' : ''}</p>
                   <TextField
                     required={props.referralCodeRequired}
@@ -347,7 +357,8 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                     disabled={uiDisabled}
                     slotProps={{
                       input: {
-                        inputProps: { maxLength: 20 }
+                        inputProps: { maxLength: 20 },
+                        style: { color: "white" }
                       },
                       inputLabel: {
                         style: { color: "white" }
@@ -356,11 +367,12 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
                     error={!isReferralCodeValid}
                     value={referralCode}
                     onChange={e => setReferralCode(e.target.value)}
+
                     sx={{
                       color: "white",
                       backgroundColor: "rgba(255,255,255,0.2)",
                       "& input::placeholder": {
-                        color: "rgba(255,255,255,0.8)"
+                        color: "white"
                       }
                     }}
                     className={`${classes.prettyInput} text-uppercase`}
