@@ -1,6 +1,6 @@
 const commonTerms = {
-  holdingRewardTokenName: "BRAIN",
-  holdingRewardVestedTokenName: "esBRAIN",
+  holdingRewardTokenName: "STRIKE",
+  holdingRewardVestedTokenName: "rSTRIKE",
   dePinKeyPurchaseRewardTokenName: "dVPN",
 
   nodeTypeCoreId: 1,
