@@ -755,7 +755,7 @@ const HomePageBody = (
     {/* <Container className="h1 p-0 text-center">
       Total <Badge bg="primary" pill>
         {uiIntNumberNiceFormat(nodesInformation.purchaseInfo.globalPurchasedAllNodesCount)}
-      </Badge> StrikeBit Engines Sold
+      </Badge> StrikeBit Nodes Sold
     </Container>
 
     <Container className="h1 p-0 text-center">
@@ -774,7 +774,7 @@ const HomePageBody = (
         >
           {nodesInformation.featureFlags.purchasingDisabled && <>Temporarily Unavailable</>}
 
-          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy StrikeBit Engines</>}
+          {!nodesInformation.featureFlags.purchasingDisabled && <>Buy StrikeBit Nodes</>}
         </Button>
       </div>
     </Container> */}
@@ -831,7 +831,7 @@ const HomePageBody = (
     </Row> */}
 
     {/* <Container className="mt-2 mb-1 h2 text-center">
-      <StarIcon /><span className="mx-3">My Engines</span><StarIcon />
+      <StarIcon /><span className="mx-3">My Nodes</span><StarIcon />
     </Container>
 
     <Row>
@@ -845,7 +845,7 @@ const HomePageBody = (
               <Col xs={12} md={6}>
                 <Stack gap={3}>
                   <div>
-                    <Card.Title>StrikeBit Engines</Card.Title>
+                    <Card.Title>StrikeBit Nodes</Card.Title>
                     <div>
                       <span className="card-subtitle h3">
                         {userNodesSummary.totalPurchasedNodesCount.map((x) => x.count).reduce((prev, cur) => prev + cur, 0)}
@@ -871,7 +871,7 @@ const HomePageBody = (
                 className="d-flex flex-column justify-content-evenly m-0 mt-3 mt-md-0 h6"
               >
                 <p>
-                  For every 5 purchased Engines, you are granted a <a
+                  For every 5 purchased Nodes, you are granted a <a
                     href={routes.docs.dePinKey()}
                     target="_blank"
                     rel="noreferrer"

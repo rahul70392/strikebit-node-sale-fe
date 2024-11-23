@@ -49,7 +49,7 @@ const ReferralPurchaseCard = (
               >{purchase.buyerAddress}&nbsp;&nbsp;<FaExternalLinkAlt/></a>}
             </span>
           </span>
-          <span><span className="fw-bolder">Engines Purchased: </span>{uiIntNumberNiceFormat(purchase.amount)}</span>
+          <span><span className="fw-bolder">Nodes Purchased: </span>{uiIntNumberNiceFormat(purchase.amount)}</span>
 
           <span className="mb-2">
             <span className="fw-bolder">Your Reward: </span>

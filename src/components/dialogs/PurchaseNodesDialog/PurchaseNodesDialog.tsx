@@ -137,7 +137,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
   }
 
   const onPurchaseSucceeded = async () => {
-    toast.success("Purchased StrikeBit Engines successfully.");
+    toast.success("Purchased StrikeBit Nodes successfully.");
 
     if (props.purchasedCallback) {
       await props.purchasedCallback();
@@ -577,7 +577,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
       data-rk=""
     >
       <Modal.Header closeButton>
-        <Modal.Title><StarIcon className="me-2"/>Purchase StrikeBit Engines</Modal.Title>
+        <Modal.Title><StarIcon className="me-2"/>Purchase StrikeBit Nodes</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -606,7 +606,7 @@ export const PurchaseNodesDialog = (props: PurchaseNodesDialogOpenProps) => {
 
               <FloatingLabel
                   controlId="purchase-amount"
-                  label="DistriBrain Engines to buy *"
+                  label="DistriBrain Nodes to buy *"
               >
                   <Form.Control
                       required
