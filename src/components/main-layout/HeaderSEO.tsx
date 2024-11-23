@@ -18,7 +18,7 @@ export function HeaderSEO() {
     <meta name="msapplication-TileColor" content="#da532c"/>
     <meta name="theme-color" content="#ffffff"/>
 
-    <meta property="og:title" content="StrikeBit"/>
+    <meta property="og:title" content="StrikeBit Radiant Nodes"/>
     <meta property="og:description" content="DexTools for Crypto Options Trading powered by AI"/>
     <meta property="og:type" content="website"/>
     <meta property="og:image" content="/logo1-black-bg.png"/>
@@ -27,7 +27,7 @@ export function HeaderSEO() {
 
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:site" content="@Strikebit"/>
-    <meta name="twitter:title" content="Strikebit"/>
+    <meta name="twitter:title" content="StrikeBit Radiant Nodes"/>
     <meta name="twitter:description" content="DexTools for Crypto Options Trading powered by AI"/>
     <meta name="twitter:image" content="/logo1-black-bg.png"/>
   </>
