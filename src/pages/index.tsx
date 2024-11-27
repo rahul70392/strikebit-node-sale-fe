@@ -344,7 +344,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700, fontSize:"24px " }}>$299 USD</p>
+            <p style={{ fontWeight: 700, fontSize: "24px " }}>$299 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
@@ -396,11 +396,13 @@ const HomePageBody = (
                   >
                     {(() => {
                       return (
-                        <button onClick={() => {
-                          openConnectModal()
-                          setSelectedNodeTypeId(commonTerms.nodeTypeCoreId);
-                          setShowNodePurchaseDialog(true);
-                        }} type="button"
+                        <button
+                          disabled
+                          onClick={() => {
+                            openConnectModal()
+                            setSelectedNodeTypeId(commonTerms.nodeTypeCoreId);
+                            setShowNodePurchaseDialog(true);
+                          }} type="button"
                           style={{
                             border: "0",
                             width: "10rem",
@@ -435,7 +437,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700, fontSize:"24px " }}>$499 USD</p>
+            <p style={{ fontWeight: 700, fontSize: "24px " }}>$499 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
@@ -487,11 +489,13 @@ const HomePageBody = (
                   >
                     {(() => {
                       return (
-                        <button onClick={() => {
-                          openConnectModal()
-                          setSelectedNodeTypeId(commonTerms.nodeTypePrimeId);
-                          setShowNodePurchaseDialog(true);
-                        }} type="button"
+                        <button
+                          disabled
+                          onClick={() => {
+                            openConnectModal()
+                            setSelectedNodeTypeId(commonTerms.nodeTypePrimeId);
+                            setShowNodePurchaseDialog(true);
+                          }} type="button"
                           style={{
                             border: "0",
                             width: "10rem",
@@ -526,7 +530,7 @@ const HomePageBody = (
               height={360}
               width={362.67}
             />
-            <p style={{ fontWeight: 700, fontSize:"24px " }}>$699 USD</p>
+            <p style={{ fontWeight: 700, fontSize: "24px " }}>$699 USD</p>
             <ul className=''
               style={{
                 listStyleType: "disc",
@@ -580,11 +584,13 @@ const HomePageBody = (
                   >
                     {(() => {
                       return (
-                        <button onClick={() => {
-                          openConnectModal();
-                          setSelectedNodeTypeId(commonTerms.nodeTypeEliteId);
-                          setShowNodePurchaseDialog(true);
-                        }} type="button"
+                        <button
+                          disabled
+                          onClick={() => {
+                            openConnectModal();
+                            setSelectedNodeTypeId(commonTerms.nodeTypeEliteId);
+                            setShowNodePurchaseDialog(true);
+                          }} type="button"
                           style={{
                             border: "0",
                             width: "10rem",
@@ -706,6 +712,7 @@ const HomePageBody = (
                 style={{
                   border: 0
                 }}
+                disabled
                 onClick={() => onWithdrawHoldingRewardsClicked()}
               >
                 CLAIM
@@ -728,6 +735,7 @@ const HomePageBody = (
                 style={{
                   border: 0
                 }}
+                disabled
                 onClick={() => onWithdrawReferralRewardsClicked()}
               >
                 WITHDRAW
